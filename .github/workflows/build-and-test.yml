@@ -446,7 +446,6 @@ jobs:
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 22.0.0"
-          local_cflags: "-std=c++1z"
       - uses: actions/upload-artifact@v2
         with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
@@ -1835,7 +1834,6 @@ jobs:
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
-          local_cflags: "-std=c++1z"
       - uses: actions/upload-artifact@v2
         with:
           name: "nodewrapper-tflite-macOS_amd64.tar.gz"
@@ -2226,7 +2224,6 @@ jobs:
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
-          local_cflags: "-std=c++1z"
       - uses: actions/upload-artifact@v2
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
@@ -3023,7 +3020,6 @@ jobs:
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
-          local_cflags: "-std=c++1z"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
       - uses: actions/upload-artifact@v2
@@ -3163,7 +3159,6 @@ jobs:
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
-          local_cflags: "-std=c++1z"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
       - uses: actions/upload-artifact@v2
