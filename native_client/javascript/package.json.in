@@ -43,7 +43,7 @@
       "node-gyp": "8.x",
       "typescript": "3.8.x",
       "typedoc": "0.17.x",
-      "@electron/rebuild": "3.x",
+      "electron-rebuild": "3.2.9",
       "@types/argparse": "1.0.x",
       "@types/node": "13.9.x"
     },
