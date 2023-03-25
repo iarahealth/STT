@@ -1466,9 +1466,6 @@ jobs:
   swig_macOS:
     name: "Mac|Build SWIG"
     runs-on: macos-12
-    strategy:
-      matrix:
-        arch: ["x86_64", "arm64"]
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
@@ -1482,7 +1479,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}
+          key: swig-${{ runner.os }}-${{ env.swig_hash }}
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1506,7 +1503,7 @@ jobs:
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}.${{ matrix.arch }}
+          name: ${{ github.job }}
           path: ${{ github.workspace }}/build-static/
   build-ctc-decoder-macos:
     name: "Mac|Build CTC decoder Python package"
@@ -1772,32 +1769,32 @@ jobs:
         with:
           name: "libstt.tflite.macOS.zip"
           path: libstt.zip
-        # Finally do the same, but for swig_macOS
-      - uses: actions/download-artifact@v3
-        with:
-          name: "swig_macOS.x86_64"
-          path: ${{ github.workspace }}/native_client/ds-swig.x86_64/
-      - run: |
-          cp -r ${{ github.workspace }}/native_client/ds-swig.x86_64 swig_macOS.x86_64
-      - uses: actions/download-artifact@v3
-        with:
-          name: "swig_macOS.arm64"
-          path: ${{ github.workspace }}/native_client/ds-swig.arm64/
-      - run: |
-          cp -r ${{ github.workspace }}/native_client/ds-swig.arm64 swig_macOS.arm64
-      - name: Create universal binaries
-        run: |
-          mkdir -p swig_macOS/bin &&
-          for binary in "bin/ds-swig" "bin/ds-cache-swig"; do
-            lipo -create -output "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}" "swig_macOS.arm64/${binary}"
-            cp -f "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}"
-          done
-      - run: |
-          zip -r9 --junk-paths swig_macOS swig_macOS.x86_64/*
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "swig_macOS"
-          path: swig_macOS
+      #   # Finally do the same, but for swig_macOS
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: "swig_macOS.x86_64"
+      #     path: ${{ github.workspace }}/native_client/ds-swig.x86_64/
+      # - run: |
+      #     cp -r ${{ github.workspace }}/native_client/ds-swig.x86_64 swig_macOS.x86_64
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: "swig_macOS.arm64"
+      #     path: ${{ github.workspace }}/native_client/ds-swig.arm64/
+      # - run: |
+      #     cp -r ${{ github.workspace }}/native_client/ds-swig.arm64 swig_macOS.arm64
+      # - name: Create universal binaries
+      #   run: |
+      #     mkdir -p swig_macOS/bin &&
+      #     for binary in "bin/ds-swig" "bin/ds-cache-swig"; do
+      #       lipo -create -output "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}" "swig_macOS.arm64/${binary}"
+      #       cp -f "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}"
+      #     done
+      # - run: |
+      #     zip -r9 --junk-paths swig_macOS swig_macOS.x86_64/*
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: "swig_macOS"
+      #     path: swig_macOS
   build-python-macOS:
     name: "Mac|Build Python bindings"
     runs-on: macos-12
@@ -1847,7 +1844,7 @@ jobs:
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
     runs-on: macos-12
-    needs: [build-universal-lib-macOS]
+    needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
         arch: ["x86_64", "arm64"]
