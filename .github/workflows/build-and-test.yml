@@ -1776,19 +1776,15 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: "swig_macOS.x86_64"
+          path: ${{ github.workspace }}/native_client/ds-swig/
       - run: |
-          mkdir swig_macOS.x86_64
-          cd swig_macOS.x86_64
-          tar xvf ../swig_macOS
-          rm ../swig_macOS
+          cp -r ${{ github.workspace }}/native_client/ds-swig swig_macOS.x86_64
       - uses: actions/download-artifact@v3
         with:
           name: "swig_macOS.arm64"
+          path: ${{ github.workspace }}/native_client/ds-swig/
       - run: |
-          mkdir swig_macOS.arm64
-          cd swig_macOS.arm64
-          tar xvf ../swig_macOS
-          rm ../swig_macOS
+          cp -r ${{ github.workspace }}/native_client/ds-swig swig_macOS.arm64
       - name: Create universal binaries
         run: |
           for binary in "bin/ds-swig" "bin/ds-cache-swig"; do
