@@ -34,8 +34,8 @@ ifeq ($(OS),Linux)
 LINK_STT := $(LINK_STT) -llzma -lbz2
 SOX_LDFLAGS     := -L$(ROOT_DIR)/sox-build/lib -lsox
 else ifeq ($(OS),Darwin)
-CFLAGS                  := -mmacosx-version-min=10.10 -target aarch64-apple-macos10.10
-LDFLAGS                 := -mmacosx-version-min=10.10 -target aarch64-apple-macos10.10
+CFLAGS                  := -mmacosx-version-min=10.10 -target x86_64-apple-macos10.10
+LDFLAGS                 := -mmacosx-version-min=10.10 -target x86_64-apple-macos10.10
 
 SOX_CFLAGS              := $(shell pkg-config --cflags sox)
 SOX_LDFLAGS             := $(shell pkg-config --libs sox) -framework CoreAudio -lz
