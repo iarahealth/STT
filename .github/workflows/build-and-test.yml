@@ -1776,20 +1776,21 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: "swig_macOS.x86_64"
-          path: ${{ github.workspace }}/native_client/ds-swig/
+          path: ${{ github.workspace }}/native_client/ds-swig.x86_64/
       - run: |
-          cp -r ${{ github.workspace }}/native_client/ds-swig swig_macOS.x86_64
+          cp -r ${{ github.workspace }}/native_client/ds-swig.x86_64 swig_macOS.x86_64
       - uses: actions/download-artifact@v3
         with:
           name: "swig_macOS.arm64"
-          path: ${{ github.workspace }}/native_client/ds-swig/
+          path: ${{ github.workspace }}/native_client/ds-swig.arm64/
       - run: |
-          cp -r ${{ github.workspace }}/native_client/ds-swig swig_macOS.arm64
+          cp -r ${{ github.workspace }}/native_client/ds-swig.arm64 swig_macOS.arm64
       - name: Create universal binaries
         run: |
+          mkdir -p swig_macOS/bin &&
           for binary in "bin/ds-swig" "bin/ds-cache-swig"; do
-            lipo -create -output "${binary}" "swig_macOS.x86_64/${binary}" "swig_macOS.arm64/${binary}"
-            cp -f "${binary}" "swig_macOS.x86_64/${binary}"
+            lipo -create -output "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}" "swig_macOS.arm64/${binary}"
+            cp -f "swig_macOS/${binary}" "swig_macOS.x86_64/${binary}"
           done
       - run: |
           zip -r9 --junk-paths swig_macOS swig_macOS.x86_64/*
