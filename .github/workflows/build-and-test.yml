@@ -1887,7 +1887,7 @@ jobs:
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0"
       - uses: actions/upload-artifact@v3
         with:
-          name: "nodewrapper-tflite-macOS_amd64.tar.gz"
+          name: "nodewrapper-tflite-macOS_${{ matrix.arch }}.tar.gz"
           path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
       - uses: actions/upload-artifact@v3
         with:
