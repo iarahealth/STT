@@ -1510,7 +1510,7 @@ jobs:
           path: ${{ github.workspace }}/build-static/
   build-ctc-decoder-macos:
     name: "Mac|Build CTC decoder Python package"
-    needs: [swig_macOS]
+    needs: [build-universal-lib-macOS]
     runs-on: macos-12
     strategy:
       matrix:
