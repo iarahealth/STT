@@ -1799,6 +1799,9 @@ jobs:
     name: "Mac|Build NodeJS and ElectronJS"
     runs-on: macos-12
     needs: [build-universal-lib-macOS, swig_macOS]
+    strategy:
+      matrix:
+        arch: ["arm64"]
     steps:
       - uses: actions/checkout@v3
         with:
