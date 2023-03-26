@@ -213,7 +213,7 @@ jobs:
           path: ${{ github.workspace }}/sox-build/
   build-ctc-decoder-Linux:
     name: "Lin|Build CTC decoder Python package"
-    needs: [ swig_Linux ]
+    needs: [swig_Linux]
     runs-on: ubuntu-20.04
     container:
       image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
@@ -264,7 +264,7 @@ jobs:
           path: ${{ github.workspace }}/wheelhouse/*.whl
   train-test-model-Linux:
     name: "Lin|Train a test model"
-    needs: [ "build-ctc-decoder-Linux" ]
+    needs: ["build-ctc-decoder-Linux"]
     runs-on: ubuntu-20.04
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -331,7 +331,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - name: Install dependencies
         run: |
           apt-get update
@@ -410,7 +410,7 @@ jobs:
   build-nodejs-Linux:
     name: "Lin|Build NodeJS and ElectronJS"
     runs-on: ubuntu-20.04
-    needs: [ build-lib-Linux, swig_Linux ]
+    needs: [build-lib-Linux, swig_Linux]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -467,7 +467,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -517,7 +517,7 @@ jobs:
   test-cpp-Linux:
     name: "Lin|Test C++ binary"
     runs-on: ubuntu-20.04
-    needs: [ build-lib-Linux, train-test-model-Linux ]
+    needs: [build-lib-Linux, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -554,7 +554,7 @@ jobs:
   test-py-Linux:
     name: "Lin|Test Python bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-python-Linux, train-test-model-Linux ]
+    needs: [build-python-Linux, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -596,7 +596,7 @@ jobs:
   test-evaluate-export:
     name: "Lin|Test evaluate_export"
     runs-on: ubuntu-20.04
-    needs: [ build-python-Linux, train-test-model-Linux, build-ctc-decoder-Linux ]
+    needs: [build-python-Linux, train-test-model-Linux, build-ctc-decoder-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -636,7 +636,7 @@ jobs:
   test-nodejs-Linux:
     name: "Lin|Test NodeJS bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-nodejs-Linux, train-test-model-Linux ]
+    needs: [build-nodejs-Linux, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -688,7 +688,7 @@ jobs:
   test-electronjs-Linux:
     name: "Lin|Test ElectronJS bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-nodejs-Linux, train-test-model-Linux ]
+    needs: [build-nodejs-Linux, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -1091,14 +1091,22 @@ jobs:
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "dist/*.whl"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
   twine-upload-stt:
     name: "Upload STT packages to PyPI"
     runs-on: ubuntu-20.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [create-release, build-python-Linux, build-python-macOS, build-python-Windows, build-python-LinuxArmv7, build-python-LinuxAarch64]
+    needs:
+      [
+        create-release,
+        build-python-Linux,
+        build-python-macOS,
+        build-python-Windows,
+        build-python-LinuxArmv7,
+        build-python-LinuxAarch64,
+      ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -1180,14 +1188,22 @@ jobs:
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.whl"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
   upload-nc-release-assets:
     name: "Upload native client artifacts to release assets"
     runs-on: ubuntu-20.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [create-release, build-lib-Windows, build-lib-Linux, build-universal-lib-macOS, build-lib-LinuxAarch64, build-lib-LinuxArmv7]
+    needs:
+      [
+        create-release,
+        build-lib-Windows,
+        build-lib-Linux,
+        build-universal-lib-macOS,
+        build-lib-LinuxAarch64,
+        build-lib-LinuxArmv7,
+      ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
@@ -1229,12 +1245,12 @@ jobs:
       - run: ls -lh
       - uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.tar.xz"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
       - uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.zip"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
   docker-build:
@@ -1244,7 +1260,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - name: Check VERSION matches Git tag and compute Docker tag
         id: compute-tag
         run: |
@@ -1272,7 +1288,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
@@ -1317,7 +1333,13 @@ jobs:
     name: "Upload coqui_stt_ctcdecoder packages to PyPI"
     runs-on: ubuntu-20.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [create-release, build-ctc-decoder-Linux, build-ctc-decoder-macos, build-ctc-decoder-windows]
+    needs:
+      [
+        create-release,
+        build-ctc-decoder-Linux,
+        build-ctc-decoder-macos,
+        build-ctc-decoder-windows,
+      ]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -1372,7 +1394,7 @@ jobs:
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.whl"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
   python-notebooks-tests-production:
@@ -1408,7 +1430,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 12
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - uses: actions/setup-python@v4
         with:
           python-version: 3.8
@@ -1437,13 +1459,16 @@ jobs:
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.tgz"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
   # macOS jobs
   swig_macOS:
     name: "Mac|Build SWIG"
     runs-on: macos-12
+    strategy:
+      matrix:
+        arch: ["x86_64", "arm64"]
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
@@ -1457,7 +1482,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ env.swig_hash }}
+          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1481,11 +1506,11 @@ jobs:
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}
+          name: ${{ github.job }}.${{ matrix.arch }}
           path: ${{ github.workspace }}/build-static/
   build-ctc-decoder-macos:
     name: "Mac|Build CTC decoder Python package"
-    needs: [ swig_macOS ]
+    needs: [swig_macOS]
     runs-on: macos-12
     strategy:
       matrix:
@@ -1502,7 +1527,7 @@ jobs:
           pip --version
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.x86_64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1528,7 +1553,7 @@ jobs:
           make -C native_client/ctcdecode clean-keep-third-party
   train-test-model-macOS:
     name: "Mac|Train a test model"
-    needs: [ "build-ctc-decoder-macos" ]
+    needs: ["build-ctc-decoder-macos"]
     runs-on: macos-12
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -1593,13 +1618,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Install system deps
-        run:
-          brew install coreutils
+        run: brew install coreutils
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
@@ -1656,13 +1680,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
       - name: Install system deps
-        run:
-          brew install coreutils
+        run: brew install coreutils
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
@@ -1769,7 +1792,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.x86_64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1815,7 +1838,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.arm64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -2097,7 +2120,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: 3.7.9
@@ -2289,7 +2312,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    needs: [ build-python-Windows, train-test-model-Linux ]
+    needs: [build-python-Windows, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -2342,7 +2365,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    needs: [ build-nodejs-Windows, train-test-model-Linux ]
+    needs: [build-nodejs-Windows, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -2404,7 +2427,7 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
-    needs: [ build-nodejs-Windows, train-test-model-Linux ]
+    needs: [build-nodejs-Windows, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -2466,7 +2489,14 @@ jobs:
   repackage-nodejs-allplatforms:
     name: "Repackage NodeJS / ElectronJS for multiplatforms"
     runs-on: ubuntu-20.04
-    needs: [build-nodejs-macOS, build-nodejs-Windows, build-nodejs-Linux, build-nodejs-LinuxArmv7, build-nodejs-LinuxAarch64]
+    needs:
+      [
+        build-nodejs-macOS,
+        build-nodejs-Windows,
+        build-nodejs-Linux,
+        build-nodejs-LinuxArmv7,
+        build-nodejs-LinuxAarch64,
+      ]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -2850,7 +2880,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -2879,7 +2909,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -2920,7 +2950,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/download-artifact@v3
         with:
           name: "native_client.tflite.linux.armv7.tar.xz"
@@ -2980,7 +3010,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/download-artifact@v3
         with:
           name: "native_client.tflite.linux.armv7.tar.xz"
@@ -3059,7 +3089,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/download-artifact@v3
         with:
           name: "native_client.tflite.linux.aarch64.tar.xz"
@@ -3119,7 +3149,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/download-artifact@v3
         with:
           name: "native_client.tflite.linux.aarch64.tar.xz"
@@ -3218,7 +3248,13 @@ jobs:
   test-cpp-LinuxArm:
     name: "LinArm*|Test C++ binary"
     runs-on: ubuntu-20.04
-    needs: [ build-lib-LinuxArmv7, build-lib-LinuxAarch64, train-test-model-Linux, build-test-chroot ]
+    needs:
+      [
+        build-lib-LinuxArmv7,
+        build-lib-LinuxAarch64,
+        train-test-model-Linux,
+        build-test-chroot,
+      ]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -3323,7 +3359,13 @@ jobs:
   test-py-LinuxArm:
     name: "LinArm*|Test Python bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-python-LinuxArmv7, build-python-LinuxAarch64, train-test-model-Linux, build-test-chroot ]
+    needs:
+      [
+        build-python-LinuxArmv7,
+        build-python-LinuxAarch64,
+        train-test-model-Linux,
+        build-test-chroot,
+      ]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -3440,7 +3482,13 @@ jobs:
   test-nodejs-LinuxArm:
     name: "LinArm*|Test NodeJS bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-nodejs-LinuxArmv7, build-nodejs-LinuxAarch64, train-test-model-Linux, build-test-chroot ]
+    needs:
+      [
+        build-nodejs-LinuxArmv7,
+        build-nodejs-LinuxAarch64,
+        train-test-model-Linux,
+        build-test-chroot,
+      ]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
@@ -3502,7 +3550,13 @@ jobs:
   test-electronjs-LinuxArm:
     name: "LinArm*|Test ElectronJS bindings"
     runs-on: ubuntu-20.04
-    needs: [ build-nodejs-LinuxArmv7, build-nodejs-LinuxAarch64, train-test-model-Linux, build-test-chroot ]
+    needs:
+      [
+        build-nodejs-LinuxArmv7,
+        build-nodejs-LinuxAarch64,
+        train-test-model-Linux,
+        build-test-chroot,
+      ]
     # Disable this task because it seems qemu does not work super-well with ElectronJS
     if: ${{ github.event_name == 'disabled' }}
     strategy:
@@ -3587,7 +3641,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -3610,7 +3664,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -3633,7 +3687,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-          submodules: 'recursive'
+          submodules: "recursive"
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
@@ -3652,7 +3706,8 @@ jobs:
   build-android-apk-aar:
     name: "Android|Build AAR+APK"
     runs-on: ubuntu-20.04
-    needs: [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
+    needs:
+      [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -3743,6 +3798,6 @@ jobs:
       - run: ls -lh
       - uses: ./.github/actions/upload-release-asset
         with:
-          name: '' # use filename
+          name: "" # use filename
           path: "*.aar"
           release-tag: ${{ needs.create-release.outputs.release-tag }}
