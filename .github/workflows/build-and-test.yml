@@ -1470,7 +1470,7 @@ jobs:
       matrix:
         arch: ["x86_64", "arm64"]
     env:
-      swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
+      swig_hash: "1"
     steps:
       - uses: actions/checkout@v3
         with:
