@@ -2472,11 +2472,11 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          mkdir -p /tmp/nodewrapper-tflite-macOS_amd64/
+          mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
       - uses: actions/download-artifact@v3
         with:
-          name: "nodewrapper-tflite-macOS_amd64.tar.gz"
+          name: "nodewrapper-tflite-macOS_arm64.tar.gz"
           path: /tmp/nodewrapper-macOS_amd64/
       - uses: actions/download-artifact@v3
         with:
