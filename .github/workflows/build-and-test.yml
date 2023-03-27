@@ -1488,7 +1488,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}-1
+          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}-2
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
