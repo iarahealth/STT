@@ -1821,7 +1821,7 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
-    runs-on: macos-12
+    runs-on: self-hosted
     needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
