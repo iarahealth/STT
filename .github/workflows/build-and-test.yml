@@ -1465,10 +1465,16 @@ jobs:
   # macOS jobs
   swig_macOS:
     name: "Mac|Build SWIG"
-    runs-on: macos-12
     strategy:
       matrix:
+        exclude:
+          - os: macos-12
+            arch: arm64
+          - os: self-hosted
+            arch: x86_64
         arch: ["x86_64", "arm64"]
+        os: ["self-hosted", "macos-12"]
+    runs-on: ${{ matrix.os }}
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
@@ -1482,7 +1488,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}-1
+          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}-2
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1821,7 +1827,7 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
-    runs-on: macos-12
+    runs-on: self-hosted
     needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
