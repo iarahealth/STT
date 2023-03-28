@@ -1854,7 +1854,7 @@ jobs:
           chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           architecture: "arm64"
       - uses: actions/cache@v3
         id: node-headers-cache
