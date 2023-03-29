@@ -1825,6 +1825,8 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
+    needs: [build-universal-lib-macOS, swig_macOS]
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
@@ -1832,11 +1834,6 @@ jobs:
             arch: arm64
           - os: macos-12
             arch: x86_64
-    runs-on: ${{ matrix.os }}
-    needs: [build-universal-lib-macOS, swig_macOS]
-    strategy:
-      matrix:
-        arch: ["arm64"]
     steps:
       - uses: actions/checkout@v3
         with:
