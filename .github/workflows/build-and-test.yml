@@ -1443,7 +1443,14 @@ jobs:
   # macOS jobs
   swig_macOS:
     name: "Mac|Build SWIG"
-    runs-on: macos-12
+    strategy:
+      matrix:
+        include:
+          - os: self-hosted
+            arch: arm64
+          - os: macos-12
+            arch: x86_64
+    runs-on: ${{ matrix.os }}
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
@@ -1457,7 +1464,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ env.swig_hash }}
+          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1481,7 +1488,7 @@ jobs:
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}
+          name: ${{ github.job }}.${{ matrix.arch }}
           path: ${{ github.workspace }}/build-static/
   build-ctc-decoder-macos:
     name: "Mac|Build CTC decoder Python package"
@@ -1502,7 +1509,7 @@ jobs:
           pip --version
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.x86_64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1769,7 +1776,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.x86_64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1797,7 +1804,14 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
-    runs-on: macos-12
+    strategy:
+      matrix:
+        include:
+          - os: self-hosted
+            arch: arm64
+          - os: macos-12
+            arch: x86_64
+    runs-on: ${{ matrix.os }}
     needs: [build-universal-lib-macOS, swig_macOS]
     steps:
       - uses: actions/checkout@v3
@@ -1812,7 +1826,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS"
+          name: "swig_macOS.${{ matrix.arch }}"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1821,7 +1835,8 @@ jobs:
           chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 18
+          architecture: ${{ matrix.arch }}
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
@@ -2470,11 +2485,16 @@ jobs:
           fetch-depth: 1
       - run: |
           mkdir -p /tmp/nodewrapper-tflite-macOS_amd64/
+          mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
       - uses: actions/download-artifact@v3
         with:
           name: "nodewrapper-tflite-macOS_amd64.tar.gz"
           path: /tmp/nodewrapper-macOS_amd64/
+      - uses: actions/download-artifact@v3
+        with:
+          name: "nodewrapper-tflite-macOS_arm64.tar.gz"
+          path: /tmp/nodewrapper-macOS_arm64/
       - uses: actions/download-artifact@v3
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
