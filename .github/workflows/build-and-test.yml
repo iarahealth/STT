@@ -1467,13 +1467,11 @@ jobs:
     name: "Mac|Build SWIG"
     strategy:
       matrix:
-        exclude:
-          - os: macos-12
-            arch: arm64
+        include:
           - os: self-hosted
+            arch: arm64
+          - os: macos-12
             arch: x86_64
-        arch: ["x86_64", "arm64"]
-        os: ["self-hosted", "macos-12"]
     runs-on: ${{ matrix.os }}
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
@@ -1488,7 +1486,7 @@ jobs:
         id: swig-build-cache
         with:
           path: build-static/
-          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}-2
+          key: swig-${{ runner.os }}-${{ matrix.arch }}-${{ env.swig_hash }}
       - run: |
           brew install automake
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1827,7 +1825,14 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-macOS:
     name: "Mac|Build NodeJS and ElectronJS"
-    runs-on: self-hosted
+    strategy:
+      matrix:
+        include:
+          - os: self-hosted
+            arch: arm64
+          - os: macos-12
+            arch: x86_64
+    runs-on: ${{ matrix.os }}
     needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
@@ -1845,7 +1850,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS.arm64"
+          name: "swig_macOS.${{ matrix.arch }}"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1855,7 +1860,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          architecture: "arm64"
+          architecture: ${{ matrix.arch }}
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
@@ -2510,12 +2515,17 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
+          mkdir -p /tmp/nodewrapper-tflite-macOS_amd64/
           mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
       - uses: actions/download-artifact@v3
         with:
-          name: "nodewrapper-tflite-macOS_arm64.tar.gz"
+          name: "nodewrapper-tflite-macOS_amd64.tar.gz"
           path: /tmp/nodewrapper-macOS_amd64/
+      - uses: actions/download-artifact@v3
+        with:
+          name: "nodewrapper-tflite-macOS_arm64.tar.gz"
+          path: /tmp/nodewrapper-macOS_arm64/
       - uses: actions/download-artifact@v3
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
