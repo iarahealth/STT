@@ -99,6 +99,7 @@ jobs:
           path: build-static/
           key: swig-win-3-${{ env.swig_hash }}
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends autoconf automake bison build-essential mingw-w64
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
       - run: |
@@ -572,6 +573,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v3
         with:
@@ -630,6 +632,7 @@ jobs:
       - run: |
           python -m pip install coqui_stt_ctcdecoder-*.whl
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 libopusfile0
       - run: |
           ./ci_scripts/evaluate-export-test.sh ${{ matrix.samplerate }}
@@ -656,6 +659,7 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v3
         with:
@@ -707,6 +711,7 @@ jobs:
         with:
           node-version: 12
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v3
         with:
@@ -753,6 +758,7 @@ jobs:
         with:
           name: "coqui_stt_ctcdecoder-Linux-3.7.whl"
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopusfile0 libopus-dev libopusfile-dev
       - run: |
           python --version
@@ -857,6 +863,7 @@ jobs:
       - run: |
           mkdir -p ${CI_ARTIFACTS_DIR} || true
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 libopusfile0 libvorbis-dev sox
       - name: Run tests
         run: |
@@ -911,6 +918,7 @@ jobs:
       - run: |
           mkdir -p ${CI_ARTIFACTS_DIR} || true
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 sox
       - name: Run tests
         run: |
@@ -955,6 +963,7 @@ jobs:
       - run: |
           mkdir -p ${CI_ARTIFACTS_DIR} || true
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 sox
       - name: Run tests
         run: |
@@ -995,6 +1004,7 @@ jobs:
       - run: |
           mkdir -p ${CI_ARTIFACTS_DIR} || true
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 sox
       - name: Run tests
         run: |
@@ -1040,6 +1050,7 @@ jobs:
       - run: |
           mkdir -p ${CI_ARTIFACTS_DIR} || true
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopus0 sox
       - name: Run tests
         run: |
@@ -1391,6 +1402,7 @@ jobs:
         with:
           python-version: 3.7
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends libopusfile0 libopus-dev libopusfile-dev
       - run: |
           python -m pip install -U pip setuptools wheel jupyter
@@ -2527,6 +2539,7 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - run: |
+          sudo apt-get update
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v3
         with:
