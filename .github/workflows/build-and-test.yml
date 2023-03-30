@@ -1544,7 +1544,7 @@ jobs:
           pip --version
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS.x86_64"
+          name: "swig_macOS.x64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
@@ -1809,7 +1809,7 @@ jobs:
           tar xf native_client.tar.xz
       - uses: actions/download-artifact@v3
         with:
-          name: "swig_macOS.x86_64"
+          name: "swig_macOS.x64"
           path: ${{ github.workspace }}/native_client/ds-swig/
       - name: Link ds-swig into swig
         run: |
