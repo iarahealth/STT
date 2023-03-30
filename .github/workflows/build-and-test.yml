@@ -1846,7 +1846,7 @@ jobs:
             arch: arm64
             nodejs-version: 18
           - os: macos-12
-            arch: x86_64
+            arch: x64
             nodejs-version: 12
     steps:
       - uses: actions/checkout@v3
