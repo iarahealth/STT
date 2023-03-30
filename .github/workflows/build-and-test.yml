@@ -1844,8 +1844,10 @@ jobs:
         include:
           - os: self-hosted
             arch: arm64
+            nodejs-version: 18
           - os: macos-12
             arch: x86_64
+            nodejs-version: 12
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1868,7 +1870,7 @@ jobs:
           chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: ${{ matrix.nodejs-version }}
           architecture: ${{ matrix.arch }}
       - uses: actions/cache@v3
         id: node-headers-cache
