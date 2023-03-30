@@ -1511,7 +1511,6 @@ jobs:
       - run: |
           sh autogen.sh
           ./configure \
-            --host=arm64-apple-darwin \
             --prefix=${{ github.workspace }}/build-static/ \
             --program-prefix=ds-
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
@@ -1627,10 +1626,14 @@ jobs:
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-macOS:
     name: "Mac|Build libstt+client"
-    runs-on: macos-12
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        arch: ["x86_64", "arm64"]
+        include:
+          - os: self-hosted
+            arch: arm64
+          - os: macos-12
+            arch: x86_64
     steps:
       - uses: actions/checkout@v3
         with:
