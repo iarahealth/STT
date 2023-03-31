@@ -1661,42 +1661,43 @@ jobs:
         with:
           name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
-  build-lib-iOS:
-    name: "iOS|Build libstt+client"
-    runs-on: macos-12
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - name: Install system deps
-        run:
-          brew install coreutils
-      - name: Select Xcode version
-        run: |
-          sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
-      - run: ./ci_scripts/tf-setup.sh
-      - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
-        run: |
-          sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/ios-build.sh
-      - run: |
-          zip -r9 --junk-paths ${CI_ARTIFACTS_DIR}/ios_artifacts.zip \
-            tensorflow/bazel-bin/native_client/STT.swiftdoc \
-            tensorflow/bazel-bin/native_client/STT.swiftmodule \
-            tensorflow/bazel-bin/native_client/STT.swiftsourceinfo \
-            tensorflow/bazel-bin/native_client/coqui_stt_bundle.swift.modulemap \
-            tensorflow/bazel-bin/native_client/libkenlm.so \
-            tensorflow/bazel-bin/native_client/libstt.so \
-            tensorflow/bazel-out/applebin_ios*/bin/native_client/stt_ios.zip \
-            tensorflow/bazel-out/applebin_ios*/bin/native_client/kenlm_ios.zip
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "ios_artifacts.zip"
-          path: ${{ github.workspace }}/artifacts/ios_artifacts.zip
+  # Temporarily disable iOS builds, as they are failing due to broken bazel mirrors
+  # build-lib-iOS:
+  #   name: "iOS|Build libstt+client"
+  #   runs-on: macos-12
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         submodules: 'recursive'
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.7"
+  #     - name: Install system deps
+  #       run:
+  #         brew install coreutils
+  #     - name: Select Xcode version
+  #       run: |
+  #         sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
+  #     - run: ./ci_scripts/tf-setup.sh
+  #     - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
+  #       run: |
+  #         sudo rm -r /Library/Developer/CommandLineTools
+  #     - run: ./ci_scripts/ios-build.sh
+  #     - run: |
+  #         zip -r9 --junk-paths ${CI_ARTIFACTS_DIR}/ios_artifacts.zip \
+  #           tensorflow/bazel-bin/native_client/STT.swiftdoc \
+  #           tensorflow/bazel-bin/native_client/STT.swiftmodule \
+  #           tensorflow/bazel-bin/native_client/STT.swiftsourceinfo \
+  #           tensorflow/bazel-bin/native_client/coqui_stt_bundle.swift.modulemap \
+  #           tensorflow/bazel-bin/native_client/libkenlm.so \
+  #           tensorflow/bazel-bin/native_client/libstt.so \
+  #           tensorflow/bazel-out/applebin_ios*/bin/native_client/stt_ios.zip \
+  #           tensorflow/bazel-out/applebin_ios*/bin/native_client/kenlm_ios.zip
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "ios_artifacts.zip"
+  #         path: ${{ github.workspace }}/artifacts/ios_artifacts.zip
   build-universal-lib-macOS:
     name: "Mac|Build universal lib"
     runs-on: macos-12
@@ -3591,170 +3592,171 @@ jobs:
         run: |
           cat ${{ env.CI_TMP_DIR }}/xvfb.pid
           sudo kill -9 $(cat ${{ env.CI_TMP_DIR }}/xvfb.pid)
+  # Temporarily disable android jobs, as they are failing due to broken bazel mirrors
   # Android jobs
-  build-lib-AndroidArmv7:
-    name: "AndroidArmv7|Build libstt+client"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-armv7
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-armv7-build.sh
-      - run: ./ci_scripts/android-package.sh armeabi-v7a
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "native_client.tflite.android.armv7.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-lib-AndroidArm64:
-    name: "AndroidArm64|Build libstt+client"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-arm64
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-arm64-build.sh
-      - run: ./ci_scripts/android-package.sh arm64-v8a
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "native_client.tflite.android.arm64.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-lib-Androidx86_64:
-    name: "Androidx86_64|Build libstt+client"
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-arm64
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-x86_64-build.sh
-      - run: ./ci_scripts/android-package.sh x86_64
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "native_client.tflite.android.x86_64.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-android-apk-aar:
-    name: "Android|Build AAR+APK"
-    runs-on: ubuntu-20.04
-    needs: [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v3
-        with:
-          name: native_client.tflite.android.armv7.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/armeabi-v7a
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/armeabi-v7a/
-          rm -f *
-      - uses: actions/download-artifact@v3
-        with:
-          name: native_client.tflite.android.arm64.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/arm64-v8a
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/arm64-v8a/
-          rm -f *
-      - uses: actions/download-artifact@v3
-        with:
-          name: native_client.tflite.android.x86_64.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/x86_64
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/x86_64/
-          rm -f *
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "11"
-          cache: "gradle"
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-      - name: Install Android NDK r19c
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r19c
-          add-to-path: false
-      # This particular version of CMake confuses Gradle by not being semver.
-      # We're fine with 3.22.1 which is also installed. Keep an eye on the
-      # virtual environments though:
-      # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md#android
-      - name: Remove CMake 3.18.1-g262b901
-        run: |
-          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall 'cmake;3.18.1'
-      - run: |
-          make GRADLE="./gradlew " -C native_client/java
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - run: |
-          make GRADLE="./gradlew " -C native_client/java maven-bundle
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "app.apk"
-          path: ${{ github.workspace }}/native_client/java/app/build/outputs/apk/release/app*.apk
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "libstt.aar"
-          path: ${{ github.workspace }}/native_client/java/libstt/build/outputs/aar/libstt*.aar
-      - uses: actions/upload-artifact@v3
-        with:
-          name: "libstt.maven.zip"
-          path: ${{ github.workspace }}/native_client/java/libstt/build/libstt-*.maven.zip
-  publish-android-aar:
-    name: "Android|Publish AAR"
-    runs-on: ubuntu-20.04
-    needs: [create-release, build-android-apk-aar]
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v3
-        with:
-          name: "libstt.aar"
-          path: ${{ github.workspace }}/
-      - run: ls -lh
-      - uses: ./.github/actions/upload-release-asset
-        with:
-          name: '' # use filename
-          path: "*.aar"
-          release-tag: ${{ needs.create-release.outputs.release-tag }}
+  # build-lib-AndroidArmv7:
+  #   name: "AndroidArmv7|Build libstt+client"
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         submodules: 'recursive'
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.7"
+  #     - uses: actions/setup-java@v3
+  #       with:
+  #         distribution: "temurin"
+  #         java-version: "8"
+  #     - run: ./ci_scripts/tf-setup.sh --android-armv7
+  #     - run: ./ci_scripts/tf-configure.sh --android
+  #     - run: ./ci_scripts/android-armv7-build.sh
+  #     - run: ./ci_scripts/android-package.sh armeabi-v7a
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "native_client.tflite.android.armv7.tar.xz"
+  #         path: ${{ github.workspace }}/artifacts/native_client.tar.xz
+  # build-lib-AndroidArm64:
+  #   name: "AndroidArm64|Build libstt+client"
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         submodules: 'recursive'
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.7"
+  #     - uses: actions/setup-java@v3
+  #       with:
+  #         distribution: "temurin"
+  #         java-version: "8"
+  #     - run: ./ci_scripts/tf-setup.sh --android-arm64
+  #     - run: ./ci_scripts/tf-configure.sh --android
+  #     - run: ./ci_scripts/android-arm64-build.sh
+  #     - run: ./ci_scripts/android-package.sh arm64-v8a
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "native_client.tflite.android.arm64.tar.xz"
+  #         path: ${{ github.workspace }}/artifacts/native_client.tar.xz
+  # build-lib-Androidx86_64:
+  #   name: "Androidx86_64|Build libstt+client"
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #         submodules: 'recursive'
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.7"
+  #     - uses: actions/setup-java@v3
+  #       with:
+  #         distribution: "temurin"
+  #         java-version: "8"
+  #     - run: ./ci_scripts/tf-setup.sh --android-arm64
+  #     - run: ./ci_scripts/tf-configure.sh --android
+  #     - run: ./ci_scripts/android-x86_64-build.sh
+  #     - run: ./ci_scripts/android-package.sh x86_64
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "native_client.tflite.android.x86_64.tar.xz"
+  #         path: ${{ github.workspace }}/artifacts/native_client.tar.xz
+  # build-android-apk-aar:
+  #   name: "Android|Build AAR+APK"
+  #   runs-on: ubuntu-20.04
+  #   needs: [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: native_client.tflite.android.armv7.tar.xz
+  #         path: /tmp/nc
+  #     - run: |
+  #         mkdir -p native_client/java/libstt/libs/armeabi-v7a
+  #         cd /tmp/nc
+  #         tar xvf native_client.tar.xz
+  #         mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/armeabi-v7a/
+  #         rm -f *
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: native_client.tflite.android.arm64.tar.xz
+  #         path: /tmp/nc
+  #     - run: |
+  #         mkdir -p native_client/java/libstt/libs/arm64-v8a
+  #         cd /tmp/nc
+  #         tar xvf native_client.tar.xz
+  #         mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/arm64-v8a/
+  #         rm -f *
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: native_client.tflite.android.x86_64.tar.xz
+  #         path: /tmp/nc
+  #     - run: |
+  #         mkdir -p native_client/java/libstt/libs/x86_64
+  #         cd /tmp/nc
+  #         tar xvf native_client.tar.xz
+  #         mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/x86_64/
+  #         rm -f *
+  #     - uses: actions/setup-java@v3
+  #       with:
+  #         distribution: "temurin"
+  #         java-version: "11"
+  #         cache: "gradle"
+  #     - name: Setup Android SDK
+  #       uses: android-actions/setup-android@v2
+  #     - name: Install Android NDK r19c
+  #       uses: nttld/setup-ndk@v1
+  #       id: setup-ndk
+  #       with:
+  #         ndk-version: r19c
+  #         add-to-path: false
+  #     # This particular version of CMake confuses Gradle by not being semver.
+  #     # We're fine with 3.22.1 which is also installed. Keep an eye on the
+  #     # virtual environments though:
+  #     # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-12-Readme.md#android
+  #     - name: Remove CMake 3.18.1-g262b901
+  #       run: |
+  #         ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall 'cmake;3.18.1'
+  #     - run: |
+  #         make GRADLE="./gradlew " -C native_client/java
+  #       env:
+  #         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+  #     - run: |
+  #         make GRADLE="./gradlew " -C native_client/java maven-bundle
+  #       env:
+  #         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "app.apk"
+  #         path: ${{ github.workspace }}/native_client/java/app/build/outputs/apk/release/app*.apk
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "libstt.aar"
+  #         path: ${{ github.workspace }}/native_client/java/libstt/build/outputs/aar/libstt*.aar
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: "libstt.maven.zip"
+  #         path: ${{ github.workspace }}/native_client/java/libstt/build/libstt-*.maven.zip
+  # publish-android-aar:
+  #   name: "Android|Publish AAR"
+  #   runs-on: ubuntu-20.04
+  #   needs: [create-release, build-android-apk-aar]
+  #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/download-artifact@v3
+  #       with:
+  #         name: "libstt.aar"
+  #         path: ${{ github.workspace }}/
+  #     - run: ls -lh
+  #     - uses: ./.github/actions/upload-release-asset
+  #       with:
+  #         name: '' # use filename
+  #         path: "*.aar"
+  #         release-tag: ${{ needs.create-release.outputs.release-tag }}
