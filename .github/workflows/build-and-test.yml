@@ -1889,7 +1889,7 @@ jobs:
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0"
       - uses: actions/upload-artifact@v3
         with:
-          name: "nodewrapper-tflite-macOS_arm64.tar.gz"
+          name: "nodewrapper-tflite-macOS_${{ matrix.arch }}.tar.gz"
           path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
       - uses: actions/upload-artifact@v3
         with:
@@ -2527,13 +2527,13 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          mkdir -p /tmp/nodewrapper-tflite-macOS_amd64/
+          mkdir -p /tmp/nodewrapper-tflite-macOS_x64/
           mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
       - uses: actions/download-artifact@v3
         with:
-          name: "nodewrapper-tflite-macOS_amd64.tar.gz"
-          path: /tmp/nodewrapper-macOS_amd64/
+          name: "nodewrapper-tflite-macOS_x64.tar.gz"
+          path: /tmp/nodewrapper-macOS_x64/
       - uses: actions/download-artifact@v3
         with:
           name: "nodewrapper-tflite-macOS_arm64.tar.gz"
