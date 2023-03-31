@@ -1482,8 +1482,10 @@ jobs:
         include:
           - os: self-hosted
             arch: arm64
+            artifact_suffix: arm64
           - os: macos-12
             arch: x86_64
+            artifact_suffix: x64
     runs-on: ${{ matrix.os }}
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
@@ -1522,7 +1524,7 @@ jobs:
         if: steps.swig-build-cache.outputs.cache-hit != 'true'
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}.${{ matrix.arch }}
+          name: ${{ github.job }}.${{ matrix.artifact_suffix }}
           path: ${{ github.workspace }}/build-static/
   build-ctc-decoder-macos:
     name: "Mac|Build CTC decoder Python package"
