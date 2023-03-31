@@ -2556,7 +2556,8 @@ jobs:
           path: /tmp/nodewrapper-Linux_aarch64/
       - name: Extract nodewrapper archives
         run: |
-          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_amd64/wrapper.tar.gz
+          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_arm64/wrapper.tar.gz
+          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_x64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Windows_amd64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Linux_amd64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Linux_armv7/wrapper.tar.gz
@@ -2675,7 +2676,7 @@ jobs:
         timeout-minutes: 5
   test-nodejs_all-macOS:
     name: "Mac|Test MultiArchPlatform NodeJS bindings"
-    runs-on: macos-12
+    runs-on: ${{ matrix.os }}
     needs: [repackage-nodejs-allplatforms, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -2684,6 +2685,11 @@ jobs:
         nodejs-version: [12, 17]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
+        include:
+          - os: self-hosted
+            arch: arm64
+          - os: macos-12
+            arch: x86_64
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
