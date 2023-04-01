@@ -1973,7 +1973,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-nodejs-macOS:
     name: "Mac|Test NodeJS bindings"
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-12
     needs: [build-nodejs-macOS, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -1982,11 +1982,6 @@ jobs:
         nodejs-version: [12, 14, 16, 17]
         models: ["test"]
         samplerate: ["16000"]
-        include:
-          - os: self-hosted
-            arch: arm64
-          - os: macos-12
-            arch: x64
       fail-fast: false        
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
@@ -2000,7 +1995,7 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
       - uses: actions/download-artifact@v3
         with:
-          name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}.tgz"
+          name: "stt_intermediate-tflite-macOS_x64.tgz"
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v3
         with:
