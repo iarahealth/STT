@@ -1430,7 +1430,7 @@ jobs:
           path: ${{ github.workspace }}/
       - run: |
           for pkg in ${{ github.workspace }}/stt-*.tgz; do
-            npm publish --verbose @iarahealth/$pkg --tag ${{ steps.compute-npm-tag.outputs.npm-tag }}
+            npm publish --verbose $pkg --tag ${{ steps.compute-npm-tag.outputs.npm-tag }}
           done
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

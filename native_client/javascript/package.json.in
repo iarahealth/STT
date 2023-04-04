@@ -1,5 +1,5 @@
 {
-    "name" : "$(PROJECT_NAME)",
+    "name" : "@iarahealth/$(PROJECT_NAME)",
     "version" : "$(PROJECT_VERSION)",
     "description" : "A library for doing speech recognition using a Coqui STT model",
     "main" : "./index.js",
