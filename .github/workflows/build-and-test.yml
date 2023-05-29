@@ -2221,7 +2221,7 @@ jobs:
         id: electron-headers-cache
         with:
           path: native_client/javascript/headers/electronjs/
-          key: electron-headers-win-12.0.0_15.0.0
+          key: electron-headers-win-12.0.0_21.0.0
       - uses: ./.github/actions/win-node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0"

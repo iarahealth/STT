@@ -50,6 +50,9 @@
             ],
         },
     ],
+    "msvs_settings": {
+        "VCCLCompilerTool": { "AdditionalOptions": ["/std:c++17" ] }
+    },
     "variables": {
         "build_v8_with_gn": 0,
         "v8_enable_pointer_compression": 0,
