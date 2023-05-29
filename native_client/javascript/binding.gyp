@@ -12,10 +12,12 @@
                     {
                         "xcode_settings": {
                             "OTHER_CXXFLAGS": [
+                                "-std=c++17",
                                 "-stdlib=libc++",
                                 "-mmacosx-version-min=10.10",
                             ],
                             "OTHER_LDFLAGS": [
+                                "-std=c++17",
                                 "-stdlib=libc++",
                                 "-mmacosx-version-min=10.10",
                             ],
@@ -51,18 +53,10 @@
             ],
         },
     ],
-    "msbuild_settings": {
-        "ClCompile": {
-            "LanguageStandard": "stdcpp17"
-        }
-    },
     "variables": {
         "build_v8_with_gn": 0,
         "v8_enable_pointer_compression": 0,
         "v8_enable_31bit_smis_on_64bit_arch": 0,
         "enable_lto": 1,
-    },
-    "xcode_settings": {
-        "OTHER_CFLAGS": [ "-std=c++17"],
     },
 }
