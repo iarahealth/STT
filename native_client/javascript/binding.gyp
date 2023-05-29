@@ -5,6 +5,7 @@
             "sources": ["stt_wrap.cxx"],
             "libraries": [],
             "include_dirs": ["../"],
+            "cflags_cc": "-std=c++17", 
             "conditions": [
                 [
                     "OS=='mac'",
@@ -50,13 +51,18 @@
             ],
         },
     ],
-    "msvs_settings": {
-        "VCCLCompilerTool": { "AdditionalOptions": ["/std:c++17" ] }
+    "msbuild_settings": {
+        "ClCompile": {
+            "LanguageStandard": "stdcpp17"
+        }
     },
     "variables": {
         "build_v8_with_gn": 0,
         "v8_enable_pointer_compression": 0,
         "v8_enable_31bit_smis_on_64bit_arch": 0,
         "enable_lto": 1,
+    },
+    "xcode_settings": {
+        "OTHER_CFLAGS": [ "-std=c++17"],
     },
 }
