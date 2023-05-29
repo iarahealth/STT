@@ -20,7 +20,7 @@ PLATFORM_EXE_SUFFIX := .exe
 endif
 
 STT_BIN       := stt$(PLATFORM_EXE_SUFFIX)
-CFLAGS_STT    := -std=c++11 -o $(STT_BIN)
+CFLAGS_STT    := -std=c++17 -o $(STT_BIN)
 LINK_STT      := -lstt -lkenlm
 LINK_PATH_STT := -L${TFDIR}/bazel-bin/native_client -L${TFDIR}/bazel-bin/tensorflow/lite
 
