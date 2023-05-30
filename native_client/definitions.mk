@@ -148,8 +148,8 @@ LDFLAGS_NEEDED := -Wl,--no-as-needed
 LDFLAGS_RPATH  := -Wl,-rpath,\$$ORIGIN
 endif
 ifeq ($(OS),Darwin)
-CXXFLAGS       += -stdlib=libc++
-LDFLAGS_NEEDED := -stdlib=libc++
+CXXFLAGS       += -stdlib=libc++ -std=c++17
+LDFLAGS_NEEDED := -stdlib=libc++ -std=c++17
 LDFLAGS_RPATH  := -Wl,-rpath,@executable_path
 endif
 
