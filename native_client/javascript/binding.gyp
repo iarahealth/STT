@@ -5,22 +5,21 @@
             "sources": ["stt_wrap.cxx"],
             "libraries": [],
             "include_dirs": ["../"],
-            'cflags': [ '-std=c++17' ],
-            'cflags_cc': [ '-std=c++17' ],
+            "cflags": [ "-fno-exceptions" ],
+            "cflags_cc": [ "-fno-exceptions", "-std=c++17" ],
+            'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
             "conditions": [
                 [
                     "OS=='mac'",
                     {
                         "xcode_settings": {
-                            'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
+                            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+                            "CLANG_CXX_LIBRARY": "libc++",
+                            "CLANG_CXX_LANGUAGE_STANDARD":"c++17",
                             "OTHER_CXXFLAGS": [
-                                "-std=c++17",
-                                "-stdlib=libc++",
                                 "-mmacosx-version-min=10.10",
                             ],
                             "OTHER_LDFLAGS": [
-                                "-std=c++17",
-                                "-stdlib=libc++",
                                 "-mmacosx-version-min=10.10",
                             ],
                         }
@@ -31,10 +30,8 @@
                     {
                         "msvs_settings": {
                             "VCCLCompilerTool": {
-                                "AdditionalOptions": [
-                                "/std:c++17"
-                                ]
-                            }
+                            "AdditionalOptions": [ "-std:c++17", ],
+                            },
                         },
                         "libraries": [
                             "../../../tensorflow/bazel-bin/native_client/libstt.so.if.lib",
