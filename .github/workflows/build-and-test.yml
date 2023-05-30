@@ -1446,6 +1446,7 @@ jobs:
   # macOS jobs
   swig_macOS:
     name: "Mac|Build SWIG"
+    needs: [ build-lib-macOS ]
     strategy:
       matrix:
         include:
