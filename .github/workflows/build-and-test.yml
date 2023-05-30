@@ -334,6 +334,7 @@ jobs:
           submodules: 'recursive'
       - name: Install dependencies
         run: |
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
           apt-get update
           apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
       - name: Setup venv
@@ -376,6 +377,7 @@ jobs:
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - name: Install dependencies
         run: |
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
           apt-get update
           apt-get install -y --no-install-recommends xz-utils liblzma-dev libbz2-dev
       - name: Extract native_client.tar.xz
@@ -443,11 +445,11 @@ jobs:
         id: electron-headers-cache
         with:
           path: native_client/javascript/headers/electronjs/
-          key: electron-headers-12.0.0_16.0.0
+          key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
+          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v3
         with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
@@ -473,6 +475,7 @@ jobs:
           node-version: 16
       - name: Install dependencies
         run: |
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
           apt-get update
           apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
       - name: Setup venv
@@ -1831,11 +1834,11 @@ jobs:
         id: electron-headers-cache
         with:
           path: native_client/javascript/headers/electronjs/
-          key: electron-headers-12.0.0_16.0.0
+          key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
+          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v3
         with:
           name: "nodewrapper-tflite-macOS_amd64.tar.gz"
@@ -2225,7 +2228,7 @@ jobs:
       - uses: ./.github/actions/win-node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
+          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v3
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
@@ -3010,7 +3013,7 @@ jobs:
         id: electron-headers-cache
         with:
           path: native_client/javascript/headers/electronjs/
-          key: electron-headers-12.0.0_16.0.0
+          key: electron-headers-12.0.0_21.0.0
       - name: Download cross-build toolchain
         run: |
           cd tensorflow
@@ -3021,7 +3024,7 @@ jobs:
       - uses: ./.github/actions/node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
+          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
       - uses: actions/upload-artifact@v3
@@ -3149,7 +3152,7 @@ jobs:
         id: electron-headers-cache
         with:
           path: native_client/javascript/headers/electronjs/
-          key: electron-headers-12.0.0_16.0.0
+          key: electron-headers-12.0.0_21.0.0
       - name: Download cross-build toolchain
         run: |
           cd tensorflow
@@ -3160,7 +3163,7 @@ jobs:
       - uses: ./.github/actions/node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 19.0.0"
+          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
       - uses: actions/upload-artifact@v3
