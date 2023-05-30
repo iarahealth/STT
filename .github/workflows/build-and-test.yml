@@ -1449,7 +1449,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted
+          - os: self-hosted-macos-arm
             arch: arm64
             artifact_suffix: arm64
           - os: macos-12
@@ -1814,7 +1814,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted
+          - os: self-hosted-macos-arm
             arch: arm64
             nodejs-version: 18
           - os: macos-12
@@ -2648,7 +2648,7 @@ jobs:
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
         include:
-          - os: self-hosted
+          - os: self-hosted-macos-arm
             arch: arm64
           - os: macos-12
             arch: x86_64
