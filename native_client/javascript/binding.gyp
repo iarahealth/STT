@@ -30,8 +30,10 @@
                     {
                         "msvs_settings": {
                             "VCCLCompilerTool": {
-                            "AdditionalOptions": [ "-std:c++17", ],
-                            },
+                                "AdditionalOptions": [
+                                "/std:c++17"
+                                ]
+                            }
                         },
                         "libraries": [
                             "../../../tensorflow/bazel-bin/native_client/libstt.so.if.lib",
