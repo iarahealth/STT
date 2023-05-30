@@ -5,14 +5,14 @@
             "sources": ["stt_wrap.cxx"],
             "libraries": [],
             "include_dirs": ["../"],
-            "cflags_cc": [ "-std=c++17" ],
+            "cflags_cc": ["-std=c++17"],
             "conditions": [
                 [
                     "OS=='mac'",
                     {
                         "xcode_settings": {
                             "CLANG_CXX_LIBRARY": "libc++",
-                            "CLANG_CXX_LANGUAGE_STANDARD":"c++17",
+                            "CLANG_CXX_LANGUAGE_STANDARD": "c++17",
                             "OTHER_CXXFLAGS": [
                                 "-mmacosx-version-min=10.10",
                             ],
@@ -26,9 +26,7 @@
                     "OS=='win'",
                     {
                         "msvs_settings": {
-                            "VCCLCompilerTool": {
-                                "AdditionalOptions": ["/std:c++17"]
-                            }
+                            "VCCLCompilerTool": {"AdditionalOptions": ["/std:c++17"]}
                         },
                         "libraries": [
                             "../../../tensorflow/bazel-bin/native_client/libstt.so.if.lib",
