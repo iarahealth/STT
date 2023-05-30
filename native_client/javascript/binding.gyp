@@ -5,11 +5,14 @@
             "sources": ["stt_wrap.cxx"],
             "libraries": [],
             "include_dirs": ["../"],
+            "cflags_cc": ["-std=c++17"],
             "conditions": [
                 [
                     "OS=='mac'",
                     {
                         "xcode_settings": {
+                            "CLANG_CXX_LIBRARY": "libc++",
+                            "CLANG_CXX_LANGUAGE_STANDARD": "c++17",
                             "OTHER_CXXFLAGS": [
                                 "-stdlib=libc++",
                                 "-mmacosx-version-min=10.10",
@@ -24,6 +27,9 @@
                 [
                     "OS=='win'",
                     {
+                        "msvs_settings": {
+                            "VCCLCompilerTool": {"AdditionalOptions": ["/std:c++17"]}
+                        },
                         "libraries": [
                             "../../../tensorflow/bazel-bin/native_client/libstt.so.if.lib",
                             "../../../tensorflow/bazel-bin/native_client/libkenlm.so.if.lib",
