@@ -24,10 +24,12 @@ package_native_client()
   win_lib=""
   if [ -f "${tensorflow_dir}/bazel-bin/native_client/libstt.so.if.lib" ]; then
     win_lib="-C ${tensorflow_dir}/bazel-bin/native_client/ libstt.so.if.lib"
+    win_lib="$win_lib -C ${tensorflow_dir}/bazel-bin/native_client/ libstt.pdb"
   fi;
 
   if [ -f "${tensorflow_dir}/bazel-bin/native_client/libkenlm.so.if.lib" ]; then
     win_lib="$win_lib -C ${tensorflow_dir}/bazel-bin/native_client/ libkenlm.so.if.lib"
+    win_lib="$win_lib -C ${tensorflow_dir}/bazel-bin/native_client/ libkenlm.pdb"
   fi;
 
   libsox_lib=""
