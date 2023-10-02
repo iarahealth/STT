@@ -12,6 +12,8 @@ from coqui_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf
+import numpy as np
+import neptune
 
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
@@ -48,7 +50,7 @@ def sparse_tuple_to_texts(sp_tuple, alphabet):
     return [alphabet.Decode(res) for res in results]
 
 
-def evaluate(test_csvs, create_model):
+def evaluate(test_csvs, create_model, neptune_run=None):
     if Config.scorer_path:
         scorer = Scorer(
             Config.lm_alpha, Config.lm_beta, Config.scorer_path, Config.alphabet
@@ -155,7 +157,7 @@ def evaluate(test_csvs, create_model):
             bar.finish()
 
             # Print test summary
-            test_samples = calculate_and_print_report(
+            test_samples, test_wer, test_cer = calculate_and_print_report(
                 wav_filenames,
                 ground_truths,
                 predictions,
@@ -164,6 +166,10 @@ def evaluate(test_csvs, create_model):
                 "cer" if Config.bytes_output_mode else "wer",
                 Config.report_count,
             )
+            if neptune_run:
+                neptune_run["test/test_loss"].append(losses)
+                neptune_run["test/test_wer"].log(test_wer)
+                neptune_run["test/test_cer"].log(test_cer)
             return test_samples
 
         samples = []
@@ -173,10 +179,10 @@ def evaluate(test_csvs, create_model):
         return samples
 
 
-def test():
+def test(neptune_run=None):
     reset_default_graph()
 
-    samples = evaluate(Config.test_files, create_model)
+    samples = evaluate(Config.test_files, create_model, neptune_run)
     if Config.test_output_file:
         save_samples_json(samples, Config.test_output_file)
 
@@ -185,13 +191,18 @@ def main():
     initialize_globals_from_cli()
     check_ctcdecoder_version()
 
+    neptune_run = neptune.init_run(with_id=Config.run_id) if Config.run_id else None
+
     if not Config.test_files:
         raise RuntimeError(
             "You need to specify what files to use for evaluation via "
             "the --test_files flag."
         )
 
-    test()
+    test(neptune_run=neptune_run)
+
+    if neptune_run:
+        neptune_run.stop()
 
 
 if __name__ == "__main__":

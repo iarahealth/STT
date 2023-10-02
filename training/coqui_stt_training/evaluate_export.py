@@ -112,9 +112,14 @@ def main():
         wavlist.append(msg["wav"])
 
     # Print test summary
-    _ = calculate_and_print_report(
+    _, test_wer, test_cer = calculate_and_print_report(
         wav_filenames, ground_truths, predictions, losses, args.csv
     )
+
+    if neptune_run:
+        neptune_run["test_export/test_loss"].append(losses)
+        neptune_run["test_export/test_wer"].log(test_wer)
+        neptune_run["test_export/test_cer"].log(test_cer)
 
     if args.dump:
         with open(args.dump + ".txt", "w") as ftxt, open(

@@ -19,6 +19,7 @@ import numpy as np
 import progressbar
 import tensorflow.compat.v1 as tfv1
 import tensorflow as tf
+import neptune
 from coqui_stt_ctcdecoder import Scorer
 
 tfv1.logging.set_verbosity(
@@ -110,6 +111,7 @@ def calculate_mean_edit_distance_and_loss(iterator, dropout, reuse):
 
 # Adam Optimization
 # =================
+
 
 # In contrast to 'Deep Speech: Scaling up end-to-end speech recognition'
 # (http://arxiv.org/abs/1412.5567),
@@ -323,7 +325,7 @@ def create_training_datasets(
     return train_set, dev_sets, metrics_sets
 
 
-def train():
+def train(neptune_run=None):
     if not Config.skip_batch_test:
         log_info("Performing dummy training to check for memory problems.")
         log_info(
@@ -331,16 +333,27 @@ def train():
             "that are too big for your available system memory (or GPU memory)."
         )
         train_impl(
-            epochs=1, reverse=True, limit=Config.train_batch_size * 3, write=False
+            epochs=1,
+            reverse=True,
+            limit=Config.train_batch_size * 3,
+            write=False,
+            neptune_run=neptune_run,
         )
 
         log_info(
             "Dummy run finished without problems, now starting real training process."
         )
-    train_impl(epochs=Config.epochs, silent_load=True)
+    train_impl(epochs=Config.epochs, silent_load=True, neptune_run=neptune_run)
 
 
-def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
+def train_impl(
+    epochs=0,
+    reverse=False,
+    limit=0,
+    write=True,
+    silent_load=False,
+    neptune_run=None,
+):
     early_training_checks()
 
     reset_default_graph()
@@ -572,6 +585,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                 # Training
                 log_progress("Training epoch %d..." % epoch)
                 train_loss, _ = run_set("train", epoch, train_init_op)
+                if neptune_run:
+                    neptune_run["train/train_loss"].append(train_loss)
                 log_progress(
                     "Finished training epoch %d - loss: %f" % (epoch, train_loss)
                 )
@@ -595,6 +610,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                         )
 
                     dev_loss = dev_loss / total_steps
+                    if neptune_run:
+                        neptune_run["train/dev_loss"].append(dev_loss)
                     dev_losses.append(dev_loss)
 
                     # Count epochs without an improvement for early stopping and reduction of learning rate on a plateau
@@ -677,9 +694,12 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
 
         except KeyboardInterrupt:
             pass
-        log_info(
-            "FINISHED optimization in {}".format(datetime.utcnow() - train_start_time)
-        )
+
+        optim_time = datetime.utcnow() - train_start_time
+        log_info("FINISHED optimization in {}".format(optim_time))
+        if neptune_run:
+            neptune_run["train/training_time"] = optim_time.total_seconds()
+
     log_debug("Session closed.")
 
 
@@ -697,8 +717,10 @@ def main():
             "    python -m coqui_stt_training.training_graph_inference"
         )
 
+    neptune_run = neptune.init_run(with_id=Config.run_id) if Config.run_id else None
+
     if Config.train_files:
-        train()
+        train(neptune_run)
     else:
         log_warn(deprecated_msg("Calling training module without --train_files."))
 
@@ -708,7 +730,7 @@ def main():
                 "Specifying --test_files when calling train module. Use python -m coqui_stt_training.evaluate"
             )
         )
-        evaluate.test()
+        evaluate.test(neptune_run)
 
     if Config.export_dir:
         log_warn(
@@ -716,7 +738,7 @@ def main():
                 "Specifying --export_dir when calling train module. Use python -m coqui_stt_training.export"
             )
         )
-        export.export()
+        export.export(neptune_run)
 
     if Config.one_shot_infer:
         log_warn(
@@ -725,6 +747,9 @@ def main():
             )
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)
+
+    if neptune_run:
+        neptune_run.stop()
 
 
 if __name__ == "__main__":
