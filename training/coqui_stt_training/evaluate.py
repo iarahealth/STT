@@ -13,7 +13,6 @@ from six.moves import zip
 
 import tensorflow as tf
 import numpy as np
-import neptune
 
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
@@ -28,6 +27,7 @@ from .util.config import (
 from .util.evaluate_tools import calculate_and_print_report, save_samples_json
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
+from .util.neptune_config import neptune_client
 
 
 def sparse_tensor_value_to_texts(value, alphabet):
@@ -50,7 +50,7 @@ def sparse_tuple_to_texts(sp_tuple, alphabet):
     return [alphabet.Decode(res) for res in results]
 
 
-def evaluate(test_csvs, create_model, neptune_run=None):
+def evaluate(test_csvs, create_model):
     if Config.scorer_path:
         scorer = Scorer(
             Config.lm_alpha, Config.lm_beta, Config.scorer_path, Config.alphabet
@@ -150,6 +150,7 @@ def evaluate(test_csvs, create_model, neptune_run=None):
                     wav_filename.decode("UTF-8") for wav_filename in batch_wav_filenames
                 )
                 losses.extend(batch_loss)
+                neptune_client.log_metric("test/test_loss", batch_loss)
 
                 step_count += 1
                 bar.update(step_count)
@@ -166,10 +167,8 @@ def evaluate(test_csvs, create_model, neptune_run=None):
                 "cer" if Config.bytes_output_mode else "wer",
                 Config.report_count,
             )
-            if neptune_run:
-                neptune_run["test/test_loss"].append(losses)
-                neptune_run["test/test_wer"].log(test_wer)
-                neptune_run["test/test_cer"].log(test_cer)
+            neptune_client.log_score("test/test_wer", test_wer)
+            neptune_client.log_score("test/test_cer", test_cer)
             return test_samples
 
         samples = []
@@ -179,10 +178,10 @@ def evaluate(test_csvs, create_model, neptune_run=None):
         return samples
 
 
-def test(neptune_run=None):
+def test():
     reset_default_graph()
 
-    samples = evaluate(Config.test_files, create_model, neptune_run)
+    samples = evaluate(Config.test_files, create_model)
     if Config.test_output_file:
         save_samples_json(samples, Config.test_output_file)
 
@@ -191,7 +190,11 @@ def main():
     initialize_globals_from_cli()
     check_ctcdecoder_version()
 
-    neptune_run = neptune.init_run(with_id=Config.run_id) if Config.run_id else None
+    neptune_client.start_run(
+        Config.run_api_project, Config.run_api_token, Config.run_id
+    )
+    neptune_client.log_score("parameters/beam_width", Config.beam_width)
+    neptune_client.log_score("parameters/random_seed", Config.random_seed)
 
     if not Config.test_files:
         raise RuntimeError(
@@ -199,10 +202,8 @@ def main():
             "the --test_files flag."
         )
 
-    test(neptune_run=neptune_run)
-
-    if neptune_run:
-        neptune_run.stop()
+    test()
+    neptune_client.stop_run()
 
 
 if __name__ == "__main__":
