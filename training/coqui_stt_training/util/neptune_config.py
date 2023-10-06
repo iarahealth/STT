@@ -25,13 +25,15 @@ class NeptuneClient:
         self.project = ""
         self.api_token = ""
 
-    def start_run(self, neptune_project, neptune_api_token, run_id):
+    def start_run(self, neptune_project, neptune_api_token, run_id, monitoring_name):
         if neptune_project and neptune_api_token:
             run_id = run_id if run_id else None
+            monitoring_name = f"monitoring/{monitoring_name}"
             self.nep_run = neptune.init_run(
                 project=neptune_project,
                 api_token=neptune_api_token,
                 with_id=run_id,
+                monitoring_namespace=monitoring_name,
             )
             self.run_id = run_id
             self.project = neptune_project

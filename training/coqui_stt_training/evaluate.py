@@ -191,7 +191,7 @@ def main():
     check_ctcdecoder_version()
 
     neptune_client.start_run(
-        Config.run_api_project, Config.run_api_token, Config.run_id
+        Config.run_api_project, Config.run_api_token, Config.run_id, "test"
     )
     neptune_client.log_score("parameters/beam_width", Config.beam_width)
     neptune_client.log_score("parameters/random_seed", Config.random_seed)
