@@ -1,4 +1,5 @@
 import neptune
+import numpy as np
 
 from .config import (
     log_info,
@@ -79,7 +80,12 @@ class NeptuneClient:
             value: The value of the metric.
 
         """
-        self.nep_run[name].append(value)
+        if isinstance(value, (np.ndarray, list)):
+            if isinstance(value, np.ndarray):
+                value = value.tolist()
+            self.nep_run[name].extend(value)
+        else:
+            self.nep_run[name].append(value)
 
     @neptune_run_required
     def log_score(self, name, value):
