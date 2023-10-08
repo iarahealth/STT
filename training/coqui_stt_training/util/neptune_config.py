@@ -24,6 +24,7 @@ class NeptuneClient:
         self.run_id = ""
         self.project = ""
         self.api_token = ""
+        self.enabled = False
 
     def start_run(self, neptune_project, neptune_api_token, run_id, monitoring_name):
         if neptune_project and neptune_api_token:
@@ -38,6 +39,7 @@ class NeptuneClient:
             self.run_id = run_id
             self.project = neptune_project
             self.api_token = neptune_api_token
+            self.enabled = True
             log_info("Neptune run started.")
             log_info(f"Neptune project {self.project}")
             log_info(f"Neptune API token {self.api_token}")
@@ -105,6 +107,7 @@ class NeptuneClient:
     @neptune_run_required
     def stop_run(self):
         self.nep_run.stop()
+        self.enabled = False
 
 
 neptune_client = NeptuneClient()

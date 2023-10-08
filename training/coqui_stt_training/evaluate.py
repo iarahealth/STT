@@ -150,7 +150,6 @@ def evaluate(test_csvs, create_model):
                     wav_filename.decode("UTF-8") for wav_filename in batch_wav_filenames
                 )
                 losses.extend(batch_loss)
-                neptune_client.log_metric("test/test_loss", batch_loss)
 
                 step_count += 1
                 bar.update(step_count)
@@ -167,14 +166,26 @@ def evaluate(test_csvs, create_model):
                 "cer" if Config.bytes_output_mode else "wer",
                 Config.report_count,
             )
-            neptune_client.log_score("test/test_wer", test_wer)
-            neptune_client.log_score("test/test_cer", test_cer)
             return test_samples
 
         samples = []
         for csv, init_op in zip(test_csvs, test_init_ops):
             print("Testing model on {}".format(csv))
             samples.extend(run_test(init_op, dataset=csv))
+
+        if neptune_client.enabled:
+            samples_wer = []
+            samples_cer = []
+            for sample in samples:
+                samples_wer.append(sample.wer)
+                samples_cer.append(sample.cer)
+                neptune_client.log_metric("test/test_wer", sample.wer)
+                neptune_client.log_metric("test/test_cer", sample.cer)
+                neptune_client.log_metric("test/test_loss", sample.loss)
+
+            neptune_client.log_score("test/test_mean_wer", np.mean(samples_wer))
+            neptune_client.log_score("test/test_mean_cer", np.mean(samples_cer))
+
         return samples
 
 
