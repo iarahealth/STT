@@ -440,19 +440,19 @@ class BaseSttConfig(Coqpit):
     )
 
     # Global Constants
-    run_id: str = field(
+    neptune_run_id: str = field(
         default="",
         metadata=dict(
             help="run ID to be used for ML logging - defaults to empty (no logging)"
         ),
     )
-    run_api_token: str = field(
+    neptune_api_token: str = field(
         default="",
         metadata=dict(
             help="run api token to be used for ML logging - defaults to empty (no logging)"
         ),
     )
-    run_api_project: str = field(
+    neptune_project: str = field(
         default="",
         metadata=dict(
             help="run api project name to be used for ML logging - defaults to empty (no logging)"

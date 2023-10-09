@@ -713,9 +713,9 @@ def main():
         )
 
     neptune_client.start_run(
-        Config.run_api_project,
-        Config.run_api_token,
-        Config.run_id,
+        Config.neptune_project,
+        Config.neptune_api_token,
+        Config.neptune_run_id,
         "train",
     )
     neptune_client.log_score("parameters/beam_width", Config.beam_width)
