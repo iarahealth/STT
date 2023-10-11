@@ -106,7 +106,7 @@ if [ "${OS}" != "${CI_MSYS_VERSION}" ]; then
 fi
 
 if [ "${OS}" = "${CI_MSYS_VERSION}" ]; then
-    BAZEL_OPT_FLAGS="--copt=/arch:AVX"
+    BAZEL_OPT_FLAGS=""
 elif [ "${OS}" = "Darwin" ]; then
     FROM="$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m)"
     if [ "$SYSTEM_TARGET" = "host" ]; then
