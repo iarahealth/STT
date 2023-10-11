@@ -1631,7 +1631,7 @@ jobs:
           export PATH="$HOME/arm-target/bin:$PATH"
 
           cd ~/arm-target
-          mkdir arm-brew && curl -L https://github.com/Homebrew/brew/tarball/932d2cf3b77c9439a57b6a43577fc8d3b6399a62 | tar xz --strip 1 -C arm-brew
+          mkdir arm-brew && curl -L https://github.com/Homebrew/brew/archive/refs/tags/4.1.15.tar.gz | tar xz --strip 1 -C arm-brew
 
           export HOMEBREW_NO_AUTO_UPDATE=1
           export HOMEBREW_CACHE=~/arm-target/brew-cache
