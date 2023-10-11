@@ -3221,9 +3221,6 @@ jobs:
           - arch: aarch64
             python-version: 3.7
             system: buster
-          - arch: aarch64
-            python-version: 3.9
-            system: bullseye
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp
