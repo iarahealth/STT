@@ -1624,8 +1624,8 @@ jobs:
           mkdir arm-brew && curl -L https://github.com/Homebrew/brew/archive/refs/tags/4.1.22.tar.gz | tar xz --strip 1 -C arm-brew
 
           export HOMEBREW_CACHE=~/arm-target/brew-cache
-          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_big_sur sox opusfile
-          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_big_sur sox opusfile)
+          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_big_sur curl sox opusfile
+          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_big_sur curl sox opusfile)
 
           # Install host version of pkg-config so we can call it in the build system
           ~/arm-target/arm-brew/bin/brew install pkg-config
