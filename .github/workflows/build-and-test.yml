@@ -1812,6 +1812,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.7.9
       - uses: actions/download-artifact@v3
         with:
           name: "native_client.tflite.macOS.tar.xz"
@@ -1842,8 +1845,6 @@ jobs:
         with:
           path: native_client/javascript/headers/electronjs/
           key: electron-headers-12.0.0_21.0.0
-      - name: Setup distutils
-        run: python3 -m pip install packaging
       - uses: ./.github/actions/node-build
         with:
           nodejs_versions: "12.7.0 13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
