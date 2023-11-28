@@ -1813,6 +1813,7 @@ jobs:
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
+        if: matrix.arch == 'x64'
         with:
           python-version: 3.7.9
       - uses: actions/download-artifact@v3
