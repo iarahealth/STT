@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <locale>
 
 #include "coqui-stt.h"
 #include "alphabet.h"
@@ -340,6 +341,7 @@ CreateModelImpl(const char* aModelString,
                 unsigned int aBufferSize = 0)
 {
   *retval = nullptr;
+  setlocale(LC_ALL, "en_US.UTF-8");
 
   std::cerr << "TensorFlow: " << tf_local_git_version() << std::endl;
   std::cerr << " Coqui STT: " << ds_git_version() << std::endl;
