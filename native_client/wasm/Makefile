@@ -1,6 +1,6 @@
 NPM_TOOL           ?= npm
 PROJECT_NAME       ?= stt-wasm
-PROJECT_VERSION    ?= $(shell cat ../../training/coqui_stt_training/VERSION | tr -d '\n')
+PROJECT_VERSION    ?= $(shell cat ../../training/iarahealth_stt_training/VERSION | tr -d '\n')
 
 clean:
 	rm -rf ./stt-wasm-*.tgz package.json

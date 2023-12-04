@@ -53,7 +53,7 @@ export DS_TFDIR=${DS_ROOT_TASK}/tensorflow
 export DS_DSDIR=${DS_ROOT_TASK}/
 export DS_EXAMPLEDIR=${DS_ROOT_TASK}/examples
 
-export DS_VERSION="$(cat ${DS_DSDIR}/training/coqui_stt_training/VERSION)"
+export DS_VERSION="$(cat ${DS_DSDIR}/training/iarahealth_stt_training/VERSION)"
 
 export GRADLE_USER_HOME=${DS_ROOT_TASK}/gradle-cache
 export ANDROID_SDK_HOME=${DS_ROOT_TASK}/DeepSpeech/Android/SDK/
