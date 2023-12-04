@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 
 import progressbar
-from coqui_stt_ctcdecoder import Alphabet
+from iarahealth_stt_ctcdecoder import Alphabet
 from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
 from iarahealth_stt_training.util.importers import validate_label_eng as validate_label
 

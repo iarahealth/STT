@@ -13,7 +13,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
-from coqui_stt_ctcdecoder import (
+from iarahealth_stt_ctcdecoder import (
     flashlight_beam_search_decoder,
     Scorer,
     FlashlightDecoderState,

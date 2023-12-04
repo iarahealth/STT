@@ -21,7 +21,7 @@ from multiprocessing.pool import ThreadPool
 
 import progressbar
 import sox
-from coqui_stt_ctcdecoder import Alphabet
+from iarahealth_stt_ctcdecoder import Alphabet
 from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
 from iarahealth_stt_training.util.importers import validate_label_eng as validate_label
 

@@ -260,7 +260,7 @@ jobs:
           auditwheel repair native_client/ctcdecode/dist/*.whl
       - uses: actions/upload-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.python-version }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.python-version }}.whl"
           path: ${{ github.workspace }}/wheelhouse/*.whl
   train-test-model-Linux:
     name: "Lin|Train a test model"
@@ -279,14 +279,14 @@ jobs:
           python-version: "3.7"
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-3.7.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-3.7.whl"
       - run: |
           python --version
           pip --version
       - run: |
           pip install --upgrade pip setuptools wheel
       - run: |
-          pip install coqui_stt_ctcdecoder-*-cp37-cp37m-*_x86_64.whl
+          pip install iarahealth_stt_ctcdecoder-*-cp37-cp37m-*_x86_64.whl
           DS_NODECODER=y pip install --upgrade .
       - run: |
           # Easier to rename to that we can exercize the LDC93S1 importer code to
@@ -621,7 +621,7 @@ jobs:
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.python-version }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.python-version }}.whl"
       - uses: actions/download-artifact@v3
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
@@ -631,7 +631,7 @@ jobs:
       - run: |
           python -m pip install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
       - run: |
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
       - run: |
           sudo apt-get install -y --no-install-recommends libopus0 libopusfile0
       - run: |
@@ -754,7 +754,7 @@ jobs:
           python-version: 3.7
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-3.7.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-3.7.whl"
       - run: |
           sudo apt-get install -y --no-install-recommends libopusfile0 libopus-dev libopusfile-dev
       - run: |
@@ -763,7 +763,7 @@ jobs:
       - run: |
           python -m pip install --upgrade pip setuptools wheel jupyter
       - run: |
-          python -m pip install coqui_stt_ctcdecoder*.whl
+          python -m pip install iarahealth_stt_ctcdecoder*.whl
           DS_NODECODER=y python -m pip install --upgrade .
       - name: Run python notebooks
         run: |
@@ -784,7 +784,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
           wget -O temp.zip https://github.com/coqui-ai/STT/releases/download/v0.9.3/convert_graphdef_memmapped_format.linux.amd64.zip
           unzip temp.zip
@@ -796,7 +796,7 @@ jobs:
       - name: Run basic training tests
         run: |
           set -ex
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -850,7 +850,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
           wget -O temp.zip https://github.com/coqui-ai/STT/releases/download/v0.9.3/convert_graphdef_memmapped_format.linux.amd64.zip
           unzip temp.zip
@@ -864,7 +864,7 @@ jobs:
       - name: Run tests
         run: |
           set -xe
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -904,7 +904,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
           wget -O temp.zip https://github.com/coqui-ai/STT/releases/download/v0.9.3/convert_graphdef_memmapped_format.linux.amd64.zip
           unzip temp.zip
@@ -918,7 +918,7 @@ jobs:
       - name: Run tests
         run: |
           set -xe
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -948,7 +948,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
           wget -O temp.zip https://github.com/coqui-ai/STT/releases/download/v0.9.3/convert_graphdef_memmapped_format.linux.amd64.zip
           unzip temp.zip
@@ -962,7 +962,7 @@ jobs:
       - name: Run tests
         run: |
           set -xe
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -988,7 +988,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
           wget -O temp.zip https://github.com/coqui-ai/STT/releases/download/v0.9.3/convert_graphdef_memmapped_format.linux.amd64.zip
           unzip temp.zip
@@ -1002,7 +1002,7 @@ jobs:
       - name: Run tests
         run: |
           set -xe
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -1024,7 +1024,7 @@ jobs:
           python-version: ${{ matrix.pyver }}
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
+          name: "iarahealth_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - uses: actions/download-artifact@v3
         with:
           name: "training-basic-tests-checkpoint.tar.xz"
@@ -1048,7 +1048,7 @@ jobs:
         run: |
           set -xe
           python -m pip install ".[transcribe]"
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
@@ -1307,7 +1307,7 @@ jobs:
           done
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
   twine-upload-decoder:
-    name: "Upload coqui_stt_ctcdecoder packages to PyPI"
+    name: "Upload iarahealth_stt_ctcdecoder packages to PyPI"
     runs-on: ubuntu-20.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: [create-release, build-ctc-decoder-Linux, build-ctc-decoder-macos, build-ctc-decoder-windows]
@@ -1322,37 +1322,37 @@ jobs:
           python -m pip install -U twine
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-Linux-3.6.whl
+          name: iarahealth_stt_ctcdecoder-Linux-3.6.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-Linux-3.7.whl
+          name: iarahealth_stt_ctcdecoder-Linux-3.7.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-Linux-3.8.whl
+          name: iarahealth_stt_ctcdecoder-Linux-3.8.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-Linux-3.9.whl
+          name: iarahealth_stt_ctcdecoder-Linux-3.9.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-Linux-3.10.whl
+          name: iarahealth_stt_ctcdecoder-Linux-3.10.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-macOS-3.6.8.whl
+          name: iarahealth_stt_ctcdecoder-macOS-3.6.8.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-macOS-3.7.9.whl
+          name: iarahealth_stt_ctcdecoder-macOS-3.7.9.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-macOS-3.8.9.whl
+          name: iarahealth_stt_ctcdecoder-macOS-3.8.9.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-macOS-3.9.4.whl
+          name: iarahealth_stt_ctcdecoder-macOS-3.9.4.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-macOS-3.10.1.whl
+          name: iarahealth_stt_ctcdecoder-macOS-3.10.1.whl
       - uses: actions/download-artifact@v3
         with:
-          name: coqui_stt_ctcdecoder-windows-test.whl
+          name: iarahealth_stt_ctcdecoder-windows-test.whl
       - name: Setup PyPI config
         run: |
           cat << EOF > ~/.pypirc
@@ -1525,7 +1525,7 @@ jobs:
             bindings
       - uses: actions/upload-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-macOS-${{ matrix.python-version }}.whl"
+          name: "iarahealth_stt_ctcdecoder-macOS-${{ matrix.python-version }}.whl"
           path: ${{ github.workspace }}/native_client/ctcdecode/dist/*.whl
       - run: |
           make -C native_client/ctcdecode clean-keep-third-party
@@ -1546,14 +1546,14 @@ jobs:
           python-version: 3.7
       - uses: actions/download-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-macOS-3.7.9.whl"
+          name: "iarahealth_stt_ctcdecoder-macOS-3.7.9.whl"
       - run: |
           python --version
           python -m pip --version
       - run: |
           python -m pip install -U pip setuptools wheel
       - run: |
-          python -m pip install coqui_stt_ctcdecoder-*.whl
+          python -m pip install iarahealth_stt_ctcdecoder-*.whl
           DS_NODECODER=y python -m pip install --upgrade .
       - run: |
           # Easier to rename to that we can exercize the LDC93S1 importer code to
@@ -2081,7 +2081,7 @@ jobs:
             bindings
       - uses: actions/upload-artifact@v3
         with:
-          name: "coqui_stt_ctcdecoder-windows-test.whl"
+          name: "iarahealth_stt_ctcdecoder-windows-test.whl"
           path: ${{ github.workspace }}/native_client/ctcdecode/dist/*.whl
       - run: |
           make -C native_client/ctcdecode clean-keep-third-party

@@ -32,7 +32,7 @@ except ImportError:
 import json
 
 import requests
-from coqui_stt_ctcdecoder import Alphabet
+from iarahealth_stt_ctcdecoder import Alphabet
 from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
 from iarahealth_stt_training.util.helpers import secs_to_hours
 from iarahealth_stt_training.util.importers import (

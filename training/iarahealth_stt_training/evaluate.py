@@ -8,7 +8,7 @@ from multiprocessing import cpu_count
 
 import progressbar
 import tensorflow.compat.v1 as tfv1
-from coqui_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
+from iarahealth_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf

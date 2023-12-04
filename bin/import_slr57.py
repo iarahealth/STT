@@ -8,7 +8,7 @@ from glob import glob
 from multiprocessing import Pool
 
 import progressbar
-from coqui_stt_ctcdecoder import Alphabet
+from iarahealth_stt_ctcdecoder import Alphabet
 from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
 from iarahealth_stt_training.util.importers import (
     get_counter,

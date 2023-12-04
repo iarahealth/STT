@@ -10,7 +10,7 @@ from typing import List
 import progressbar
 from attrdict import AttrDict
 from coqpit import MISSING, Coqpit, check_argument
-from coqui_stt_ctcdecoder import Alphabet, UTF8Alphabet
+from iarahealth_stt_ctcdecoder import Alphabet, UTF8Alphabet
 
 from .augmentations import NormalizeSampleRate, parse_augmentations
 from .auto_input import create_alphabet_from_sources, create_datasets_from_auto_input
