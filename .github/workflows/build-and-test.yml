@@ -1053,7 +1053,7 @@ jobs:
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
           # transcribe module
-          time python -m coqui_stt_training.transcribe \
+          time python -m iarahealth_stt_training.transcribe \
               --checkpoint_dir "/tmp/ckpt" \
               --src "data/smoke_test/LDC93S1.wav" \
               --dst ${CI_ARTIFACTS_DIR}/transcribe.log \
@@ -1061,7 +1061,7 @@ jobs:
 
           mkdir /tmp/transcribe_dir
           cp data/smoke_test/LDC93S1.wav /tmp/transcribe_dir
-          time python -m coqui_stt_training.transcribe \
+          time python -m iarahealth_stt_training.transcribe \
              --checkpoint_dir "/tmp/ckpt" \
              --src "/tmp/transcribe_dir/" \
              --scorer_path "data/smoke_test/pruned_lm.scorer"

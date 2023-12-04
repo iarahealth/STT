@@ -6,8 +6,8 @@ import argparse
 import sys
 
 import numpy as np
-from coqui_stt_training.util.audio import AUDIO_TYPE_NP, mean_dbfs
-from coqui_stt_training.util.sample_collections import load_sample
+from iarahealth_stt_training.util.audio import AUDIO_TYPE_NP, mean_dbfs
+from iarahealth_stt_training.util.sample_collections import load_sample
 
 
 def fail(message):

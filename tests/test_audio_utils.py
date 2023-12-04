@@ -2,7 +2,7 @@ import unittest
 from argparse import Namespace
 from pathlib import Path
 
-from coqui_stt_training.util import audio
+from iarahealth_stt_training.util import audio
 
 
 def from_here(path):

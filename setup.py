@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 
 def main():
-    version_file = Path(__file__).parent / "training" / "coqui_stt_training" / "VERSION"
+    version_file = Path(__file__).parent / "training" / "iarahealth_stt_training" / "VERSION"
     with open(str(version_file)) as fin:
         version = fin.read().strip()
 
@@ -51,7 +51,7 @@ def main():
         install_requires = install_requires + tensorflow_pypi_dep
 
     setup(
-        name="coqui_stt_training",
+        name="iarahealth_stt_training",
         version=version,
         description="Training code for Coqui STT",
         url="https://github.com/coqui-ai/STT",

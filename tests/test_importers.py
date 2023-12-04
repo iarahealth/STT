@@ -2,7 +2,7 @@ import unittest
 from argparse import Namespace
 from pathlib import Path
 
-from coqui_stt_training.util.importers import get_validate_label, validate_label_eng
+from iarahealth_stt_training.util.importers import get_validate_label, validate_label_eng
 
 
 def from_here(path):

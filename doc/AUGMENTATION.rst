@@ -21,7 +21,7 @@ For example, for the ``overlay`` augmentation:
 
 .. code-block::
 
-  python -m coqui_stt_training.train --augment "overlay[p=0.1,source=/path/to/audio.sdb,snr=20.0]" ...
+  python -m iarahealth_stt_training.train --augment "overlay[p=0.1,source=/path/to/audio.sdb,snr=20.0]" ...
 
 In the documentation below, whenever a value is specified as ``<float-range>`` or ``<int-range>``, it supports one of the follow formats:
 
@@ -191,7 +191,7 @@ Example training with all augmentations:
 
 .. code-block:: bash
 
-        python -m coqui_stt_training.train \
+        python -m iarahealth_stt_training.train \
           --train_files "train.sdb" \
           --epochs 100 \
           --augment \

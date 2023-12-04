@@ -9,13 +9,13 @@ from multiprocessing import Pool
 
 import progressbar
 import sox
-from coqui_stt_training.util.downloader import SIMPLE_BAR, maybe_download
-from coqui_stt_training.util.importers import (
+from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
+from iarahealth_stt_training.util.importers import (
     get_counter,
     get_imported_samples,
     print_import_report,
 )
-from coqui_stt_training.util.importers import validate_label_eng as validate_label
+from iarahealth_stt_training.util.importers import validate_label_eng as validate_label
 
 FIELDNAMES = ["wav_filename", "wav_filesize", "transcript"]
 SAMPLE_RATE = 16000

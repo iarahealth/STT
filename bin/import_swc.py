@@ -22,8 +22,8 @@ from multiprocessing.pool import ThreadPool
 import progressbar
 import sox
 from coqui_stt_ctcdecoder import Alphabet
-from coqui_stt_training.util.downloader import SIMPLE_BAR, maybe_download
-from coqui_stt_training.util.importers import validate_label_eng as validate_label
+from iarahealth_stt_training.util.downloader import SIMPLE_BAR, maybe_download
+from iarahealth_stt_training.util.importers import validate_label_eng as validate_label
 
 SWC_URL = "https://www2.informatik.uni-hamburg.de/nats/pub/SWC/SWC_{language}.tar"
 SWC_ARCHIVE = "SWC_{language}.tar"

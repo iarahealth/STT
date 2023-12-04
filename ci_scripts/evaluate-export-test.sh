@@ -29,10 +29,10 @@ cp "data/smoke_test/${sample_name}" "data/smoke_test/LDC93S1.wav"
 
 # Evaluate tflite model on wav files
 python bin/import_ldc93s1.py data/smoke_test
-python -m coqui_stt_training.evaluate_export  --model $STT_TEST_MODEL --csv "data/smoke_test/ldc93s1.csv" --dump /tmp/result_wav
+python -m iarahealth_stt_training.evaluate_export  --model $STT_TEST_MODEL --csv "data/smoke_test/ldc93s1.csv" --dump /tmp/result_wav
 cat /tmp/result_wav.out
 
 # Evaluate tflite model on opus files
 opus_csv="data/smoke_test/ldc93s1_opus.csv"
-python -m coqui_stt_training.evaluate_export  --model $STT_TEST_MODEL --csv $opus_csv --dump /tmp/result_opus
+python -m iarahealth_stt_training.evaluate_export  --model $STT_TEST_MODEL --csv $opus_csv --dump /tmp/result_opus
 cat /tmp/result_opus.out

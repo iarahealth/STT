@@ -4,7 +4,7 @@ import os
 import tarfile
 
 import pandas
-from coqui_stt_training.util.importers import get_importers_parser
+from iarahealth_stt_training.util.importers import get_importers_parser
 
 COLUMNNAMES = ["wav_filename", "wav_filesize", "transcript"]
 

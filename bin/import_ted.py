@@ -7,8 +7,8 @@ from glob import glob
 from os import makedirs, path, remove, rmdir
 
 import pandas
-from coqui_stt_training.util.downloader import maybe_download
-from coqui_stt_training.util.stm import parse_stm_file
+from iarahealth_stt_training.util.downloader import maybe_download
+from iarahealth_stt_training.util.stm import parse_stm_file
 from sox import Transformer
 from tensorflow.python.platform import gfile
 
