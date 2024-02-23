@@ -2,7 +2,7 @@ import binary from 'node-pre-gyp';
 import path from 'path';
 
 // 'lib', 'binding', 'v0.1.1', ['node', 'v' + process.versions.modules, process.platform, process.arch].join('-'), 'stt-bindings.node')
-const binding_path = binary.find(path.resolve(path.join(__dirname, 'package.json')));
+let binding_path = binary.find(path.resolve(path.join(__dirname, 'package.json')));
 
 // On Windows, we can't rely on RPATH being set to $ORIGIN/../ or on
 // @loader_path/../ but we can change the PATH to include the proper directory
@@ -19,6 +19,9 @@ if (process.platform === 'win32') {
     process.env['PATH'] = `${dslib_path};${process.env.PATH}`;
 }
 
+if (process.env.STT_BINDING_NAME) {
+  binding_path = binding_path.replace("stt-bindings.node", process.env.STT_BINDING_NAME);
+}
 const binding = require(binding_path);
 
 if (process.platform === 'win32') {
