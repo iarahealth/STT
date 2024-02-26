@@ -105,7 +105,7 @@ def calculate_and_print_report(
     # Print the report
     print_report(samples, losses, samples_wer, samples_cer, dataset_name, report_count)
 
-    return samples
+    return samples, samples_wer, samples_cer
 
 
 def print_report(samples, losses, wer, cer, dataset_name, report_count=5):

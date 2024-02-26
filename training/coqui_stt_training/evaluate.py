@@ -12,6 +12,7 @@ from coqui_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf
+import numpy as np
 
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
@@ -26,6 +27,7 @@ from .util.config import (
 from .util.evaluate_tools import calculate_and_print_report, save_samples_json
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
+from .util.neptune_config import neptune_client
 
 
 def sparse_tensor_value_to_texts(value, alphabet):
@@ -155,7 +157,7 @@ def evaluate(test_csvs, create_model):
             bar.finish()
 
             # Print test summary
-            test_samples = calculate_and_print_report(
+            test_samples, test_wer, test_cer = calculate_and_print_report(
                 wav_filenames,
                 ground_truths,
                 predictions,
@@ -170,6 +172,20 @@ def evaluate(test_csvs, create_model):
         for csv, init_op in zip(test_csvs, test_init_ops):
             print("Testing model on {}".format(csv))
             samples.extend(run_test(init_op, dataset=csv))
+
+        if neptune_client.enabled:
+            samples_wer = []
+            samples_cer = []
+            for sample in samples:
+                samples_wer.append(sample.wer)
+                samples_cer.append(sample.cer)
+                neptune_client.log_metric("test/test_wer", sample.wer)
+                neptune_client.log_metric("test/test_cer", sample.cer)
+                neptune_client.log_metric("test/test_loss", sample.loss)
+
+            neptune_client.log_score("test/test_mean_wer", np.mean(samples_wer))
+            neptune_client.log_score("test/test_mean_cer", np.mean(samples_cer))
+
         return samples
 
 
@@ -185,6 +201,12 @@ def main():
     initialize_globals_from_cli()
     check_ctcdecoder_version()
 
+    neptune_client.start_run(
+        Config.neptune_project, Config.neptune_api_token, Config.neptune_run_id, "test"
+    )
+    neptune_client.log_score("parameters/beam_width", Config.beam_width)
+    neptune_client.log_score("parameters/random_seed", Config.random_seed)
+
     if not Config.test_files:
         raise RuntimeError(
             "You need to specify what files to use for evaluation via "
@@ -192,6 +214,7 @@ def main():
         )
 
     test()
+    neptune_client.stop_run()
 
 
 if __name__ == "__main__":

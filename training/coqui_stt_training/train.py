@@ -59,6 +59,7 @@ from .util.config import (
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
 from .util.io import remove_remote
+from .util.neptune_config import neptune_client
 
 
 # Accuracy and Loss
@@ -110,6 +111,7 @@ def calculate_mean_edit_distance_and_loss(iterator, dropout, reuse):
 
 # Adam Optimization
 # =================
+
 
 # In contrast to 'Deep Speech: Scaling up end-to-end speech recognition'
 # (http://arxiv.org/abs/1412.5567),
@@ -331,7 +333,10 @@ def train():
             "that are too big for your available system memory (or GPU memory)."
         )
         train_impl(
-            epochs=1, reverse=True, limit=Config.train_batch_size * 3, write=False
+            epochs=1,
+            reverse=True,
+            limit=Config.train_batch_size * 3,
+            write=False,
         )
 
         log_info(
@@ -340,7 +345,13 @@ def train():
     train_impl(epochs=Config.epochs, silent_load=True)
 
 
-def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
+def train_impl(
+    epochs=0,
+    reverse=False,
+    limit=0,
+    write=True,
+    silent_load=False,
+):
     early_training_checks()
 
     reset_default_graph()
@@ -572,6 +583,7 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                 # Training
                 log_progress("Training epoch %d..." % epoch)
                 train_loss, _ = run_set("train", epoch, train_init_op)
+                neptune_client.log_metric("train/train_loss", train_loss)
                 log_progress(
                     "Finished training epoch %d - loss: %f" % (epoch, train_loss)
                 )
@@ -595,6 +607,7 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                         )
 
                     dev_loss = dev_loss / total_steps
+                    neptune_client.log_metric("train/dev_loss", dev_loss)
                     dev_losses.append(dev_loss)
 
                     # Count epochs without an improvement for early stopping and reduction of learning rate on a plateau
@@ -677,9 +690,11 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
 
         except KeyboardInterrupt:
             pass
-        log_info(
-            "FINISHED optimization in {}".format(datetime.utcnow() - train_start_time)
-        )
+
+        optim_time = datetime.utcnow() - train_start_time
+        log_info("FINISHED optimization in {}".format(optim_time))
+        neptune_client.log_score("train/training_time", optim_time.total_seconds())
+
     log_debug("Session closed.")
 
 
@@ -696,6 +711,15 @@ def main():
             "    python -m coqui_stt_training.export\n"
             "    python -m coqui_stt_training.training_graph_inference"
         )
+
+    neptune_client.start_run(
+        Config.neptune_project,
+        Config.neptune_api_token,
+        Config.neptune_run_id,
+        "train",
+    )
+    neptune_client.log_score("parameters/beam_width", Config.beam_width)
+    neptune_client.log_score("parameters/random_seed", Config.random_seed)
 
     if Config.train_files:
         train()
@@ -725,6 +749,8 @@ def main():
             )
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)
+
+    neptune_client.stop_run()
 
 
 if __name__ == "__main__":
