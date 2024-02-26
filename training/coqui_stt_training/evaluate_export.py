@@ -22,7 +22,7 @@ Then run using `python -m coqui_stt_training.evaluate_export` with a TFLite mode
 """
 
 
-def tflite_worker(model, scorer, queue_in, queue_out, gpu_mask):
+def tflite_worker(model, scorer, lm_alpha, lm_beta, queue_in, queue_out, gpu_mask):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_mask)
     try:
         from stt import Model
@@ -31,6 +31,9 @@ def tflite_worker(model, scorer, queue_in, queue_out, gpu_mask):
     ds = Model(model)
     if scorer:
         ds.enableExternalScorer(scorer)
+    if lm_alpha and lm_beta:
+        print(f"Using scorer with alpha={lm_alpha} and beta={lm_beta}.")
+        ds.setScorerAlphaBeta(float(lm_alpha), float(lm_beta))
 
     while True:
         try:
@@ -72,7 +75,7 @@ def main():
     for i in range(args.proc):
         worker_process = Process(
             target=tflite_worker,
-            args=(args.model, args.scorer, work_todo, work_done, i),
+            args=(args.model, args.scorer, args.lm_alpha, args.lm_beta, work_todo, work_done, i),
             daemon=True,
             name="tflite_process_{}".format(i),
         )
@@ -98,7 +101,7 @@ def main():
             work_todo.put(
                 {"filename": row["wav_filename"], "transcript": row["transcript"]}
             )
-            wav_filenames.extend(row["wav_filename"])
+            wav_filenames.append(row["wav_filename"])
 
     print("Totally %d wav entries found in csv\n" % count)
     work_todo.join()
@@ -150,6 +153,18 @@ def parse_args():
         "--dump",
         required=False,
         help='Path to dump the results as text file, with one line for each wav: "wav transcription".',
+    )
+    parser.add_argument(
+        "--lm_alpha",
+        type=float,
+        default=None,
+        help="The alpha hyperparameter of the decoder. Language model weight.",
+    )
+    parser.add_argument(
+        "--lm_beta",
+        type=float,
+        default=None,
+        help="The beta hyperparameter of the decoder. Word insertion weight.",
     )
     args, unknown = parser.parse_known_args()
     return args
