@@ -36,7 +36,8 @@
       "argparse": "1.0.x",
       "sox-stream": "2.0.x",
       "memory-stream": "1.0.x",
-      "node-wav": "0.0.2"
+      "node-wav": "0.0.2",
+      "systeminformation": "5.22.x"
     },
     "devDependencies": {
       "electron": "^1.7.9",
