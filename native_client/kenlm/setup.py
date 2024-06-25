@@ -27,8 +27,8 @@ elif platform.system() == 'Darwin':
 else:
     LIBS = []
 
-#We don't need -std=c++11 but python seems to be compiled with it now.  https://github.com/kpu/kenlm/issues/86
-ARGS = ['-O3', '-DNDEBUG', '-DKENLM_MAX_ORDER='+max_order, '-std=c++11']
+# Use c++17 to support newer versions of electron
+ARGS = ['-O3', '-DNDEBUG', '-DKENLM_MAX_ORDER='+max_order, '-std=c++17']
 
 #Attempted fix to https://github.com/kpu/kenlm/issues/186 and https://github.com/kpu/kenlm/issues/197
 if platform.system() == 'Darwin':
