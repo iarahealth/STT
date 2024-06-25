@@ -84,8 +84,9 @@ cc_library(
         "kenlm/*/*main.cc",
     ],),
     copts = select({
-        "//tensorflow:windows": ["/std:c++14"],
-        "//conditions:default": ["-std=c++14", "-fwrapv", "-fvisibility=hidden"],
+        "//tensorflow:macos": ["/std:c++17"],
+        "//tensorflow:windows": ["/std:c++17"],
+        "//conditions:default": ["-std=c++17", "-fwrapv", "-fvisibility=hidden"],
     }),
     defines = ["KENLM_MAX_ORDER=6"],
     includes = ["kenlm"],
