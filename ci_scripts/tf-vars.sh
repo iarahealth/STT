@@ -140,7 +140,7 @@ else
     #
     # Build for generic amd64 platforms, no device-specific optimization
     # See https://gcc.gnu.org/onlinedocs/gcc/x86-Options.html for targetting specific CPUs
-    BAZEL_OPT_FLAGS="--copt=-mtune=generic --copt=-march=x86-64 --copt=-msse --copt=-msse2 --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mavx"
+    BAZEL_OPT_FLAGS="--copt=-mtune=generic --copt=-march=x86-64 --copt=-msse --copt=-msse2 --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2"
 fi
 
 if [ "$CI" != "true" ]; then
