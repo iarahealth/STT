@@ -32,7 +32,7 @@ jobs:
       is-prerelease: ${{ steps.check-version.outputs.is-prerelease }}
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v4
@@ -87,7 +87,7 @@ jobs:
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: "swig/swig"
           ref: ${{ env.swig_hash }}
@@ -136,7 +136,7 @@ jobs:
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: "swig/swig"
           ref: ${{ env.swig_hash }}
@@ -223,7 +223,7 @@ jobs:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/download-artifact@v3
@@ -271,7 +271,7 @@ jobs:
       matrix:
         samplerate: ["8000", "16000"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -328,7 +328,7 @@ jobs:
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -368,7 +368,7 @@ jobs:
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -414,7 +414,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [ build-lib-Linux, swig_Linux ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -466,7 +466,7 @@ jobs:
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -507,7 +507,7 @@ jobs:
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -530,7 +530,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -568,7 +568,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -609,7 +609,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -652,7 +652,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -703,7 +703,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -746,7 +746,7 @@ jobs:
     runs-on: ubuntu-20.04
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -778,7 +778,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -844,7 +844,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -898,7 +898,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -942,7 +942,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -982,7 +982,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -1018,7 +1018,7 @@ jobs:
         samplerate: ["8000", "16000"]
         pyver: ["3.7"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
@@ -1073,7 +1073,7 @@ jobs:
     needs: [create-release]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.8
@@ -1103,7 +1103,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: [create-release, build-python-Linux, build-python-macOS, build-python-Windows, build-python-LinuxArmv7]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.8
@@ -1186,7 +1186,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: [create-release, build-lib-Windows, build-lib-Linux, build-universal-lib-macOS, build-lib-LinuxArmv7]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
           name: libstt.tflite.Linux.zip
@@ -1234,7 +1234,7 @@ jobs:
     name: "Build Dockerfile.build image"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -1262,7 +1262,7 @@ jobs:
     needs: [upload-nc-release-assets]
     if: always()
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -1312,7 +1312,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: [create-release, build-ctc-decoder-Linux, build-ctc-decoder-macos, build-ctc-decoder-windows]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: 3.8
@@ -1377,7 +1377,7 @@ jobs:
       - name: Wait for PyPI index to refresh
         run: |
           sleep 60
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -1397,7 +1397,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     needs: [create-release, repackage-nodejs-allplatforms, build-wasm]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: 12
@@ -1450,7 +1450,7 @@ jobs:
     env:
       swig_hash: "90cdbee6a69d13b39d734083b9f91069533b0d7b"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           repository: "swig/swig"
           ref: ${{ env.swig_hash }}
@@ -1494,7 +1494,7 @@ jobs:
       matrix:
         python-version: [3.6.8, 3.7.9, 3.8.9, 3.9.4, 3.10.1]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: ./.github/actions/install-python-upstream
@@ -1538,7 +1538,7 @@ jobs:
       matrix:
         samplerate: ["8000", "16000"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -1593,7 +1593,7 @@ jobs:
       matrix:
         arch: ["x86_64", "arm64"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -1653,7 +1653,7 @@ jobs:
     name: "iOS|Build libstt+client"
     runs-on: macos-12
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -1757,7 +1757,7 @@ jobs:
       matrix:
         python-version: [3.6.8, 3.7.9, 3.8.9, 3.9.4, 3.10.1]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -1809,7 +1809,7 @@ jobs:
             arch: x64
             nodejs-version: 13
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -1871,7 +1871,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -1908,7 +1908,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -1950,7 +1950,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -1998,7 +1998,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2051,7 +2051,7 @@ jobs:
           install: >-
             git
             make
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v4
@@ -2105,7 +2105,7 @@ jobs:
             unzip
             zip
             make
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -2148,7 +2148,7 @@ jobs:
           update: true
           install: >-
             make
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -2203,7 +2203,7 @@ jobs:
           install: >-
             make
             tar
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -2267,7 +2267,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Download native_client.tar.xz
@@ -2320,7 +2320,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-python@v4
@@ -2372,7 +2372,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2433,7 +2433,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2479,7 +2479,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [build-nodejs-macOS, build-nodejs-Windows, build-nodejs-Linux, build-nodejs-LinuxArmv7]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - run: |
@@ -2535,7 +2535,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2586,7 +2586,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2644,7 +2644,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2693,7 +2693,7 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2754,7 +2754,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2816,7 +2816,7 @@ jobs:
           update: true
           install: >-
             vim
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/setup-node@v3
@@ -2864,7 +2864,7 @@ jobs:
       SYSTEM_TARGET: rpi3
       SYSTEM_RASPBIAN: ${{ github.workspace }}/multistrap-raspbian-buster
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -2905,7 +2905,7 @@ jobs:
       SYSTEM_TARGET: rpi3
       SYSTEM_RASPBIAN: ${{ github.workspace }}/${{ matrix.system-raspbian }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -2965,7 +2965,7 @@ jobs:
       SYSTEM_TARGET: rpi3
       SYSTEM_RASPBIAN: ${{ github.workspace }}/multistrap-raspbian-buster
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -3042,7 +3042,7 @@ jobs:
       DEBIAN_FRONTEND: "noninteractive"
       SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-${{ matrix.system }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: "Install and setup chroot"
@@ -3109,7 +3109,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -3207,7 +3207,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -3267,7 +3267,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -3330,7 +3330,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends qemu-user-static xvfb xauth
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
@@ -3391,7 +3391,7 @@ jobs:
     name: "AndroidArmv7|Build libstt+client"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -3414,7 +3414,7 @@ jobs:
     name: "AndroidArm64|Build libstt+client"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -3437,7 +3437,7 @@ jobs:
     name: "Androidx86_64|Build libstt+client"
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'recursive'
@@ -3461,7 +3461,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/download-artifact@v3
@@ -3540,7 +3540,7 @@ jobs:
     needs: [create-release, build-android-apk-aar]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/download-artifact@v3
