@@ -448,7 +448,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "16.0.0 17.0.1 20.0.0 21.0.0 22.0.0"
           electronjs_versions: "16.0.0 21.0.0 22.3.27"
       - uses: actions/upload-artifact@v3
         with:
@@ -1848,7 +1848,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "16.0.0 17.0.1 20.0.0 21.0.0 22.0.0"
           electronjs_versions: "16.0.0 21.0.0 22.3.27"
       - uses: actions/upload-artifact@v3
         with:
@@ -2238,7 +2238,7 @@ jobs:
           key: electron-headers-win-12.0.0_15.0.0
       - uses: ./.github/actions/win-node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0"
+          nodejs_versions: "16.0.0 17.0.1 20.0.0 21.0.0 22.0.0"
           electronjs_versions: "16.0.0 21.0.0 22.3.27"
       - uses: actions/upload-artifact@v3
         with:
@@ -3011,7 +3011,7 @@ jobs:
           target: ${{ env.SYSTEM_TARGET }}
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "16.0.0 17.0.1 20.0.0 21.0.0 22.0.0"
           electronjs_versions: "16.0.0 21.0.0 22.3.27"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
