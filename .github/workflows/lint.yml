@@ -7,7 +7,7 @@ defaults:
 jobs:
   training-unittests:
     name: "Lin|Training unittests"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         pyver: ["3.7"]
@@ -23,7 +23,7 @@ jobs:
 
   pre-commit-checks:
     name: "Lin|Pre-commit checks"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
