@@ -1,8 +1,9 @@
 import binary from 'node-pre-gyp';
 import path from 'path';
+import systemInfo from 'systeminformation';
 
 // 'lib', 'binding', 'v0.1.1', ['node', 'v' + process.versions.modules, process.platform, process.arch].join('-'), 'stt-bindings.node')
-const binding_path = binary.find(path.resolve(path.join(__dirname, 'package.json')));
+let binding_path = binary.find(path.resolve(path.join(__dirname, 'package.json')));
 
 // On Windows, we can't rely on RPATH being set to $ORIGIN/../ or on
 // @loader_path/../ but we can change the PATH to include the proper directory
@@ -19,7 +20,20 @@ if (process.platform === 'win32') {
     process.env['PATH'] = `${dslib_path};${process.env.PATH}`;
 }
 
-const binding = require(binding_path);
+if (process.env.CHECK_AVX_SUPPORT === "1") {
+    // First, load no-AVX binaries, and replace them with AVX ones if supported
+    binding_path = binding_path.replace("stt.node", "stt-noavx.node");
+}
+let binding = require(binding_path);
+
+if (process.env.CHECK_AVX_SUPPORT === "1") {
+    systemInfo.cpuFlags()
+      .then(data => {
+        console.log("data", data);
+        binding_path = binding_path.replace("stt-noavx.node", "stt.node");
+        binding = require(binding_path);
+      });
+}
 
 if (process.platform === 'win32') {
   process.env['PATH'] = oldPath;
