@@ -346,7 +346,7 @@ jobs:
           name: "libsox3_Linux"
           path: ${{ github.workspace }}/sox-build/
       - run: ./ci_scripts/tf-setup.sh
-      - run: ./ci_scripts/host-build.sh
+      - run: ./ci_scripts/host-build.sh ""
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v3
         with:
@@ -1592,6 +1592,7 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64", "arm64"]
+        avx: ["true", "false"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1639,15 +1640,15 @@ jobs:
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
           sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }}
+      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }} ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: "native_client.tflite.macOS.${{ matrix.arch }}.tar.xz"
+          name: "native_client.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v3
         with:
-          name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
+          name: "libstt.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-lib-iOS:
     name: "iOS|Build libstt+client"
@@ -2091,6 +2092,9 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: msys2/setup-msys2@v2
@@ -2117,15 +2121,15 @@ jobs:
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
       - run: ./ci_scripts/tf-setup.sh
-      - run: ./ci_scripts/host-build.sh
+      - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v3
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v3
         with:
-          name: "libstt.tflite.Windows.zip"
+          name: "libstt.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-python-Windows:
     name: "Win|Build Python bindings"
@@ -2208,7 +2212,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
@@ -2243,10 +2247,10 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
-          path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
+          path: ${{ github.workspace }}/native_client/javascript/wrapper${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz
       - uses: actions/upload-artifact@v3
         with:
-          name: "STT_intermediate-tflite-Windows.tgz"
+          name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
   test-cpp-Windows:
     name: "Win|Test C++ binary"
