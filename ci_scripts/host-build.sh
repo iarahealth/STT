@@ -3,7 +3,7 @@
 set -xe
 
 macos_target_arch=$1
-disable_avx=$2
+DISABLE_AVX=$2
 SYSTEM_TARGET=host
 if [ "$(uname)-$(uname -m)" = "Darwin-x86_64" -a "${macos_target_arch}" = "arm64" ]; then
   SYSTEM_TARGET="darwin-arm64"
@@ -21,7 +21,6 @@ BAZEL_TARGETS="
 //native_client:generate_scorer_package
 "
 
-DISABLE_AVX=${disable_avx}
 BAZEL_BUILD_FLAGS="${BAZEL_OPT_FLAGS} ${BAZEL_EXTRA_FLAGS}"
 
 do_bazel_build
