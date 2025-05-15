@@ -1603,7 +1603,7 @@ jobs:
           python-version: "3.7"
       - name: Install system deps
         run:
-          brew install coreutils curl
+          brew install coreutils curl sox
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.3.1.app/Contents/Developer
