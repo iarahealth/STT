@@ -106,7 +106,11 @@ if [ "${OS}" != "${CI_MSYS_VERSION}" ]; then
 fi
 
 if [ "${OS}" = "${CI_MSYS_VERSION}" ]; then
-    BAZEL_OPT_FLAGS="--copt=/arch:AVX"
+    if [ "${DISABLE_AVX}" = "true" ]; then
+        BAZEL_OPT_FLAGS=""
+    else
+        BAZEL_OPT_FLAGS="--copt=/arch:AVX"
+    fi
 elif [ "${OS}" = "Darwin" ]; then
     FROM="$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m)"
     if [ "$SYSTEM_TARGET" = "host" ]; then
@@ -116,7 +120,12 @@ elif [ "${OS}" = "Darwin" ]; then
     fi
 
     if [ "$FROM" = "darwin-x86_64" -a "$TO" = "darwin-x86_64" ]; then
-        BAZEL_OPT_FLAGS="--copt=-mtune=generic --copt=-march=x86-64 --copt=-msse --copt=-msse2 --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mavx"
+        if [ "${DISABLE_AVX}" = "true" ]; then
+            BAZEL_OPT_FLAGS="--copt=-mtune=generic --copt=-march=x86-64 --copt=-msse --copt=-msse2 --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2"
+        else
+            BAZEL_OPT_FLAGS="--copt=-mtune=generic --copt=-march=x86-64 --copt=-msse --copt=-msse2 --copt=-msse3 --copt=-msse4.1 --copt=-msse4.2 --copt=-mavx"
+        fi
+
         if [ "${CI}" = true ]; then
             BAZEL_EXTRA_FLAGS="${BAZEL_EXTRA_FLAGS} --macos_minimum_os 10.10 --macos_sdk_version 13.0"
         fi
