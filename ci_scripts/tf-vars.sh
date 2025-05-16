@@ -123,7 +123,7 @@ elif [ "${OS}" = "Darwin" ]; then
     elif [ "$FROM" = "darwin-x86_64" -a "$TO" = "darwin-arm64" ]; then
         BAZEL_OPT_FLAGS=""
         if [ "${CI}" = true ]; then
-            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 13.1 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
+            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 14.1 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
         fi
     elif [ "$FROM" = "darwin-arm64" -a "$TO" = "darwin-arm64" ]; then
         BAZEL_OPT_FLAGS=""
