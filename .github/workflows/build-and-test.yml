@@ -1604,10 +1604,6 @@ jobs:
       - name: Install system deps
         run:
           brew install coreutils curl sox
-      - name: Install Xcode 13.1
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: 13.1
       - name: Select Xcode version
         run: |
           curl -L https://storage.googleapis.com/sdk-downloads-storage-sa/iara-desktop/xcode/Xcode_13.1.xip -o Xcode_13.1.xip
@@ -1670,10 +1666,6 @@ jobs:
       - name: Install system deps
         run:
           brew install coreutils
-      - name: Install Xcode 13.1
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: 13.1
       - name: Select Xcode version
         run: |
           curl -L https://storage.googleapis.com/sdk-downloads-storage-sa/iara-desktop/xcode/Xcode_13.1.xip -o Xcode_13.1.xip
