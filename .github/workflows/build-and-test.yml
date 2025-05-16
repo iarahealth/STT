@@ -1605,7 +1605,7 @@ jobs:
           brew install coreutils curl sox
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
           sudo xcode-select -p
           sudo xcode-select -v
       - uses: actions/cache@v3
