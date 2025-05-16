@@ -1604,9 +1604,13 @@ jobs:
       - name: Install system deps
         run:
           brew install coreutils curl sox
+      - name: Install Xcode 13.1
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 13.1
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
       - uses: actions/cache@v3
         id: cache
         if: matrix.arch == 'arm64'
@@ -1664,9 +1668,13 @@ jobs:
       - name: Install system deps
         run:
           brew install coreutils
+      - name: Install Xcode 13.1
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: 13.1
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
