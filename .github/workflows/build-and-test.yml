@@ -1603,7 +1603,7 @@ jobs:
           python-version: "3.7"
       - name: Install system deps
         run:
-          brew install coreutils curl sox
+          brew install coreutils curl
       - name: Restore cached Xcode 13.1
         id: cache-xcode-restore
         uses: actions/cache/restore@v4
@@ -1649,9 +1649,9 @@ jobs:
           ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_big_sur curl sox opusfile
           ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_big_sur curl sox opusfile)
 
-          # Install host version of pkgconf so we can call it in the build system
-          ~/arm-target/arm-brew/bin/brew install pkgconf
-          ln -s ~/arm-target/arm-brew/bin/pkgconf ~/arm-target/bin/arm-pkg-config
+          # Install host version of pkg-config so we can call it in the build system
+          ~/arm-target/arm-brew/bin/brew install pkg-config
+          ln -s ~/arm-target/arm-brew/bin/pkg-config ~/arm-target/bin/arm-pkg-config
       - run: |
           echo "$HOME/arm-target/bin" >> $GITHUB_PATH
         if: matrix.arch == 'arm64'
