@@ -226,7 +226,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -277,7 +277,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-3.7.whl"
       - run: |
@@ -341,7 +341,7 @@ jobs:
         run: |
           /opt/python/cp37-cp37m/bin/python -m venv /tmp/venv
           echo "/tmp/venv/bin" >> $GITHUB_PATH
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "libsox3_Linux"
           path: ${{ github.workspace }}/sox-build/
@@ -371,7 +371,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
@@ -384,7 +384,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -417,14 +417,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -511,7 +511,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "libstt.tflite.wasm.es6.tgz"
           path: ${{ env.CI_TMP_DIR }}
@@ -533,7 +533,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
@@ -541,7 +541,7 @@ jobs:
           cd ${{ env.CI_TMP_DIR }}
           mkdir ds && cd ds && tar xf ../native_client.tar.xz
           ls -lh
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -576,11 +576,11 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - run: |
           sudo apt-get install -y --no-install-recommends sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-Linux.whl"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -615,14 +615,14 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-Linux.whl"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.python-version }}.whl"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -660,11 +660,11 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
       - run: |
           sudo apt-get install -y --no-install-recommends sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-Linux.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -711,11 +711,11 @@ jobs:
           node-version: 12
       - run: |
           sudo apt-get install -y --no-install-recommends sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-Linux.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -752,7 +752,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.7
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-3.7.whl"
       - run: |
@@ -782,7 +782,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
@@ -848,7 +848,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
@@ -902,7 +902,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
@@ -946,7 +946,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
@@ -986,7 +986,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - run: |
@@ -1022,10 +1022,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.pyver }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "training-basic-tests-checkpoint.tar.xz"
       - name: Extract training checkpoint
@@ -1111,49 +1111,49 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -U twine
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.6.8-macOS.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.7.9-macOS.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.8.9-macOS.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.9.4-macOS.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.10.1-macOS.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.6.8-Windows.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.7.9-Windows.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.8.8-Windows.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.9.4-Windows.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.10.0-Windows.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.6-Linux.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.7-Linux.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.8-Linux.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.9-Linux.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.10-Linux.whl
       - name: Setup PyPI config
@@ -1168,10 +1168,10 @@ jobs:
       # PyPI only supports ARM wheels built on manylinux images, but those aren't
       # ready for use yet, so we upload our wheels to the corresponding release
       # for this tag.
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.7-armv7.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite-3.9-armv7.whl
       - name: Upload artifacts to GitHub release
@@ -1187,35 +1187,35 @@ jobs:
     needs: [create-release, build-lib-Windows, build-lib-Linux, build-universal-lib-macOS, build-lib-LinuxArmv7]
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: libstt.tflite.Linux.zip
       - run: mv libstt.zip libstt.tflite.Linux.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.Linux.tar.xz
       - run: mv native_client.tar.xz native_client.tflite.Linux.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: libstt.tflite.macOS.zip
       - run: mv libstt.zip libstt.tflite.macOS.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: libstt.tflite.wasm.zip
       - run: mv libstt.zip libstt.tflite.wasm.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.macOS.tar.xz
       - run: mv native_client.tar.xz native_client.tflite.macOS.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: libstt.tflite.Windows.zip
       - run: mv libstt.zip libstt.tflite.Windows.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.Windows.tar.xz
       - run: mv native_client.tar.xz native_client.tflite.Windows.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.linux.armv7.tar.xz
       - run: mv native_client.tar.xz native_client.tflite.linux.armv7.tar.xz
@@ -1320,37 +1320,37 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -U twine
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-Linux-3.6.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-Linux-3.7.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-Linux-3.8.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-Linux-3.9.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-Linux-3.10.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-macOS-3.6.8.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-macOS-3.7.9.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-macOS-3.8.9.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-macOS-3.9.4.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-macOS-3.10.1.whl
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: coqui_stt_ctcdecoder-windows-test.whl
       - name: Setup PyPI config
@@ -1413,11 +1413,11 @@ jobs:
           else
             echo "npm-tag=latest" >> $GITHUB_OUTPUT
           fi
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: stt-tflite.tgz
           path: ${{ github.workspace }}/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: libstt.tflite.wasm.es6.tgz
           path: ${{ github.workspace }}/
@@ -1503,7 +1503,7 @@ jobs:
       - run: |
           python --version
           pip --version
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.x64"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -1544,7 +1544,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.7
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "coqui_stt_ctcdecoder-macOS-3.7.9.whl"
       - run: |
@@ -1661,7 +1661,7 @@ jobs:
     needs: [build-lib-macOS]
     steps:
       # Download and extract individual arch packages and create universal binaries
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.x86_64.tar.xz"
       - run: |
@@ -1669,7 +1669,7 @@ jobs:
           cd nc.x86_64
           tar xvf ../native_client.tar.xz
           rm ../native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.arm64.tar.xz"
       - run: |
@@ -1691,7 +1691,7 @@ jobs:
           name: "native_client.tflite.macOS.tar.xz"
           path: nc.x86_64/native_client.tar.xz
       # Now do the same, but for libstt.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "libstt.tflite.macOS.x86_64.zip"
       - run: |
@@ -1699,7 +1699,7 @@ jobs:
           cd libstt.x86_64
           tar xvf ../libstt.zip
           rm ../libstt.zip
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "libstt.tflite.macOS.arm64.zip"
       - run: |
@@ -1730,14 +1730,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.x64"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -1786,14 +1786,14 @@ jobs:
         if: matrix.arch == 'x64'
         with:
           python-version: 3.7.9
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.${{ matrix.arch }}"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -1844,14 +1844,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
       - run: |
           cd ${{ env.CI_TMP_DIR }}
           mkdir ds && cd ds && tar xf ../native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -1884,11 +1884,11 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-macOS.whl"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -1926,11 +1926,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -1974,11 +1974,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 12
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2030,7 +2030,7 @@ jobs:
       - run: |
           python --version
           python -m pip --version
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Windows_crosscompiled"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -2121,14 +2121,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Windows.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
           "C:/Program Files/7-Zip/7z.exe" x native_client.tar.xz -so | "C:/Program Files/7-Zip/7z.exe" x -aoa -si -snld -ttar -o`pwd`
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Windows_crosscompiled"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -2176,14 +2176,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Windows.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
           "C:/Program Files/7-Zip/7z.exe" x native_client.tar.xz -so | "C:/Program Files/7-Zip/7z.exe" x -aoa -si -snld -ttar -o`pwd`
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Windows_crosscompiled"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -2241,7 +2241,7 @@ jobs:
         with:
           fetch-depth: 1
       - name: Download native_client.tar.xz
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Windows.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
@@ -2253,7 +2253,7 @@ jobs:
           ls -hal
           popd
       - name: Download trained test model
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-16000.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2297,11 +2297,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - uses: ./.github/actions/win-install-sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-Windows.whl"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2349,11 +2349,11 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - uses: ./.github/actions/win-install-sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "STT_intermediate-tflite-Windows.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2410,11 +2410,11 @@ jobs:
         with:
           node-version: 12
       - uses: ./.github/actions/win-install-sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "STT_intermediate-tflite-Windows.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2456,23 +2456,23 @@ jobs:
           mkdir -p /tmp/nodewrapper-tflite-macOS_x64/
           mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-macOS_x64.tar.gz"
           path: /tmp/nodewrapper-macOS_x64/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-macOS_arm64.tar.gz"
           path: /tmp/nodewrapper-macOS_arm64/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-Windows_amd64.tar.gz"
           path: /tmp/nodewrapper-Windows_amd64/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
           path: /tmp/nodewrapper-Linux_amd64/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-Linux_armv7.tar.gz"
           path: /tmp/nodewrapper-Linux_armv7/
@@ -2513,11 +2513,11 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
       - run: |
           sudo apt-get install -y --no-install-recommends sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2564,11 +2564,11 @@ jobs:
           node-version: 12
       - run: |
           sudo apt-get install -y --no-install-recommends sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2620,11 +2620,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2669,11 +2669,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 12
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2731,11 +2731,11 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - uses: ./.github/actions/win-install-sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2793,11 +2793,11 @@ jobs:
         with:
           node-version: 12
       - uses: ./.github/actions/win-install-sox
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
           path: ${{ env.CI_TMP_DIR }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
@@ -2879,14 +2879,14 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.linux.armv7.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -2939,14 +2939,14 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.linux.armv7.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
           path: ${{ github.workspace }}/native_client/ds-swig/
@@ -3082,7 +3082,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "chroot-${{ matrix.arch }}-${{ matrix.system }}"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3090,14 +3090,14 @@ jobs:
           mkdir ${{ env.SYSTEM_RASPBIAN }}/
           sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
           rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.linux.${{ matrix.arch }}.tar.xz"
           path: ${{ env.CI_TMP_DIR }}/
       - run: |
           cd ${{ env.CI_TMP_DIR }}/
           mkdir ds && cd ds && tar xf ../native_client.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3180,7 +3180,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "chroot-${{ matrix.arch }}-${{ matrix.system }}"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3188,11 +3188,11 @@ jobs:
           mkdir ${{ env.SYSTEM_RASPBIAN }}/
           sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
           rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-${{ matrix.arch }}.whl"
           path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3240,7 +3240,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "chroot-${{ matrix.arch }}-buster"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3252,11 +3252,11 @@ jobs:
         uses: ./.github/actions/node-install
         with:
           node: ${{ matrix.nodejs-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-${{ matrix.arch }}.tgz"
           path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3303,7 +3303,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "chroot-${{ matrix.arch }}-buster"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3315,11 +3315,11 @@ jobs:
         uses: ./.github/actions/node-install
         with:
           node: 12
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-${{ matrix.arch }}.tgz"
           path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}/
@@ -3434,7 +3434,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.android.armv7.tar.xz
           path: /tmp/nc
@@ -3444,7 +3444,7 @@ jobs:
           tar xvf native_client.tar.xz
           mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/armeabi-v7a/
           rm -f *
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.android.arm64.tar.xz
           path: /tmp/nc
@@ -3454,7 +3454,7 @@ jobs:
           tar xvf native_client.tar.xz
           mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/arm64-v8a/
           rm -f *
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native_client.tflite.android.x86_64.tar.xz
           path: /tmp/nc
@@ -3513,7 +3513,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: "libstt.aar"
           path: ${{ github.workspace }}/
