@@ -1610,6 +1610,8 @@ jobs:
           xcode-version: 13.1
       - name: Select Xcode version
         run: |
+          curl -L https://storage.googleapis.com/sdk-downloads-storage-sa/iara-desktop/xcode/Xcode_13.1.xip -o Xcode_13.1.xip
+          sudo xip -x Xcode_13.1.xip
           sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
       - uses: actions/cache@v3
         id: cache
@@ -1674,6 +1676,8 @@ jobs:
           xcode-version: 13.1
       - name: Select Xcode version
         run: |
+          curl -L https://storage.googleapis.com/sdk-downloads-storage-sa/iara-desktop/xcode/Xcode_13.1.xip -o Xcode_13.1.xip
+          sudo xip -x Xcode_13.1.xip
           sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
