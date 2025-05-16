@@ -334,7 +334,7 @@ jobs:
           submodules: 'recursive'
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
           apt-get update
           apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
       - name: Setup venv
@@ -377,7 +377,7 @@ jobs:
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
           apt-get update
           apt-get install -y --no-install-recommends xz-utils liblzma-dev libbz2-dev
       - name: Extract native_client.tar.xz
@@ -475,7 +475,7 @@ jobs:
           node-version: 16
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list
+          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
           apt-get update
           apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
       - name: Setup venv
