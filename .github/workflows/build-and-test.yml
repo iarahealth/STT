@@ -1592,6 +1592,7 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64", "arm64"]
+        avx: ["true", "false"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1645,7 +1646,7 @@ jobs:
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
           sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }}
+      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }} ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
@@ -2061,6 +2062,9 @@ jobs:
     defaults:
       run:
         shell: msys2 {0}
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: msys2/setup-msys2@v2
@@ -2087,7 +2091,7 @@ jobs:
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
       - run: ./ci_scripts/tf-setup.sh
-      - run: ./ci_scripts/host-build.sh
+      - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
