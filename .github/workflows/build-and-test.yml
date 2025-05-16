@@ -1608,7 +1608,7 @@ jobs:
         id: cache-xcode-restore
         uses: actions/cache/restore@v4
         with:
-          path: ~/Xcode
+          path: Xcode.app
           key: xcode-13.1
       - name: Install Xcode 13.1
         if: steps.cache-xcode-restore.outputs.cache-hit != 'true'
@@ -1620,7 +1620,7 @@ jobs:
         if: steps.cache-xcode-restore.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: Xcode
+          path: Xcode.app
           key: xcode-13.1
       - name: Select Xcode version
         run: |
