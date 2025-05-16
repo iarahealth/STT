@@ -46,6 +46,7 @@ chmod +x ${DS_ROOT_TASK}/bin/bazel${SUFFIX}
 
 # For debug
 bazel version
+bazel sync --configure
 
 bazel shutdown
 

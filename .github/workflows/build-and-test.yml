@@ -1605,7 +1605,7 @@ jobs:
           brew install coreutils curl
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
       - uses: actions/cache@v3
         id: cache
         if: matrix.arch == 'arm64'
@@ -1665,7 +1665,7 @@ jobs:
           brew install coreutils
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
