@@ -130,7 +130,7 @@ jobs:
     name: "Lin|Build SWIG"
     runs-on: ubuntu-22.04
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     env:
@@ -173,7 +173,7 @@ jobs:
     name: "Lin|Build libsox3"
     runs-on: ubuntu-22.04
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
@@ -216,7 +216,7 @@ jobs:
     needs: [ swig_Linux ]
     runs-on: ubuntu-22.04
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     strategy:
@@ -324,7 +324,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [libsox3_Linux]
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
@@ -364,7 +364,7 @@ jobs:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
@@ -462,7 +462,7 @@ jobs:
     name: "Wasm|Build libstt"
     runs-on: ubuntu-22.04
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     steps:
@@ -501,7 +501,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [build-wasm]
     container:
-      image: quay.io/pypa/manylinux_2_24_x86_64:2021-12-05-142ef77
+      image: quay.io/pypa/manylinux_2_34_x86_64:2021-12-05-142ef77
       volumes:
         - ${{ github.workspace }}:${{ github.workspace }}
     env:
