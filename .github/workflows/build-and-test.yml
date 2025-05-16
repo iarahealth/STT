@@ -1632,8 +1632,8 @@ jobs:
 
           export HOMEBREW_CACHE=~/arm-target/brew-cache
           export HOMEBREW_FORCE_BREWED_CURL=1
-          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_big_sur curl sox opusfile
-          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_big_sur curl sox opusfile)
+          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_ventura curl sox opusfile
+          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_ventura curl sox opusfile)
 
           # Install host version of pkgconf so we can call it in the build system
           ~/arm-target/arm-brew/bin/brew install pkgconf
