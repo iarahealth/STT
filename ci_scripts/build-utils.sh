@@ -8,8 +8,6 @@ do_bazel_build()
 
   cd ${DS_TFDIR}
 
-  bazel sync --configure
-
   bazel build ${BAZEL_CACHE} \
     -s --explain bazel_explain.log --verbose_explanations \
     --workspace_status_command="bash native_client/bazel_workspace_status_cmd.sh" \

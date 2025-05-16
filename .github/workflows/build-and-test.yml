@@ -1606,6 +1606,8 @@ jobs:
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
+          sudo xcode-select -p
+          sudo xcode-select -v
       - uses: actions/cache@v3
         id: cache
         if: matrix.arch == 'arm64'
@@ -1666,6 +1668,8 @@ jobs:
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
+          sudo xcode-select -p
+          sudo xcode-select -v
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
