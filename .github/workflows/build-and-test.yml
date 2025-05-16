@@ -1602,7 +1602,7 @@ jobs:
           python-version: "3.7"
       - name: Install system deps
         run:
-          brew install coreutils curl
+          brew install coreutils curl sox
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
@@ -1651,44 +1651,6 @@ jobs:
         with:
           name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
-  build-lib-iOS:
-    name: "iOS|Build libstt+client"
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - name: Install system deps
-        run:
-          brew install coreutils
-      - name: Select Xcode version
-        run: |
-          sudo xcode-select --switch /Applications/Xcode_14.3.app/Contents/Developer
-          sudo xcode-select -p
-          sudo xcode-select -v
-      - run: ./ci_scripts/tf-setup.sh
-      - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
-        run: |
-          sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/ios-build.sh
-      - run: |
-          zip -r9 --junk-paths ${CI_ARTIFACTS_DIR}/ios_artifacts.zip \
-            tensorflow/bazel-bin/native_client/STT.swiftdoc \
-            tensorflow/bazel-bin/native_client/STT.swiftmodule \
-            tensorflow/bazel-bin/native_client/STT.swiftsourceinfo \
-            tensorflow/bazel-bin/native_client/coqui_stt_bundle.swift.modulemap \
-            tensorflow/bazel-bin/native_client/libkenlm.so \
-            tensorflow/bazel-bin/native_client/libstt.so \
-            tensorflow/bazel-out/applebin_ios*/bin/native_client/stt_ios.zip \
-            tensorflow/bazel-out/applebin_ios*/bin/native_client/kenlm_ios.zip
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "ios_artifacts.zip"
-          path: ${{ github.workspace }}/artifacts/ios_artifacts.zip
   build-universal-lib-macOS:
     name: "Mac|Build universal lib"
     runs-on: macos-13
