@@ -1604,10 +1604,27 @@ jobs:
       - name: Install system deps
         run:
           brew install coreutils curl sox
-      - name: Select Xcode version
+      - name: Restore cached Xcode 13.1
+        id: cache-xcode-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/Xcode
+          key: xcode-13.1
+      - name: Install Xcode 13.1
+        if: steps.cache-xcode-restore.outputs.cache-hit != 'true'
         run: |
           curl -L https://storage.googleapis.com/sdk-downloads-storage-sa/iara-desktop/xcode/Xcode_13.1.xip -o Xcode_13.1.xip
-          sudo xip -x Xcode_13.1.xip
+          xip -x Xcode_13.1.xip
+      - name: Cache Xcode 13.1
+        id: cache-xcode-save
+        if: steps.cache-xcode-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: Xcode
+          key: xcode-13.1
+      - name: Select Xcode version
+        run: |
+          sudo mv Xcode.app /Applications/Xcode_13.1.app
           sudo xcode-select --switch /Applications/Xcode_13.1.app/Contents/Developer
       - uses: actions/cache@v3
         id: cache
