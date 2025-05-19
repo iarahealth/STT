@@ -45,6 +45,7 @@
       "typescript": "3.8.x",
       "typedoc": "0.17.x",
       "@types/argparse": "1.0.x",
+      "@types/cpu-features": "^0.0.3",
       "@types/node": "13.9.x"
     },
     "scripts": {
