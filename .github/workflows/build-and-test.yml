@@ -1650,11 +1650,11 @@ jobs:
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.macOS.${{ matrix.arch }}.tar.xz"
+          name: "native_client.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
+          name: "libstt.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-universal-lib-macOS:
     name: "Mac|Build universal lib"
@@ -1772,6 +1772,7 @@ jobs:
     needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
+        avx: ["true", "false"]
         include:
           - os: self-hosted-macos-arm
             arch: arm64
@@ -1789,7 +1790,7 @@ jobs:
           python-version: 3.7.9
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.tar.xz"
+          name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
@@ -1823,11 +1824,11 @@ jobs:
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
-          name: "nodewrapper-tflite-macOS_${{ matrix.arch }}.tar.gz"
+          name: "nodewrapper-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
           path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
       - uses: actions/upload-artifact@v4
         with:
-          name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}.tgz"
+          name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
   test-cpp-macOS:
     name: "Mac|Test C++ binary"
@@ -2095,11 +2096,11 @@ jobs:
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.Windows.zip"
+          name: "libstt.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-python-Windows:
     name: "Win|Build Python bindings"
@@ -2167,6 +2168,9 @@ jobs:
       run:
         shell: msys2 {0}
     needs: [build-lib-Windows, swig_Windows_crosscompiled]
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: msys2/setup-msys2@v2
@@ -2182,7 +2186,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
@@ -2216,11 +2220,11 @@ jobs:
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
-          name: "nodewrapper-tflite-Windows_amd64.tar.gz"
+          name: "nodewrapper-tflite-Windows_amd64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
           path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
       - uses: actions/upload-artifact@v4
         with:
-          name: "STT_intermediate-tflite-Windows.tgz"
+          name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
   test-cpp-Windows:
     name: "Win|Test C++ binary"
