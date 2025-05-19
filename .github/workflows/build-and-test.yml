@@ -1592,7 +1592,10 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64", "arm64"]
-        avx: ["true", "false"]
+        avx: ["true"]
+        include:
+          - arch: "x86_64"
+            avx: "false"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1675,7 +1678,7 @@ jobs:
           rm ../native_client.tar.xz
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.macOS.arm64.tar.xz"
       - run: |
           mkdir nc.arm64
           cd nc.arm64
@@ -1705,7 +1708,7 @@ jobs:
           rm ../libstt.zip
       - uses: actions/download-artifact@v4
         with:
-          name: "libstt.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
+          name: "libstt.tflite.macOS.arm64.zip"
       - run: |
           mkdir libstt.arm64
           cd libstt.arm64
@@ -1775,12 +1778,13 @@ jobs:
     needs: [build-universal-lib-macOS, swig_macOS]
     strategy:
       matrix:
-        avx: ["true", "false"]
         include:
           - os: self-hosted-macos-arm
             arch: arm64
             nodejs-version: 18
+            avx: "true"
           - os: macos-13
+            avx: ["true", "false"]
             arch: x64
             nodejs-version: 13
     steps:
