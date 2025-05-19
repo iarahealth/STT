@@ -1784,7 +1784,11 @@ jobs:
             nodejs-version: 18
             avx: "true"
           - os: macos-13
-            avx: ["true", "false"]
+            avx: "true"
+            arch: x64
+            nodejs-version: 13
+          - os: macos-13
+            avx: "false"
             arch: x64
             nodejs-version: 13
     steps:
