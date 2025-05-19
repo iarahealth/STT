@@ -34,6 +34,7 @@
     "dependencies"  : {
       "node-pre-gyp": "0.15.x",
       "argparse": "1.0.x",
+      "cpu-features": "^0.0.10",
       "sox-stream": "2.0.x",
       "memory-stream": "1.0.x",
       "node-wav": "0.0.2"
