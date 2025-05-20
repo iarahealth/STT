@@ -9,15 +9,15 @@ if [ "$(uname)-$(uname -m)" = "Darwin-x86_64" -a "${macos_target_arch}" = "arm64
   SYSTEM_TARGET="darwin-arm64"
 fi
 
-if [ "${OS}" = "Linux" ]; then
-  export EXTRA_LOCAL_CFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
-fi
-
 source $(dirname "$0")/all-vars.sh
 source $(dirname "$0")/all-utils.sh
 source $(dirname "$0")/build-utils.sh
 
 source $(dirname "$0")/tf-vars.sh
+
+if [ "${OS}" = "Linux" ]; then
+  export EXTRA_LOCAL_CFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
+fi
 
 BAZEL_TARGETS="
 //native_client:libstt.so
