@@ -16,7 +16,7 @@ source $(dirname "$0")/build-utils.sh
 source $(dirname "$0")/tf-vars.sh
 
 if [ "${OS}" = "Linux" ]; then
-  export EXTRA_LOCAL_CFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
+  BAZEL_EXTRA_FLAGS+="--copt=-I/opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
 fi
 
 BAZEL_TARGETS="
