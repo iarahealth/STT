@@ -334,7 +334,7 @@ jobs:
           submodules: 'recursive'
       - name: Install dependencies
         run: |
-          yum update
+          yum update -y
           yum install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
       - name: Setup venv
         run: |
@@ -376,7 +376,7 @@ jobs:
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - name: Install dependencies
         run: |
-          yum update
+          yum update -y
           yum install -y --no-install-recommends xz-utils liblzma-dev libbz2-dev
       - name: Extract native_client.tar.xz
         run: |
@@ -473,7 +473,7 @@ jobs:
           node-version: 16
       - name: Install dependencies
         run: |
-          yum update
+          yum update -y
           yum install -y --no-install-recommends xz-utils liblzma-dev libbz2-dev
       - name: Setup venv
         run: |
