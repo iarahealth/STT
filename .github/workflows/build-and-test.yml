@@ -494,6 +494,7 @@ jobs:
           node-version: 16
       - name: Install dependencies
         run: |
+          dnf install -y zip
           yum update -y
           yum install -y tar gzip xz-devel bzip2-libs bzip2-devel
       - name: Setup venv
