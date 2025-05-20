@@ -140,6 +140,10 @@ jobs:
         with:
           repository: "swig/swig"
           ref: ${{ env.swig_hash }}
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - run: |
           mkdir -p build-static/
       - uses: actions/cache@v3
@@ -226,6 +230,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
@@ -332,6 +340,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - name: Install dependencies
         run: |
           yum update -y
@@ -370,6 +382,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
@@ -468,6 +484,10 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -505,6 +525,10 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
     steps:
       - uses: actions/checkout@v3
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/setup-node@v3
         with:
           node-version: 16
