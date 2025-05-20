@@ -146,7 +146,6 @@ endif
 ifeq ($(OS),Linux)
 LDFLAGS_NEEDED := -Wl,--no-as-needed
 LDFLAGS_RPATH  := -Wl,-rpath,\$$ORIGIN
-CXXFLAGS       += -include /usr/include/c++/14/limits
 endif
 ifeq ($(OS),Darwin)
 CXXFLAGS       += -stdlib=libc++ -std=c++17

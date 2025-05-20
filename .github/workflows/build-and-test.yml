@@ -144,6 +144,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - run: |
           mkdir -p build-static/
       - uses: actions/cache@v3
@@ -183,6 +186,9 @@ jobs:
     steps:
       - run: |
           curl -sSL https://github.com/coqui-ai/STT/releases/download/v0.10.0-alpha.7/sox-14.4.2.tar.bz2 | tar xjf -
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - run: |
           mkdir -p sox-build/
       - uses: actions/cache@v3
@@ -234,6 +240,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
@@ -344,6 +353,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - name: Install dependencies
         run: |
           yum update -y
@@ -386,6 +398,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
@@ -488,6 +503,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -529,6 +547,9 @@ jobs:
         run: |
           git config --system --add safe.directory $GITHUB_WORKSPACE
           git config --system --add safe.directory /__w/STT/STT
+      - name: Fix missing limits header
+        run: |
+          export EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
       - uses: actions/setup-node@v3
         with:
           node-version: 16
