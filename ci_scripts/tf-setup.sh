@@ -41,10 +41,6 @@ if [ "${OS}" = "${CI_MSYS_VERSION}" ]; then
     SUFFIX=".exe"
 fi
 
-if [ "${OS}" = "Linux" ]; then
-    BAZEL_EXTRA_FLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits"
-fi
-
 cp ${DS_ROOT_TASK}/dls/${BAZEL_INSTALL_FILENAME} ${DS_ROOT_TASK}/bin/bazel${SUFFIX}
 chmod +x ${DS_ROOT_TASK}/bin/bazel${SUFFIX}
 
