@@ -839,19 +839,19 @@ jobs:
           time ./bin/run-ci-ldc93s1_checkpoint.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.pb
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.pb
           path: ${{ github.workspace }}/artifacts/output_graph.pb
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.pbmm
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.pbmm
           path: ${{ github.workspace }}/artifacts/output_graph.pbmm
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.tflite
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.tflite
           path: ${{ github.workspace }}/artifacts/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-checkpoint.tar.xz
+          name: ${{ github.job }}-checkpoint-${{ matrix.samplerate }}-${{ matrix.pyver }}.tar.xz
           path: ${{ github.workspace }}/artifacts/checkpoint.tar.xz
   training-extra-tests:
     name: "Lin|Extra training tests"
