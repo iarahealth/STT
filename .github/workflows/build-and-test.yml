@@ -580,7 +580,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -1903,7 +1903,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        python-version: [3.6.8, 3.7.9, 3.8.9, 3.9.4]
+        python-version: [3.7.9, 3.8.9, 3.9.4]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -2143,7 +2143,7 @@ jobs:
       matrix:
         # Try to keep Python versions in sync with cached versions to speed things up:
         # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
-        python-version: [3.6.8, 3.7.9, 3.8.8, 3.9.4, 3.10.0]
+        python-version: [3.7.9, 3.8.8, 3.9.4, 3.10.0]
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: msys2/setup-msys2@v2
@@ -2314,7 +2314,7 @@ jobs:
       matrix:
         # Try to keep Python versions in sync with cached versions to speed things up:
         # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
-        python-version: [3.6.8, 3.7.9, 3.8.8, 3.9.4, 3.10.0]
+        python-version: [3.7.9, 3.8.8, 3.9.4, 3.10.0]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
