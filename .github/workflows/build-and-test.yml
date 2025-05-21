@@ -1046,7 +1046,7 @@ jobs:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - uses: actions/download-artifact@v4
         with:
-          name: "training-basic-tests-checkpoint.tar.xz"
+          name: "training-basic-tests-checkpoint-${{ matrix.samplerate }}-${{ matrix.pyver }}.tar.xz"
       - name: Extract training checkpoint
         run: |
           ls -lh
