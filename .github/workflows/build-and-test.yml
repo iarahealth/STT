@@ -751,9 +751,9 @@ jobs:
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
-          npm rebuild cpu-features
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2029,9 +2029,9 @@ jobs:
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
-          npm rebuild cpu-features
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2476,9 +2476,9 @@ jobs:
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
-          npm rebuild cpu-features
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
