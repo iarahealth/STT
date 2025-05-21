@@ -17,9 +17,6 @@ runs:
   using: "composite"
   steps:
     - run: |
-        node -v
-        npm -v
-
         set -xe
 
         build="_tflite"
