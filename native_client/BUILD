@@ -152,7 +152,6 @@ cc_library(
         "ctcdecode/third_party/flashlight/flashlight/lib/text/dictionary/Defines.h",
         "ctcdecode/third_party/flashlight/flashlight/lib/text/dictionary/Dictionary.h",
         "ctcdecode/third_party/flashlight/flashlight/lib/text/dictionary/Utils.h",
-        "limits.h",
     ],
     srcs = [
         "ctcdecode/third_party/flashlight/flashlight/lib/common/String.cpp",
