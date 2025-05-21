@@ -1892,6 +1892,7 @@ jobs:
       - run: |
           ls -halR ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
+      - run: brew install sox
       - uses: ./.github/actions/run-tests
         with:
           runtime: "cpp"
