@@ -753,8 +753,7 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          npm install --save-dev electron-rebuild
-          ./node_modules/.bin/electron-rebuild.cmd -f -w cpu-features
+          ./node_modules/.bin/electron-rebuild -f -w @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2032,8 +2031,7 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          npm install --save-dev electron-rebuild
-          ./node_modules/.bin/electron-rebuild.cmd -f -w cpu-features
+          ./node_modules/.bin/electron-rebuild -f -w @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2480,8 +2478,7 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          npm install --save-dev electron-rebuild
-          .\node_modules\.bin\electron-rebuild.cmd -f -w cpu-features
+          .\\node_modules\\.bin\\electron-rebuild.cmd -f -w @iarahealth/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"

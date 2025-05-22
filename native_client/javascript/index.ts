@@ -1,4 +1,4 @@
-import getCpuInfo, { X86CpuFeatures } from "cpu-features";
+import getCpuInfo, { X86CpuFeatures } from "@iarahealth/cpu-features";
 import binary from 'node-pre-gyp';
 import path from 'path';
 

@@ -32,20 +32,20 @@
         "host"        : "https://host.invalid"
     },
     "dependencies"  : {
+      "@iarahealth/cpu-features": "^0.0.11",
       "node-pre-gyp": "0.15.x",
       "argparse": "1.0.x",
-      "cpu-features": "^0.0.10",
       "sox-stream": "2.0.x",
       "memory-stream": "1.0.x",
       "node-wav": "0.0.2"
     },
     "devDependencies": {
       "electron": "^1.7.9",
+      "electron-rebuild": "^3.2.9",
       "node-gyp": "9.3.x",
       "typescript": "3.8.x",
       "typedoc": "0.17.x",
       "@types/argparse": "1.0.x",
-      "@types/cpu-features": "^0.0.3",
       "@types/node": "13.9.x"
     },
     "scripts": {
