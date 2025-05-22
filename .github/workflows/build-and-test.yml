@@ -448,12 +448,12 @@ jobs:
           chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
       - uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 14
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
+          key: node-headers-14.0.0_17.0.1
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -461,7 +461,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -1844,7 +1844,7 @@ jobs:
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
+          key: node-headers-14.0.0_17.0.1
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -1852,7 +1852,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -2238,12 +2238,12 @@ jobs:
           chmod +x native_client/ds-swig/bin/ds-swig.exe native_client/ds-swig/bin/swig.exe
       - uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 14
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-win-13.0.0_16.0.0
+          key: node-headers-win-14.0.0_16.0.0
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -2251,7 +2251,7 @@ jobs:
           key: electron-headers-win-12.0.0_15.0.0
       - uses: ./.github/actions/win-node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0"
+          nodejs_versions: "14.0.0 15.0.0 16.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -3012,12 +3012,12 @@ jobs:
           arch: armv7
       - uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 14
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
+          key: node-headers-14.0.0_17.0.1
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -3032,7 +3032,7 @@ jobs:
           target: ${{ env.SYSTEM_TARGET }}
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "14.0.0 15.0.0 16.0.0 17.0.1"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
           target: ${{ env.SYSTEM_TARGET }}
           chroot: ${{ env.SYSTEM_RASPBIAN }}
