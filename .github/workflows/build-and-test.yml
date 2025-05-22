@@ -1807,11 +1807,11 @@ jobs:
           - os: macos-13
             avx: "true"
             arch: x64
-            nodejs-version: 13
+            nodejs-version: 14
           - os: macos-13
             avx: "false"
             arch: x64
-            nodejs-version: 13
+            nodejs-version: 14
     steps:
       - uses: actions/checkout@v3
         with:
@@ -2542,7 +2542,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 17]
+        nodejs-version: [14, 17]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -2648,7 +2648,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 17]
+        nodejs-version: [14, 17]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
         include:
@@ -2758,7 +2758,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 16]
+        nodejs-version: [14, 16]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -3274,7 +3274,7 @@ jobs:
       matrix:
         arch: ["armv7"]
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 14, 16, 17]
+        nodejs-version: [14, 16, 17]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
