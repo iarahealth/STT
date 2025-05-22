@@ -753,7 +753,9 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          ./node_modules/.bin/electron-rebuild -f -w @iarahealth/cpu-features
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2031,7 +2033,9 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          ./node_modules/.bin/electron-rebuild -f -w @iarahealth/cpu-features
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2478,7 +2482,9 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
-          .\\node_modules\\.bin\\electron-rebuild.cmd -f -w @iarahealth/cpu-features
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
@@ -2629,6 +2635,9 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2734,6 +2743,9 @@ jobs:
           npm install --verbose ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2862,6 +2874,9 @@ jobs:
           npm install --verbose ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          # Reinstall cpu-features to force it to be rebuilt for electron's node version
+          npm uninstall @iarahealth/cpu-features
+          npm install @iarahealth/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
