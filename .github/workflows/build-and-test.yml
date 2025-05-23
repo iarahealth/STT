@@ -663,7 +663,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
@@ -1947,7 +1947,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
@@ -2370,7 +2370,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
@@ -2542,7 +2542,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -2648,7 +2648,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
         include:
@@ -2758,7 +2758,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -3274,7 +3274,7 @@ jobs:
       matrix:
         arch: ["armv7"]
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [16, 17, 18, 20]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
