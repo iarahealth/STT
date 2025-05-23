@@ -42,7 +42,7 @@
     "devDependencies": {
       "electron": "^1.7.9",
       "electron-rebuild": "^3.2.9",
-      "node-gyp": "11.2.x",
+      "node-gyp": "9.3.x",
       "typescript": "3.8.x",
       "typedoc": "0.17.x",
       "@types/argparse": "1.0.x",
