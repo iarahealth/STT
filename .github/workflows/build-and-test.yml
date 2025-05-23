@@ -1820,7 +1820,7 @@ jobs:
         if: matrix.arch == 'x64'
         with:
           python-version: 3.7.9
-      - run: pip install setuptools
+      - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
@@ -1971,6 +1971,7 @@ jobs:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
         if: matrix.models == 'test'
+      - run: python3 -m pip install setuptools
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
@@ -2010,7 +2011,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: brew install python-setuptools
+      - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
@@ -2669,7 +2670,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
-      - run: brew install python-setuptools
+      - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
@@ -2719,7 +2720,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: brew install python-setuptools
+      - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
