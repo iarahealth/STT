@@ -1941,6 +1941,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
@@ -1990,6 +1993,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
