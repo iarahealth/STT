@@ -2661,6 +2661,7 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
@@ -2714,6 +2715,7 @@ jobs:
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
