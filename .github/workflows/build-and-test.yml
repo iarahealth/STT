@@ -1799,6 +1799,9 @@ jobs:
         if: matrix.arch == 'x64'
         with:
           python-version: 3.7.9
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
