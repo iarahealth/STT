@@ -16,7 +16,7 @@ def main():
         "attrdict",
         "bs4",
         "coqpit",
-        "numpy",
+        "numpy==1.26.4",
         "optuna",
         "numba <= 0.53.1",
         "opuslib == 2.0.0",
