@@ -326,7 +326,7 @@ jobs:
           path: ${{ github.workspace }}/tmp/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: "test-checkpoint.${{ matrix.samplerate }}.zip"
+          name: "test-checkpoint.${{ matrix.samplerate }}-Linux.zip"
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-Linux:
     name: "Lin|Build libstt+client"
@@ -1586,7 +1586,7 @@ jobs:
           path: ${{ github.workspace }}/tmp/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: "test-checkpoint.${{ matrix.samplerate }}.zip"
+          name: "test-checkpoint.${{ matrix.samplerate }}-macOS.zip"
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-macOS:
     name: "Mac|Build libstt+client"
@@ -1800,6 +1800,7 @@ jobs:
         with:
           python-version: 3.7.9
       - name: Select Xcode version
+        if: matrix.os == 'macos-13'
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
@@ -2654,6 +2655,7 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - name: Select Xcode version
+        if: matrix.os == 'macos-13'
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
       - run: python3 -m pip install setuptools
