@@ -1595,10 +1595,6 @@ jobs:
     strategy:
       matrix:
         arch: ["x86_64", "arm64"]
-        avx: ["true"]
-        include:
-          - arch: "x86_64"
-            avx: "false"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1650,28 +1646,25 @@ jobs:
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
           sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }} ${{ matrix.avx }}
+      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.macOS.${{ matrix.arch }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
+          name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-universal-lib-macOS:
     name: "Mac|Build universal lib"
     runs-on: macos-13
     needs: [build-lib-macOS]
-    strategy:
-      matrix:
-        avx: ["true", "false"]
     steps:
       # Download and extract individual arch packages and create universal binaries
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.x86_64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.macOS.x86_64.tar.xz"
       - run: |
           mkdir nc.x86_64
           cd nc.x86_64
@@ -1696,12 +1689,12 @@ jobs:
           tar cvJf native_client.tar.xz .
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.macOS.tar.xz"
           path: nc.x86_64/native_client.tar.xz
       # Now do the same, but for libstt.zip
       - uses: actions/download-artifact@v4
         with:
-          name: "libstt.tflite.macOS.x86_64${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
+          name: "libstt.tflite.macOS.x86_64.zip"
       - run: |
           mkdir libstt.x86_64
           cd libstt.x86_64
@@ -1725,7 +1718,7 @@ jobs:
           zip -r9 --junk-paths libstt.zip libstt.x86_64/*
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
+          name: "libstt.tflite.macOS.zip"
           path: libstt.zip
   build-python-macOS:
     name: "Mac|Build Python bindings"
