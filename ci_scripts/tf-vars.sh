@@ -133,15 +133,15 @@ elif [ "${OS}" = "Darwin" ]; then
         fi
 
         if [ "${CI}" = true ]; then
-            BAZEL_EXTRA_FLAGS="${BAZEL_EXTRA_FLAGS} --macos_minimum_os 10.10 --macos_sdk_version 13.0"
+            BAZEL_EXTRA_FLAGS="${BAZEL_EXTRA_FLAGS} --macos_minimum_os 10.10 --macos_sdk_version 14.2"
         fi
     elif [ "$FROM" = "darwin-x86_64" -a "$TO" = "darwin-arm64" ]; then
         BAZEL_OPT_FLAGS=""
         if [ "${CI}" = true ]; then
-            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
+            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 14.2"
         fi
     elif [ "$FROM" = "darwin-arm64" -a "$TO" = "darwin-arm64" ]; then
-        BAZEL_OPT_FLAGS="--xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
+        BAZEL_OPT_FLAGS="--xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 14.2"
     elif [ "$FROM" = "darwin-arm64" -a "$TO" = "darwin-x86_64" ]; then
         echo "TensorFlow does not support building for x86_64 on arm64" 1>&2
         exit 1
