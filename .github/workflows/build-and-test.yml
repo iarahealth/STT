@@ -1605,7 +1605,7 @@ jobs:
           python-version: "3.7"
       - name: Install system deps
         run:
-          brew install coreutils curl sox opusfile
+          brew install coreutils curl sox opusfile pkg-config
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer

@@ -137,8 +137,8 @@ ifeq ($(TARGET),darwin-arm64)
 CFLAGS                  := -mmacosx-version-min=11.0 -target arm64-apple-macos11
 LDFLAGS                 := -mmacosx-version-min=11.0 -target arm64-apple-macos11
 
-SOX_CFLAGS              := $(shell arm-pkg-config --cflags sox)
-SOX_LDFLAGS             := $(shell arm-pkg-config --libs sox) -framework CoreAudio -lz
+SOX_CFLAGS              := $(shell pkg-config --cflags sox)
+SOX_LDFLAGS             := $(shell pkg-config --libs sox) -framework CoreAudio -lz
 endif
 
 # -Wl,--no-as-needed is required to force linker not to evict libs it thinks we
