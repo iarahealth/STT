@@ -62,8 +62,14 @@ elif [ "${OS}" = "Darwin" ]; then
 
     export DS_ROOT_TASK=${CI_TASK_DIR}
 
-    BAZEL_URL=https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-darwin-amd64
-    BAZEL_SHA256=e485bbf84532d02a60b0eb23c702610b5408df3a199087a4f2b5e0995bbf2d5a
+    ARCH="$(uname -m)"
+    if [ "${ARCH}" = "arm64" ]; then
+        BAZEL_URL=https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-darwin-arm64
+        BAZEL_SHA256=c22d48601466d9d3b043ccd74051f2f4230f9b9f4509f097017c97303aa88d13
+    else
+        BAZEL_URL=https://github.com/bazelbuild/bazelisk/releases/download/v1.10.1/bazelisk-darwin-amd64
+        BAZEL_SHA256=e485bbf84532d02a60b0eb23c702610b5408df3a199087a4f2b5e0995bbf2d5a
+    fi
 
     SHA_SUM="shasum -a 256 -c"
     TAR=gtar
@@ -132,10 +138,10 @@ elif [ "${OS}" = "Darwin" ]; then
     elif [ "$FROM" = "darwin-x86_64" -a "$TO" = "darwin-arm64" ]; then
         BAZEL_OPT_FLAGS=""
         if [ "${CI}" = true ]; then
-            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 14.1 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
+            BAZEL_EXTRA_FLAGS="--config=macos_arm64 --xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
         fi
     elif [ "$FROM" = "darwin-arm64" -a "$TO" = "darwin-arm64" ]; then
-        BAZEL_OPT_FLAGS=""
+        BAZEL_OPT_FLAGS="--xcode_version 15.2 --macos_minimum_os 11.0 --macos_sdk_version 13.0"
     elif [ "$FROM" = "darwin-arm64" -a "$TO" = "darwin-x86_64" ]; then
         echo "TensorFlow does not support building for x86_64 on arm64" 1>&2
         exit 1
