@@ -1611,7 +1611,7 @@ jobs:
           brew install coreutils curl sox opusfile pkg-config
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
@@ -1702,7 +1702,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.tar.xz"
@@ -1766,7 +1766,7 @@ jobs:
       - name: Select Xcode version
         if: matrix.os == 'macos-13'
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
@@ -1868,7 +1868,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
@@ -1914,7 +1914,7 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
@@ -1967,7 +1967,7 @@ jobs:
           node-version: 16
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - run: brew install sox
       - uses: actions/download-artifact@v4
@@ -2626,7 +2626,7 @@ jobs:
       - name: Select Xcode version
         if: matrix.os == 'macos-13'
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - run: brew install sox
       - uses: actions/download-artifact@v4
@@ -2680,7 +2680,7 @@ jobs:
           node-version: 16
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: python3 -m pip install setuptools
       - run: brew install sox
       - uses: actions/download-artifact@v4
