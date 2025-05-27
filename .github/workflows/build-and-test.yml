@@ -1274,6 +1274,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: rm -rf /opt/hostedtoolcache
       - name: Check VERSION matches Git tag and compute Docker tag
         id: compute-tag
         run: |
