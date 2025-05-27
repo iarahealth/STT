@@ -1591,7 +1591,7 @@ jobs:
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-macOS:
     name: "Mac|Build libstt+client"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
