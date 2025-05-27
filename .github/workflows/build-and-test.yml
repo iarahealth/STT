@@ -1605,7 +1605,7 @@ jobs:
           fetch-depth: 0
           submodules: 'recursive'
       # Install Python using brew as the action does not support older versions for arm64
-      - run: brew install python@3.8
+      - run: brew install python@3.9
       - name: Install system deps
         run:
           brew install coreutils curl sox opusfile pkg-config
@@ -1762,7 +1762,7 @@ jobs:
         with:
           fetch-depth: 1
       # Install Python using brew as the action does not support older versions for arm64
-      - run: brew install python@3.8
+      - run: brew install python@3.9
       - name: Select Xcode version
         if: matrix.os == 'macos-13'
         run: |
