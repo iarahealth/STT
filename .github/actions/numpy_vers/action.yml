@@ -18,7 +18,7 @@ runs:
       run: |
         set -ex
         NUMPY_BUILD_VERSION="==1.7.0"
-        NUMPY_DEP_VERSION=">=1.7.0"
+        NUMPY_DEP_VERSION=">=1.7.0,<1.19.0"
 
         OS=$(uname -s)
         ARCH=$(uname -m)
