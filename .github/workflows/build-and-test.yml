@@ -1443,7 +1443,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted-macos-arm
+          - os: macos-14
             arch: arm64
             artifact_suffix: arm64
           - os: macos-13
@@ -1594,7 +1594,11 @@ jobs:
     runs-on: macos-13
     strategy:
       matrix:
-        arch: ["x86_64", "arm64"]
+        include:
+          - os: macos-14
+            arch: arm64
+          - os: macos-13
+            arch: x86_64
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1742,7 +1746,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted-macos-arm
+          - os: macos-14
             arch: arm64
             nodejs-version: 18
             avx: "true"
@@ -2607,7 +2611,7 @@ jobs:
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
         include:
-          - os: self-hosted-macos-arm
+          - os: macos-14
             arch: arm64
           - os: macos-13
             arch: x86_64
