@@ -1605,43 +1605,10 @@ jobs:
           python-version: "3.7"
       - name: Install system deps
         run:
-          brew install coreutils curl
-      - name: Install x64 sox
-        if: matrix.arch == 'x86_64'
-        run: |
-          brew install sox
+          brew install coreutils curl sox opusfile
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
-      - uses: actions/cache@v3
-        id: cache
-        if: matrix.arch == 'arm64'
-        with:
-          path: ~/arm-target
-          key: ${{ runner.os }}-arm-brew-cache
-
-      - name: Install arm64 deps
-        if: matrix.arch == 'arm64' && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          set -xe
-          mkdir -p ~/arm-target/bin
-          mkdir -p ~/arm-target/brew-cache
-          export PATH="$HOME/arm-target/bin:$PATH"
-
-          cd ~/arm-target
-          mkdir arm-brew && curl -L https://github.com/Homebrew/brew/archive/refs/tags/4.1.13.tar.gz | tar xz --strip 1 -C arm-brew
-
-          export HOMEBREW_CACHE=~/arm-target/brew-cache
-          export HOMEBREW_FORCE_BREWED_CURL=1
-          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_ventura curl sox opusfile
-          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_ventura curl sox opusfile)
-
-          # Install host version of pkgconf so we can call it in the build system
-          ~/arm-target/arm-brew/bin/brew install pkgconf
-          ln -s ~/arm-target/arm-brew/bin/pkgconf ~/arm-target/bin/arm-pkg-config
-      - run: |
-          echo "$HOME/arm-target/bin" >> $GITHUB_PATH
-        if: matrix.arch == 'arm64'
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
