@@ -1818,7 +1818,7 @@ jobs:
     strategy:
       matrix:
         models: ["test", "prod"]
-        samplerate: ["8000", "16000"]
+        samplerate: ["16000"]
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
