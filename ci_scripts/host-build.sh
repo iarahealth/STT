@@ -5,6 +5,7 @@ set -xe
 macos_target_arch=$1
 DISABLE_AVX=$2
 SYSTEM_TARGET=host
+
 if [ "${macos_target_arch}" = "arm64" ]; then
   SYSTEM_TARGET="darwin-arm64"
 fi
@@ -22,6 +23,10 @@ BAZEL_TARGETS="
 "
 
 BAZEL_BUILD_FLAGS="${BAZEL_OPT_FLAGS} ${BAZEL_EXTRA_FLAGS}"
+
+if [ "${macos_target_arch}" = "arm64" ]; then
+  BAZEL_BUILD_FLAGS="${BAZEL_BUILD_FLAGS} --config=darwin-arm64"
+fi
 
 do_bazel_build
 
