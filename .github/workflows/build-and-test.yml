@@ -1774,7 +1774,6 @@ jobs:
         with:
           python-version: 3.9
       - name: Select Xcode version
-        if: matrix.os == 'macos-13'
         run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: python3 -m pip install setuptools
@@ -2628,11 +2627,7 @@ jobs:
         nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
-        include:
-          - os: macos-14
-            arch: arm64
-          - os: macos-13
-            arch: x86_64
+        os: [macos-14, macos-13]
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
@@ -2645,9 +2640,11 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
       - name: Select Xcode version
-        if: matrix.os == 'macos-13'
         run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
       - run: python3 -m pip install setuptools
       - run: brew install sox
       - uses: actions/download-artifact@v4
@@ -2680,7 +2677,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-electronjs_all-macOS:
     name: "Mac|Test MultiArchPlatform ElectronJS bindings"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     needs: [repackage-nodejs-allplatforms, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -2688,6 +2685,7 @@ jobs:
         electronjs-version: [12.0.0, 16.0.0]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
+        os: [macos-14, macos-13]
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
@@ -2702,6 +2700,9 @@ jobs:
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
       - run: python3 -m pip install setuptools
       - run: brew install sox
       - uses: actions/download-artifact@v4
