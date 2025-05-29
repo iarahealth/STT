@@ -1597,8 +1597,13 @@ jobs:
         include:
           - os: macos-14
             arch: arm64
+            avx: "true"
           - os: macos-13
             arch: x86_64
+            avx: "true"
+          - os: macos-13
+            arch: x86_64
+            avx: "false"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -1617,25 +1622,28 @@ jobs:
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
           sudo rm -r /Library/Developer/CommandLineTools
-      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }}
+      - run: ./ci_scripts/host-build.sh ${{ matrix.arch }} ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.macOS.${{ matrix.arch }}.tar.xz"
+          name: "native_client.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ github.workspace }}/artifacts/native_client.tar.xz
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.macOS.${{ matrix.arch }}.zip"
+          name: "libstt.tflite.macOS.${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-universal-lib-macOS:
     name: "Mac|Build universal lib"
     runs-on: macos-13
     needs: [build-lib-macOS]
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     steps:
       # Download and extract individual arch packages and create universal binaries
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.x86_64.tar.xz"
+          name: "native_client.tflite.macOS.x86_64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
       - run: |
           mkdir nc.x86_64
           cd nc.x86_64
@@ -1643,7 +1651,7 @@ jobs:
           rm ../native_client.tar.xz
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.arm64.tar.xz"
+          name: "native_client.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
       - run: |
           mkdir nc.arm64
           cd nc.arm64
@@ -1660,12 +1668,12 @@ jobs:
           tar cvJf native_client.tar.xz .
       - uses: actions/upload-artifact@v4
         with:
-          name: "native_client.tflite.macOS.tar.xz"
+          name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: nc.x86_64/native_client.tar.xz
       # Now do the same, but for libstt.zip
       - uses: actions/download-artifact@v4
         with:
-          name: "libstt.tflite.macOS.x86_64.zip"
+          name: "libstt.tflite.macOS.x86_64${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
       - run: |
           mkdir libstt.x86_64
           cd libstt.x86_64
@@ -1673,7 +1681,7 @@ jobs:
           rm ../libstt.zip
       - uses: actions/download-artifact@v4
         with:
-          name: "libstt.tflite.macOS.arm64.zip"
+          name: "libstt.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
       - run: |
           mkdir libstt.arm64
           cd libstt.arm64
@@ -1689,7 +1697,7 @@ jobs:
           zip -r9 --junk-paths libstt.zip libstt.x86_64/*
       - uses: actions/upload-artifact@v4
         with:
-          name: "libstt.tflite.macOS.zip"
+          name: "libstt.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
           path: libstt.zip
   build-python-macOS:
     name: "Mac|Build Python bindings"
@@ -1814,13 +1822,15 @@ jobs:
           path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
   test-cpp-macOS:
     name: "Mac|Test C++ binary"
-    runs-on: macos-14
+    runs-on: ${{ matrix.os }}
     needs: [build-universal-lib-macOS, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
+        os: [macos-14, macos-13]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
+        avx: ["true", "false"]
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
@@ -1830,7 +1840,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.arm64.tar.xz"
+          name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
       - run: |
           cd ${{ env.CI_TMP_DIR }}
