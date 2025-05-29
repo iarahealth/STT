@@ -1651,7 +1651,7 @@ jobs:
           rm ../native_client.tar.xz
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.macOS.arm64.tar.xz"
       - run: |
           mkdir nc.arm64
           cd nc.arm64
@@ -1830,7 +1830,13 @@ jobs:
         os: [macos-14, macos-13]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
-        avx: ["true", "false"]
+        include:
+          - os: macos-14
+            avx: "true"
+          - os: macos-13
+            avx: "true"
+          - os: macos-13
+            avx: "false"
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
