@@ -1681,7 +1681,7 @@ jobs:
           rm ../libstt.zip
       - uses: actions/download-artifact@v4
         with:
-          name: "libstt.tflite.macOS.arm64${{ matrix.avx == 'false' && '.noavx' || '' }}.zip"
+          name: "libstt.tflite.macOS.arm64.zip"
       - run: |
           mkdir libstt.arm64
           cd libstt.arm64
@@ -2243,6 +2243,9 @@ jobs:
   test-cpp-Windows:
     name: "Win|Test C++ binary"
     runs-on: windows-2019
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     defaults:
       run:
         shell: msys2 {0}
@@ -2265,7 +2268,7 @@ jobs:
       - name: Download native_client.tar.xz
         uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
       - name: Extract native_client.tar.xz
         run: |
