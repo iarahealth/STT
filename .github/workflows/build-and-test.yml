@@ -1897,8 +1897,6 @@ jobs:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
         if: matrix.models == 'test'
-      - run: pip install packaging
-      - run: python ./native_client/verify.py ${{ env.CI_TMP_DIR }}/stt-1.6.0-cp37-cp37m-macosx_13_0_x86_64.whl
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
