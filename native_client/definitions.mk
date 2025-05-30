@@ -137,8 +137,8 @@ ifeq ($(TARGET),darwin-arm64)
 CFLAGS                  := -mmacosx-version-min=11.0 -target arm64-apple-macos11
 LDFLAGS                 := -mmacosx-version-min=11.0 -target arm64-apple-macos11
 
-SOX_CFLAGS              := $(shell arm-pkg-config --cflags sox)
-SOX_LDFLAGS             := $(shell arm-pkg-config --libs sox) -framework CoreAudio -lz
+SOX_CFLAGS              := $(shell pkg-config --cflags sox)
+SOX_LDFLAGS             := $(shell pkg-config --libs sox) -framework CoreAudio -lz
 endif
 
 # -Wl,--no-as-needed is required to force linker not to evict libs it thinks we
@@ -214,8 +214,11 @@ define copy_missing_libs
     if [ "$(OS)" = "Darwin" ]; then \
         for lib in $$SRC_FILE; do \
             for dep in $$( (for f in $$(otool -L $$lib 2>/dev/null | tail -n +2 | awk '{ print $$1 }' | grep -v '$$lib'); do ls -hal $$f; done;) 2>&1 | grep 'No such' | cut -d':' -f2 ); do \
-                dep_basename=$$(basename "$$dep"); \
-                install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib"; \
+                if [ "$$dep" != "/usr/lib/libc++.1.dylib" ] && [ "$$dep" != "/usr/lib/libSystem.B.dylib" ]; then \
+                    dep_basename=$$(basename "$$dep"); \
+                    echo "install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib""; \
+                    install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib"; \
+                fi; \
             done; \
         done; \
     fi;

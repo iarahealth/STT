@@ -382,8 +382,6 @@ GetAudioBuffer(const char* path, int desired_sample_rate)
   sox_flow_effects(chain, NULL, NULL);
   sox_delete_effects_chain(chain);
 
-  // Close sox handles
-  sox_close(output);
   sox_close(input);
 #endif // NO_SOX
 
@@ -425,13 +423,19 @@ GetAudioBuffer(const char* path, int desired_sample_rate)
   fclose(wave);
 #endif // NO_SOX
 
-#if TARGET_OS_OSX && !defined(NO_SOX)
+#if !defined(NO_SOX)
+
+#if TARGET_OS_OSX
   res.buffer_size = (size_t)(output->olength * 2);
+  sox_close(output);
   res.buffer = (char*)malloc(sizeof(char) * res.buffer_size);
   FILE* output_file = fopen(output_name, "rb");
   assert(fread(res.buffer, sizeof(char), res.buffer_size, output_file) == res.buffer_size);
   fclose(output_file);
   unlink(output_name);
+#else
+  sox_close(output);
+#endif
 #endif
 
   return res;

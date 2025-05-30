@@ -46,8 +46,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # For exporting using TFLite
-RUN add-apt-repository ppa:deadsnakes/ppa -y
-
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
     python3.7 \
     python3.7-venv
