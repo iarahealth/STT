@@ -53,7 +53,7 @@ def diagnose_unsupported(p: Path) -> str:
         if sys.platform != "darwin":
             return f"The wheel was build for macosx, but the current platform is {sys.platform}"
 
-    if cpu_architecture != platform.machine():
+    if cpu_architecture != platform.machine().replace("x86_64", "x86"):
         return f"The CPU architecture supported by the wheel is {cpu_architecture}, but the platform has architecture {platform.machine()}"
 
     os_major, os_minor, os_patch = platform.mac_ver()[0].split(".")
