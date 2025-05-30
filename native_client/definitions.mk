@@ -214,8 +214,11 @@ define copy_missing_libs
     if [ "$(OS)" = "Darwin" ]; then \
         for lib in $$SRC_FILE; do \
             for dep in $$( (for f in $$(otool -L $$lib 2>/dev/null | tail -n +2 | awk '{ print $$1 }' | grep -v '$$lib'); do ls -hal $$f; done;) 2>&1 | grep 'No such' | cut -d':' -f2 ); do \
-                dep_basename=$$(basename "$$dep"); \
-                install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib"; \
+                if [ "$$dep" != "/usr/lib/libc++.1.dylib" ] && [ "$$dep" != "/usr/lib/libSystem.B.dylib" ]; then \
+                    dep_basename=$$(basename "$$dep"); \
+                    echo "install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib""; \
+                    install_name_tool -change "$$dep" "@rpath/$$dep_basename" "$$lib"; \
+                fi; \
             done; \
         done; \
     fi;
