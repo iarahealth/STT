@@ -2095,11 +2095,6 @@ jobs:
             unzip
             zip
             make
-      - name: Install winget
-        uses: Cyberboss/install-winget@v1
-      - name: Install Visual Studio 2019
-        run: |
-          winget install --accept-package-agreements --accept-source-agreements Microsoft.VisualStudio.2019.Enterprise
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -2111,6 +2106,10 @@ jobs:
         run: |
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
+      - name: Workaround bazel lack of support for VC 2022
+        shell: pwsh
+        run: |
+          mklink /D "C:\Program Files (x86)\Microsoft Visual Studio\2019" "C:\Program Files\Microsoft Visual Studio\2022"
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
