@@ -38,7 +38,7 @@ elif [ "${OS}" = "${CI_MSYS_VERSION}" ]; then
 
     export DS_ROOT_TASK=${CI_TASK_DIR}
     export BAZEL_VC="C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC"
-    export BAZEL_VC_FULL_VERSION="14.43.34808"
+    export BAZEL_VC_FULL_VERSION="17.13.35825.156"
     export MSYS2_ARG_CONV_EXCL='//'
 
     # Fix to MSYS make to avoid conflicts with mingw32-make in PATH
