@@ -2099,7 +2099,7 @@ jobs:
         uses: Cyberboss/install-winget@v1
       - name: Install Visual Studio 2019
         run: |
-          winget install Microsoft.VisualStudio.2019.Enterprise
+          winget install --accept-package-agreements --accept-source-agreements Microsoft.VisualStudio.2019.Enterprise
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
