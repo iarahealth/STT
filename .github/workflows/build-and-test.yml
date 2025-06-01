@@ -2109,7 +2109,7 @@ jobs:
       - name: Workaround bazel lack of support for VC 2022
         shell: pwsh
         run: |
-          New-Item -ItemType SymbolicLink -Name "C:\Program Files (x86)\Microsoft Visual Studio\2019" -Target "C:\Program Files\Microsoft Visual Studio\2022"
+          cmd /c mklink /D "C:\Program Files (x86)\Microsoft Visual Studio\2019" "C:\Program Files\Microsoft Visual Studio\2022"
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
