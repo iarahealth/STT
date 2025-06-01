@@ -2106,6 +2106,9 @@ jobs:
         run: |
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
+      - name: Workaround bazel lack of support for VC 2022
+        run: |
+          mklink /D "C:\Program Files (x86)\Microsoft Visual Studio\2019" "C:\Program Files (x86)\Microsoft Visual Studio\2022"
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
