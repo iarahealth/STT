@@ -59,7 +59,7 @@ RUN python3.9 -m venv /tflite-venv
 ENV PATH="$VIRTUAL_ENV/bin:/tflite-venv/bin:$PATH"
 
 # Make sure pip and its dependencies are up-to-date
-RUN pip install --upgrade pip wheel setuptools
+RUN pip install --upgrade pip packaging wheel setuptools
 
 WORKDIR /code
 
