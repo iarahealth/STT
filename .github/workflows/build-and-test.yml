@@ -1943,6 +1943,9 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
       - name: Select Xcode version
         run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
