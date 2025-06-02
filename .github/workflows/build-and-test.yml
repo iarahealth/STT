@@ -1913,12 +1913,22 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-nodejs-macOS:
     name: "Mac|Test NodeJS bindings"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     needs: [build-nodejs-macOS, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
+        os: [macos-14, macos-13]
+        include:
+          - os: macos-14
+            arch: arm64
+          - os: macos-13
+            arch: x64
+            avx: "true"
+          - os: macos-13
+            arch: x64
+            avx: "false"
         nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
@@ -1938,7 +1948,7 @@ jobs:
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
-          name: "stt_intermediate-tflite-macOS_x64.tgz"
+          name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v4
         with:
@@ -1954,7 +1964,7 @@ jobs:
         id: node-modules-cache
         with:
           path: ~/.npm/
-          key: node-modules-tflite-${{ runner.os }}-${{ env.CI_NODE_MODULES_NTH }}
+          key: node-modules-tflite-${{ runner.os }}-${{ matrix.arch }}${{ matrix.avx == 'false' && '-noavx' || '' }}-${{ env.CI_NODE_MODULES_NTH }}
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
@@ -2358,6 +2368,7 @@ jobs:
         nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
+        avx: ["true", "false"]
       fail-fast: false
     env:
       CI_TMP_DIR: tmp/
@@ -2379,7 +2390,7 @@ jobs:
       - uses: ./.github/actions/win-install-sox
       - uses: actions/download-artifact@v4
         with:
-          name: "STT_intermediate-tflite-Windows.tgz"
+          name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v4
         with:
@@ -2394,7 +2405,7 @@ jobs:
         id: node-modules-cache
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: node-modules-tflite-${{ runner.os }}-${{ env.CI_NODE_MODULES_NTH }}
+          key: node-modules-tflite-${{ runner.os }}${{ matrix.avx == 'false' && '-noavx' || '' }}-${{ env.CI_NODE_MODULES_NTH }}
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
