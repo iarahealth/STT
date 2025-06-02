@@ -56,6 +56,7 @@ def diagnose_unsupported(p: Path) -> str:
     if cpu_architecture != platform.machine().replace("x86_64", "x86"):
         return f"The CPU architecture supported by the wheel is {cpu_architecture}, but the platform has architecture {platform.machine()}"
 
+    print(wheel_os_version_major, platform.mac_ver())
     os_major, os_minor, os_patch = platform.mac_ver()[0].split(".")
     if int(os_major) < int(wheel_os_version_major):
         return f"The operating system major version is {os_major}, but the wheel requires at least OS major version {wheel_os_version_major}"
