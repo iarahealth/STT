@@ -47,14 +47,14 @@ RUN apt-get update && \
 
 # For exporting using TFLite
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
-    python3.7 \
-    python3.7-venv
+    python3.9 \
+    python3.9-venv
 
 RUN python3 -m venv --system-site-packages /venv
 ENV VIRTUAL_ENV=/venv
 
 # Venv for upstream tensorflow with tflite api
-RUN python3.7 -m venv /tflite-venv
+RUN python3.9 -m venv /tflite-venv
 
 ENV PATH="$VIRTUAL_ENV/bin:/tflite-venv/bin:$PATH"
 
