@@ -1887,6 +1887,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip
+      - run: pip install packaging
+      - run: python ./native_client/verify.py ${{ env.CI_TMP_DIR }}/stt-1.6.0-cp37-cp37m-macosx_13_0_x86_64.whl
       - run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: brew install sox
