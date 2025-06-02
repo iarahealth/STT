@@ -1736,6 +1736,7 @@ jobs:
       #- uses: actions/setup-python@v4
       #  with:
       #    python-version: ${{ matrix.python-version }}
+      - run: pip install --upgrade pip
       - id: get_numpy
         uses: ./.github/actions/numpy_vers
         with:
