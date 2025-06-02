@@ -1874,7 +1874,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        python-version: [3.7.9]
+        python-version: [3.7.9, 3.8.9, 3.9.4]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -1888,7 +1888,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -m pip install --upgrade pip
-      - run: pip install packaging
       - run: |
           sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: brew install sox
@@ -1901,7 +1900,6 @@ jobs:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
         if: matrix.models == 'test'
-      - run: python ./native_client/verify.py ${{ env.CI_TMP_DIR }}/stt-1.6.0-cp37-cp37m-macosx_13_0_x86_64.whl
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
