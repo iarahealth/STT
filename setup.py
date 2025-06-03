@@ -36,7 +36,7 @@ def main():
         "clearml",
     ]
 
-    decoder_pypi_dep = ["iara_stt_ctcdecoder == {}".format(version)]
+    decoder_pypi_dep = ["iara-stt-ctcdecoder == {}".format(version)]
 
     tensorflow_pypi_dep = ["tensorflow == 1.15.4"]
 
