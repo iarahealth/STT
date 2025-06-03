@@ -1,2 +1,2 @@
-include training/coqui_stt_training/VERSION
-include training/coqui_stt_training/GRAPH_VERSION
+include training/iara_stt_training/VERSION
+include training/iara_stt_training/GRAPH_VERSION

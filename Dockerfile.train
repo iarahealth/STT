@@ -65,8 +65,8 @@ WORKDIR /code
 
 COPY native_client /code/native_client
 COPY .git /code/.git
-COPY training/coqui_stt_training/VERSION /code/training/coqui_stt_training/VERSION
-COPY training/coqui_stt_training/GRAPH_VERSION /code/training/coqui_stt_training/GRAPH_VERSION
+COPY training/iara_stt_training/VERSION /code/training/iara_stt_training/VERSION
+COPY training/iara_stt_training/GRAPH_VERSION /code/training/iara_stt_training/GRAPH_VERSION
 
 # Build CTC decoder first, to avoid clashes on incompatible versions upgrades
 RUN cd native_client/ctcdecode && make NUM_PROCESSES=$(nproc) bindings

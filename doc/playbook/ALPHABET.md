@@ -32,7 +32,7 @@ If you think you used different alphabets to create a [language model and an aco
 One of the most common errors occurs when there is a character in the corpus that is not in the `alphabet.txt` file. You need to include the missing character in the `alphabet.txt` file.
 
 ```
-File "/STT/training/coqui_stt_training/util/text.py", line 18, in text_to_char_array
+File "/STT/training/iara_stt_training/util/text.py", line 18, in text_to_char_array
   .format(transcript, context, list(ch for ch in transcript if not alphabet.CanEncodeSingle(ch))))
 ValueError: Alphabet cannot encode transcript "panggil ambulan！" while processing sample "persistent-data/cv-corpus-6.1-2020-12-11/id/clips/common_voice_id_19338419.wav", check that your alphabet contains all characters in the training corpus. Missing characters are: ['！'].
 ```

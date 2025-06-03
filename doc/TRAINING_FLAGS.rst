@@ -8,7 +8,7 @@ Below you can find the definition of all command-line flags supported by the tra
 Flags
 -----
 
-.. literalinclude:: ../training/coqui_stt_training/util/config.py
+.. literalinclude:: ../training/iara_stt_training/util/config.py
    :language: python
    :start-after: sphinx-doc: training_ref_flags_start
    :end-before: sphinx-doc: training_ref_flags_end
