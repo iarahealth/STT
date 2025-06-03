@@ -1069,8 +1069,8 @@ jobs:
       - name: Run tests
         run: |
           set -xe
-          python -m pip install ".[transcribe]"
           python -m pip install iara_stt_ctcdecoder-*.whl
+          python -m pip install ".[transcribe]"
 
           source ./ci_scripts/train-tests-setup.sh ${{ matrix.samplerate }}
 
