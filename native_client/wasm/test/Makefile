@@ -1,6 +1,6 @@
 NPM_TOOL           	    ?= npm
 TEST_PROJECT_NAME       ?= stt-wasm
-TEST_PROJECT_VERSION    ?= $(shell cat ../../../training/iara_stt_training/VERSION | tr -d '\n')
+TEST_PROJECT_VERSION    ?= $(shell cat ../../../training/coqui_stt_training/VERSION | tr -d '\n')
 
 clean:
 	rm -rf package.json package-lock.json

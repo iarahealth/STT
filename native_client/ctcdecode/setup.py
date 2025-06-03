@@ -57,7 +57,7 @@ def maybe_rebuild(srcs, out_name, build_dir):
         )
 
 
-project_version = read("../../training/iara_stt_training/VERSION").strip()
+project_version = read("../../training/coqui_stt_training/VERSION").strip()
 
 build_dir = "temp_build/temp_build"
 

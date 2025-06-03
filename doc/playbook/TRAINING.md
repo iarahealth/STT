@@ -343,12 +343,12 @@ To work around this error, you will need to set the `TF_FORCE_GPU_ALLOW_GROWTH` 
 
 This is done in the file
 
-`STT/training/iara_stt_training/util/config.py`
+`STT/training/coqui_stt_training/util/config.py`
 
 and you should edit it as below:
 
 ```
-root@687a2e3516d7:/STT/training/iara_stt_training/util# nano config.py
+root@687a2e3516d7:/STT/training/coqui_stt_training/util# nano config.py
 
 ...
 
