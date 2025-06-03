@@ -471,7 +471,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt_intermediate-tflite-Linux.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/@iarahealth/stt-*.tgz
   build-wasm:
     name: "Wasm|Build libstt"
     runs-on: ubuntu-22.04
@@ -1838,7 +1838,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/@iarahealth/stt-*.tgz
   test-cpp-macOS:
     name: "Mac|Test C++ binary"
     runs-on: ${{ matrix.os }}
@@ -2272,7 +2272,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/@iarahealth/stt-*.tgz
   test-cpp-Windows:
     name: "Win|Test C++ binary"
     runs-on: windows-2019
@@ -2544,7 +2544,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt-tflite.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/@iarahealth/stt-*.tgz
   test-nodejs_all-Linux:
     name: "Lin|Test MultiArchPlatform NodeJS bindings"
     runs-on: ubuntu-22.04
