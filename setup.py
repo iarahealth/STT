@@ -14,6 +14,7 @@ def main():
 
     install_requires_base = [
         "attrdict",
+        "attrs < 22",
         "bs4",
         "coqpit",
         "numpy<1.19.0",
@@ -36,7 +37,7 @@ def main():
         "clearml",
     ]
 
-    decoder_pypi_dep = ["iara-stt-ctcdecoder == {}".format(version)]
+    decoder_pypi_dep = ["iara_stt_ctcdecoder == {}".format(version)]
 
     tensorflow_pypi_dep = ["tensorflow == 1.15.4"]
 
