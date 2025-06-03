@@ -17,6 +17,7 @@ env:
   # macOS specific
   MACOSX_DEPLOYMENT_TARGET: "10.10"
   CI_NODE_MODULES_NTH: 1
+  SYSTEM_VERSION_COMPAT: 0
 
   # Windows specific
   CI_MSYS_VERSION: MSYS_NT-10.0-17763
@@ -140,6 +141,10 @@ jobs:
         with:
           repository: "swig/swig"
           ref: ${{ env.swig_hash }}
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - run: |
           mkdir -p build-static/
       - uses: actions/cache@v3
@@ -226,6 +231,10 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/download-artifact@v4
         with:
           name: "swig_Linux"
@@ -254,6 +263,7 @@ jobs:
           NUMPY_DEP_VERSION="${{ steps.get_numpy.outputs.dep_version }}" \
           make -C native_client/ctcdecode/ \
             NUM_PROCESSES=$(nproc) \
+            EXTRA_CXXFLAGS="-include /opt/rh/gcc-toolset-12/root/usr/include/c++/12/limits" \
             bindings
       - name: Auditwheel repair
         run: |
@@ -317,7 +327,7 @@ jobs:
           path: ${{ github.workspace }}/tmp/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: "test-checkpoint.${{ matrix.samplerate }}.zip"
+          name: "test-checkpoint.${{ matrix.samplerate }}-Linux.zip"
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-Linux:
     name: "Lin|Build libstt+client"
@@ -332,11 +342,13 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
-          apt-get update
-          apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
+          dnf install -y xz zip xz-devel bzip2-devel
       - name: Setup venv
         run: |
           /opt/python/cp37-cp37m/bin/python -m venv /tmp/venv
@@ -371,15 +383,17 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.Linux.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
-          apt-get update
-          apt-get install -y --no-install-recommends xz-utils liblzma-dev libbz2-dev
+          dnf install -y xz zip xz-devel bzip2-devel
       - name: Extract native_client.tar.xz
         run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
@@ -435,12 +449,12 @@ jobs:
           chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
       - uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 16
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
+          key: node-headers-16.0.0_18.0.0
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -448,7 +462,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -470,14 +484,16 @@ jobs:
         with:
           fetch-depth: 0
           submodules: 'recursive'
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/setup-node@v3
         with:
           node-version: 16
       - name: Install dependencies
         run: |
-          sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's|security.debian.org|archive.debian.org/|g' -e '/stretch-updates/d' /etc/apt/sources.list.d/debian.sources
-          apt-get update
-          apt-get install -y --no-install-recommends xz-utils zip liblzma-dev libbz2-dev
+          dnf install -y xz zip xz-devel bzip2-devel
       - name: Setup venv
         run: |
           /opt/python/cp37-cp37m/bin/python -m venv /tmp/venv
@@ -508,6 +524,10 @@ jobs:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
     steps:
       - uses: actions/checkout@v3
+      - name: Fix git ownership in containers
+        run: |
+          git config --system --add safe.directory $GITHUB_WORKSPACE
+          git config --system --add safe.directory /__w/STT/STT
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -561,7 +581,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        python-version: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -644,7 +664,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [14, 16, 17]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
@@ -708,7 +728,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - run: |
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v4
@@ -734,6 +754,8 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -820,19 +842,19 @@ jobs:
           time ./bin/run-ci-ldc93s1_checkpoint.sh
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.pb
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.pb
           path: ${{ github.workspace }}/artifacts/output_graph.pb
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.pbmm
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.pbmm
           path: ${{ github.workspace }}/artifacts/output_graph.pbmm
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-output_graph.tflite
+          name: ${{ github.job }}-output_graph-${{ matrix.samplerate }}-${{ matrix.pyver }}.tflite
           path: ${{ github.workspace }}/artifacts/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.job }}-checkpoint.tar.xz
+          name: ${{ github.job }}-checkpoint-${{ matrix.samplerate }}-${{ matrix.pyver }}.tar.xz
           path: ${{ github.workspace }}/artifacts/checkpoint.tar.xz
   training-extra-tests:
     name: "Lin|Extra training tests"
@@ -1027,7 +1049,7 @@ jobs:
           name: "coqui_stt_ctcdecoder-Linux-${{ matrix.pyver }}.whl"
       - uses: actions/download-artifact@v4
         with:
-          name: "training-basic-tests-checkpoint.tar.xz"
+          name: "training-basic-tests-checkpoint-${{ matrix.samplerate }}-${{ matrix.pyver }}.tar.xz"
       - name: Extract training checkpoint
         run: |
           ls -lh
@@ -1101,7 +1123,7 @@ jobs:
     name: "Upload STT packages to PyPI"
     runs-on: ubuntu-22.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [create-release, build-python-Linux, build-python-macOS, build-python-Windows, build-python-LinuxArmv7]
+    needs: [create-release, build-python-Linux, build-python-macOS, build-python-Windows]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -1165,26 +1187,11 @@ jobs:
           EOF
       - run: |
           twine upload --repository pypi *.whl
-      # PyPI only supports ARM wheels built on manylinux images, but those aren't
-      # ready for use yet, so we upload our wheels to the corresponding release
-      # for this tag.
-      - uses: actions/download-artifact@v4
-        with:
-          name: stt-tflite-3.7-armv7.whl
-      - uses: actions/download-artifact@v4
-        with:
-          name: stt-tflite-3.9-armv7.whl
-      - name: Upload artifacts to GitHub release
-        uses: ./.github/actions/upload-release-asset
-        with:
-          name: '' # use filename
-          path: "*.whl"
-          release-tag: ${{ needs.create-release.outputs.release-tag }}
   upload-nc-release-assets:
     name: "Upload native client artifacts to release assets"
     runs-on: ubuntu-22.04
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    needs: [create-release, build-lib-Windows, build-lib-Linux, build-universal-lib-macOS, build-lib-LinuxArmv7]
+    needs: [create-release, build-lib-Windows, build-lib-Linux, build-universal-lib-macOS]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v4
@@ -1215,10 +1222,6 @@ jobs:
         with:
           name: native_client.tflite.Windows.tar.xz
       - run: mv native_client.tar.xz native_client.tflite.Windows.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: native_client.tflite.linux.armv7.tar.xz
-      - run: mv native_client.tar.xz native_client.tflite.linux.armv7.tar.xz
       - run: ls -lh
       - uses: ./.github/actions/upload-release-asset
         with:
@@ -1272,6 +1275,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: rm -rf /opt/hostedtoolcache
       - name: Check VERSION matches Git tag and compute Docker tag
         id: compute-tag
         run: |
@@ -1400,7 +1404,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
           registry-url: https://npm.pkg.github.com/
       - uses: actions/setup-python@v4
         with:
@@ -1440,7 +1444,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted-macos-arm
+          - os: macos-14
             arch: arm64
             artifact_suffix: arm64
           - os: macos-13
@@ -1503,6 +1507,7 @@ jobs:
       - run: |
           python --version
           pip --version
+      - run: pip install --upgrade pip
       - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.x64"
@@ -1584,67 +1589,37 @@ jobs:
           path: ${{ github.workspace }}/tmp/output_graph.tflite
       - uses: actions/upload-artifact@v4
         with:
-          name: "test-checkpoint.${{ matrix.samplerate }}.zip"
+          name: "test-checkpoint.${{ matrix.samplerate }}-macOS.zip"
           path: ${{ github.workspace }}/tmp/checkpoint.tar.xz
   build-lib-macOS:
     name: "Mac|Build libstt+client"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        arch: ["x86_64", "arm64"]
-        avx: ["true"]
         include:
-          - arch: "x86_64"
+          - os: macos-14
+            arch: arm64
+            avx: "true"
+          - os: macos-13
+            arch: x86_64
+            avx: "true"
+          - os: macos-13
+            arch: x86_64
             avx: "false"
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
           submodules: 'recursive'
-      - uses: actions/setup-python@v4
+      - uses: getsentry/action-setup-venv@v2.1.1
         with:
-          python-version: "3.7"
+          python-version: 3.9
       - name: Install system deps
         run:
-          brew install coreutils curl
-      - name: Install x64 sox
-        if: matrix.arch == 'x86_64'
-        run: |
-          brew install sox
+          brew install coreutils sox opusfile
       - name: Select Xcode version
         run: |
-          sudo xcode-select --switch /Applications/Xcode_14.1.app/Contents/Developer
-          sudo xcode-select -p
-          sudo xcode-select -v
-      - uses: actions/cache@v3
-        id: cache
-        if: matrix.arch == 'arm64'
-        with:
-          path: ~/arm-target
-          key: ${{ runner.os }}-arm-brew-cache
-
-      - name: Install arm64 deps
-        if: matrix.arch == 'arm64' && steps.cache.outputs.cache-hit != 'true'
-        run: |
-          set -xe
-          mkdir -p ~/arm-target/bin
-          mkdir -p ~/arm-target/brew-cache
-          export PATH="$HOME/arm-target/bin:$PATH"
-
-          cd ~/arm-target
-          mkdir arm-brew && curl -L https://github.com/Homebrew/brew/archive/refs/tags/4.1.13.tar.gz | tar xz --strip 1 -C arm-brew
-
-          export HOMEBREW_CACHE=~/arm-target/brew-cache
-          export HOMEBREW_FORCE_BREWED_CURL=1
-          ~/arm-target/arm-brew/bin/brew fetch --debug --force --bottle-tag=arm64_ventura curl sox opusfile
-          ~/arm-target/arm-brew/bin/brew install --debug $(brew --cache --bottle-tag=arm64_ventura curl sox opusfile)
-
-          # Install host version of pkgconf so we can call it in the build system
-          ~/arm-target/arm-brew/bin/brew install pkgconf
-          ln -s ~/arm-target/arm-brew/bin/pkgconf ~/arm-target/bin/arm-pkg-config
-      - run: |
-          echo "$HOME/arm-target/bin" >> $GITHUB_PATH
-        if: matrix.arch == 'arm64'
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - run: ./ci_scripts/tf-setup.sh
       - name: Workaround problems with mixing headers from Xcode and CommandLineTools by removing the latter
         run: |
@@ -1737,6 +1712,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+      - run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS.tar.xz"
@@ -1760,6 +1737,7 @@ jobs:
       #- uses: actions/setup-python@v4
       #  with:
       #    python-version: ${{ matrix.python-version }}
+      - run: pip install --upgrade pip
       - id: get_numpy
         uses: ./.github/actions/numpy_vers
         with:
@@ -1779,26 +1757,29 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: self-hosted-macos-arm
+          - os: macos-14
             arch: arm64
             nodejs-version: 18
             avx: "true"
           - os: macos-13
             avx: "true"
             arch: x64
-            nodejs-version: 13
+            nodejs-version: 16
           - os: macos-13
             avx: "false"
             arch: x64
-            nodejs-version: 13
+            nodejs-version: 16
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/setup-python@v4
-        if: matrix.arch == 'x64'
+      - uses: getsentry/action-setup-venv@v2.1.1
         with:
-          python-version: 3.7.9
+          python-version: 3.9
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - run: python3 -m pip install setuptools
       - uses: actions/download-artifact@v4
         with:
           name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
@@ -1823,7 +1804,7 @@ jobs:
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
+          key: node-headers-16.0.0_18.0.0
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -1831,7 +1812,7 @@ jobs:
           key: electron-headers-12.0.0_21.0.0
       - uses: ./.github/actions/node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
+          nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -1843,13 +1824,21 @@ jobs:
           path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
   test-cpp-macOS:
     name: "Mac|Test C++ binary"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     needs: [build-universal-lib-macOS, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
+        os: [macos-14, macos-13]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
+        include:
+          - os: macos-14
+            avx: "true"
+          - os: macos-13
+            avx: "true"
+          - os: macos-13
+            avx: "false"
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
       STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
@@ -1859,7 +1848,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.macOS.tar.xz"
+          name: "native_client.tflite.macOS${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
       - run: |
           cd ${{ env.CI_TMP_DIR }}
@@ -1872,6 +1861,7 @@ jobs:
       - run: |
           ls -halR ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
+      - run: brew install sox opusfile
       - uses: ./.github/actions/run-tests
         with:
           runtime: "cpp"
@@ -1884,7 +1874,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        python-version: [3.6.8, 3.7.9, 3.8.9, 3.9.4]
+        python-version: [3.7.9, 3.8.9, 3.9.4]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -1897,6 +1887,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      - run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite-${{ matrix.python-version }}-macOS.whl"
@@ -1919,13 +1913,23 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-nodejs-macOS:
     name: "Mac|Test NodeJS bindings"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     needs: [build-nodejs-macOS, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [14, 16, 17]
+        os: [macos-14, macos-13]
+        include:
+          - os: macos-14
+            arch: arm64
+          - os: macos-13
+            arch: x64
+            avx: "true"
+          - os: macos-13
+            arch: x64
+            avx: "false"
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
       fail-fast: false
@@ -1939,15 +1943,23 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
       - uses: actions/download-artifact@v4
         with:
-          name: "stt_intermediate-tflite-macOS_x64.tgz"
+          name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v4
         with:
           name: "test-model.tflite-${{ matrix.samplerate }}.zip"
           path: ${{ env.CI_TMP_DIR }}
         if: matrix.models == 'test'
+      - run: python3 -m pip install setuptools
+      - run: brew install sox
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
@@ -1955,7 +1967,7 @@ jobs:
         id: node-modules-cache
         with:
           path: ~/.npm/
-          key: node-modules-tflite-${{ runner.os }}-${{ env.CI_NODE_MODULES_NTH }}
+          key: node-modules-tflite-${{ runner.os }}-${{ matrix.arch }}${{ matrix.avx == 'false' && '-noavx' || '' }}-${{ env.CI_NODE_MODULES_NTH }}
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
@@ -1974,7 +1986,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        electronjs-version: [12.0.0, 13.0.0, 14.0.0, 15.0.0, 16.0.0]
+        electronjs-version: [12.0.0, 13.0.0, 14.0.0, 15.0.0, 16.0.0, 21.0.0]
         models: ["test"]
         samplerate: ["16000"]
     env:
@@ -1986,7 +1998,12 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - run: python3 -m pip install setuptools
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_x64.tgz"
@@ -2010,6 +2027,8 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2124,7 +2143,7 @@ jobs:
       matrix:
         # Try to keep Python versions in sync with cached versions to speed things up:
         # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
-        python-version: [3.6.8, 3.7.9, 3.8.8, 3.9.4, 3.10.0]
+        python-version: [3.7.9, 3.8.8, 3.9.4, 3.10.0]
     steps:
       - uses: ilammy/msvc-dev-cmd@v1
       - uses: msys2/setup-msys2@v2
@@ -2214,12 +2233,12 @@ jobs:
           chmod +x native_client/ds-swig/bin/ds-swig.exe native_client/ds-swig/bin/swig.exe
       - uses: actions/setup-node@v3
         with:
-          node-version: 13
+          node-version: 16
       - uses: actions/cache@v3
         id: node-headers-cache
         with:
           path: native_client/javascript/headers/nodejs/
-          key: node-headers-win-13.0.0_16.0.0
+          key: node-headers-win-14.0.0_16.0.0
       - uses: actions/cache@v3
         id: electron-headers-cache
         with:
@@ -2227,7 +2246,7 @@ jobs:
           key: electron-headers-win-12.0.0_15.0.0
       - uses: ./.github/actions/win-node-build
         with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0"
+          nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
       - uses: actions/upload-artifact@v4
         with:
@@ -2240,6 +2259,9 @@ jobs:
   test-cpp-Windows:
     name: "Win|Test C++ binary"
     runs-on: windows-2019
+    strategy:
+      matrix:
+        avx: ["true", "false"]
     defaults:
       run:
         shell: msys2 {0}
@@ -2262,7 +2284,7 @@ jobs:
       - name: Download native_client.tar.xz
         uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.Windows.tar.xz"
+          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
           path: ${{ env.CI_TMP_DIR }}
       - name: Extract native_client.tar.xz
         run: |
@@ -2295,7 +2317,7 @@ jobs:
       matrix:
         # Try to keep Python versions in sync with cached versions to speed things up:
         # https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md
-        python-version: [3.6.8, 3.7.9, 3.8.8, 3.9.4, 3.10.0]
+        python-version: [3.7.9, 3.8.8, 3.9.4, 3.10.0]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
     env:
@@ -2346,9 +2368,10 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
       matrix:
-        nodejs-version: [14, 16]
+        nodejs-version: [16, 17, 18]
         models: ["test"]
         samplerate: ["16000"]
+        avx: ["true", "false"]
       fail-fast: false
     env:
       CI_TMP_DIR: tmp/
@@ -2370,7 +2393,7 @@ jobs:
       - uses: ./.github/actions/win-install-sox
       - uses: actions/download-artifact@v4
         with:
-          name: "STT_intermediate-tflite-Windows.tgz"
+          name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
           path: ${{ env.CI_TMP_DIR }}
       - uses: actions/download-artifact@v4
         with:
@@ -2385,7 +2408,7 @@ jobs:
         id: node-modules-cache
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: node-modules-tflite-${{ runner.os }}-${{ env.CI_NODE_MODULES_NTH }}
+          key: node-modules-tflite-${{ runner.os }}${{ matrix.avx == 'false' && '-noavx' || '' }}-${{ env.CI_NODE_MODULES_NTH }}
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
         if: matrix.models == 'test'
@@ -2427,7 +2450,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - uses: ./.github/actions/win-install-sox
       - uses: actions/download-artifact@v4
         with:
@@ -2456,6 +2479,8 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
@@ -2466,7 +2491,7 @@ jobs:
   repackage-nodejs-allplatforms:
     name: "Repackage NodeJS / ElectronJS for multiplatforms"
     runs-on: ubuntu-22.04
-    needs: [build-nodejs-macOS, build-nodejs-Windows, build-nodejs-Linux, build-nodejs-LinuxArmv7]
+    needs: [build-nodejs-macOS, build-nodejs-Windows, build-nodejs-Linux]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -2491,17 +2516,12 @@ jobs:
         with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
           path: /tmp/nodewrapper-Linux_amd64/
-      - uses: actions/download-artifact@v4
-        with:
-          name: "nodewrapper-tflite-Linux_armv7.tar.gz"
-          path: /tmp/nodewrapper-Linux_armv7/
       - name: Extract nodewrapper archives
         run: |
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_arm64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_x64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Windows_amd64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Linux_amd64/wrapper.tar.gz
-          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Linux_armv7/wrapper.tar.gz
       - run: |
           make -C native_client/javascript clean npm-pack PROJECT_NAME=stt
       - uses: actions/upload-artifact@v4
@@ -2516,7 +2536,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 17]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -2580,7 +2600,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - run: |
           sudo apt-get install -y --no-install-recommends sox
       - uses: actions/download-artifact@v4
@@ -2606,6 +2626,8 @@ jobs:
           npm install ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2620,14 +2642,10 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 17]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
-        include:
-          - os: self-hosted-macos-arm
-            arch: arm64
-          - os: macos-13
-            arch: x86_64
+        os: [macos-14, macos-13]
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
@@ -2639,6 +2657,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.nodejs-version }}
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
+      - run: python3 -m pip install setuptools
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
@@ -2669,7 +2695,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-electronjs_all-macOS:
     name: "Mac|Test MultiArchPlatform ElectronJS bindings"
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
     needs: [repackage-nodejs-allplatforms, train-test-model-Linux]
     if: ${{ github.event_name == 'pull_request' }}
     strategy:
@@ -2677,6 +2703,7 @@ jobs:
         electronjs-version: [12.0.0, 16.0.0]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
+        os: [macos-14, macos-13]
       fail-fast: false
     env:
       CI_TMP_DIR: ${{ github.workspace }}/tmp/
@@ -2687,7 +2714,15 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
+      - name: Select Xcode version
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_15.2.app/Contents/Developer
+      - uses: getsentry/action-setup-venv@v2.1.1
+        with:
+          python-version: 3.9
+      - run: python3 -m pip install setuptools
+      - run: brew install sox
       - uses: actions/download-artifact@v4
         with:
           name: "stt-tflite.tgz"
@@ -2711,6 +2746,8 @@ jobs:
           npm install --verbose ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2728,7 +2765,7 @@ jobs:
     strategy:
       matrix:
         # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 16]
+        nodejs-version: [16, 17, 18]
         models: ["test", "prod"]
         samplerate: ["8000", "16000"]
       fail-fast: false
@@ -2810,7 +2847,7 @@ jobs:
           fetch-depth: 1
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - uses: ./.github/actions/win-install-sox
       - uses: actions/download-artifact@v4
         with:
@@ -2839,706 +2876,11 @@ jobs:
           npm install --verbose ${{ env.CI_TMP_DIR }}/stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
+          npm install electron-rebuild
+          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarahealth/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
           samplerate: ${{ matrix.samplerate }}
           model-kind: ${{ matrix.models }}
         timeout-minutes: 5
-  # Linux Armv7 jobs
-  build-lib-LinuxArmv7:
-    name: "LinArmv7|Build libstt+client"
-    runs-on: ubuntu-22.04
-    env:
-      SYSTEM_TARGET: rpi3
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/multistrap-raspbian-buster
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - name: Install chroot
-        uses: ./.github/actions/multistrap
-        with:
-          arch: armv7
-      - run: ./ci_scripts/tf-setup.sh
-      - run: ./ci_scripts/armv7-build.sh
-      - run: ./ci_scripts/package.sh
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "native_client.tflite.linux.armv7.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "libstt.tflite.linux.armv7.zip"
-          path: ${{ github.workspace }}/artifacts/libstt.zip
-  build-python-LinuxArmv7:
-    name: "LinArmv7|Build Python bindings"
-    runs-on: ubuntu-22.04
-    needs: [build-lib-LinuxArmv7, swig_Linux]
-    strategy:
-      matrix:
-        include:
-          - python-version: 3.7
-            system-raspbian: multistrap-raspbian-buster
-            arch: armv7
-          - python-version: 3.9
-            system-raspbian: multistrap-raspbian-bullseye
-            arch: armv7
-      fail-fast: false
-    env:
-      DEBIAN_FRONTEND: "noninteractive"
-      SYSTEM_TARGET: rpi3
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/${{ matrix.system-raspbian }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/download-artifact@v4
-        with:
-          name: "native_client.tflite.linux.armv7.tar.xz"
-          path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
-      - run: |
-          cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
-          tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: "swig_Linux"
-          path: ${{ github.workspace }}/native_client/ds-swig/
-      - name: Link ds-swig into swig
-        run: |
-          ls -hal ${{ github.workspace }}/native_client/ds-swig/bin
-          ln -s ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
-          chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: "Install chroot"
-        uses: ./.github/actions/multistrap
-        with:
-          arch: ${{ matrix.arch }}
-          pyver: ${{ matrix.python-version }}
-      - id: get_numpy
-        uses: ./.github/actions/numpy_vers
-        with:
-          pyver: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          pip install -U pip setuptools wheel
-      - name: Download cross-build toolchain
-        run: |
-          cd tensorflow
-          bazel build --cpu=armhf @local_config_embedded_arm//:toolchain
-      - uses: ./.github/actions/install-xldd
-        with:
-          target: ${{ env.SYSTEM_TARGET }}
-      - uses: ./.github/actions/python-build
-        with:
-          numpy_build: "${{ steps.get_numpy.outputs.build_version }}"
-          numpy_dep: "${{ steps.get_numpy.outputs.dep_version }}"
-          target: ${{ env.SYSTEM_TARGET }}
-          chroot: ${{ env.SYSTEM_RASPBIAN }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "stt-tflite-${{ matrix.python-version }}-armv7.whl"
-          path: ${{ github.workspace }}/native_client/python/dist/*.whl
-  build-nodejs-LinuxArmv7:
-    name: "LinArmv7|Build NodeJS and ElectronJS"
-    runs-on: ubuntu-22.04
-    needs: [build-lib-LinuxArmv7, swig_Linux]
-    env:
-      SYSTEM_TARGET: rpi3
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/multistrap-raspbian-buster
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/download-artifact@v4
-        with:
-          name: "native_client.tflite.linux.armv7.tar.xz"
-          path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
-      - run: |
-          cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
-          tar xf native_client.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: "swig_Linux"
-          path: ${{ github.workspace }}/native_client/ds-swig/
-      - name: Link ds-swig into swig
-        run: |
-          ls -hal ${{ github.workspace }}/native_client/ds-swig/bin
-          ln -s ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
-          chmod +x ${{ github.workspace }}/native_client/ds-swig/bin/ds-swig ${{ github.workspace }}/native_client/ds-swig/bin/swig
-      - name: "Install chroot"
-        uses: ./.github/actions/multistrap
-        with:
-          arch: armv7
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 13
-      - uses: actions/cache@v3
-        id: node-headers-cache
-        with:
-          path: native_client/javascript/headers/nodejs/
-          key: node-headers-13.0.0_17.0.1
-      - uses: actions/cache@v3
-        id: electron-headers-cache
-        with:
-          path: native_client/javascript/headers/electronjs/
-          key: electron-headers-12.0.0_21.0.0
-      - name: Download cross-build toolchain
-        run: |
-          cd tensorflow
-          bazel build --cpu=armhf @local_config_embedded_arm//:toolchain
-      - uses: ./.github/actions/install-xldd
-        with:
-          target: ${{ env.SYSTEM_TARGET }}
-      - uses: ./.github/actions/node-build
-        with:
-          nodejs_versions: "13.0.0 14.0.0 15.0.0 16.0.0 17.0.1"
-          electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
-          target: ${{ env.SYSTEM_TARGET }}
-          chroot: ${{ env.SYSTEM_RASPBIAN }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "nodewrapper-tflite-Linux_armv7.tar.gz"
-          path: ${{ github.workspace }}/native_client/javascript/wrapper.tar.gz
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "stt_intermediate-tflite-armv7.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/stt-*.tgz
-  build-test-chroot:
-    name: "Lin|Build test chroot"
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'pull_request' }}
-    strategy:
-      matrix:
-        include:
-          - arch: armv7
-            python-version: 3.7
-            system: buster
-          - arch: armv7
-            python-version: 3.9
-            system: bullseye
-      fail-fast: false
-    env:
-      CI_TMP_DIR: ${{ github.workspace }}/tmp
-      DEBIAN_FRONTEND: "noninteractive"
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-${{ matrix.system }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - name: "Install and setup chroot"
-        uses: ./.github/actions/multistrap
-        with:
-          arch: ${{ matrix.arch }}
-          pyver: ${{ matrix.python-version }}
-          packages: "bash wget curl sox xxd libatlas3-base libopenblas-base ca-certificates python3 python3-pip gnupg libatk1.0-0 libatk-bridge2.0-0 libcairo2 libcups2 libdbus-1-3 libgdk-pixbuf2.0-0 libgtk-3-0 libgbm1 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libx11-xcb1 libxcb-dri3-0 libxcomposite1 libxcursor1 libxdamage1 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 xauth"
-      - name: "Create a chroot tarball"
-        run: |
-          sudo tar -cf - -C ${{ env.SYSTEM_RASPBIAN }}/ --one-file-system . | xz -9 -T0 > ${{ github.workspace }}/chroot.tar.xz
-      - uses: actions/upload-artifact@v4
-        with:
-          name: chroot-${{ matrix.arch }}-${{ matrix.system }}
-          path: ${{ github.workspace }}/chroot.tar.xz
-  test-cpp-LinuxArm:
-    name: "LinArm*|Test C++ binary"
-    runs-on: ubuntu-22.04
-    needs: [ build-lib-LinuxArmv7, train-test-model-Linux, build-test-chroot ]
-    if: ${{ github.event_name == 'pull_request' }}
-    strategy:
-      matrix:
-        include:
-          - arch: "armv7"
-            system: "buster"
-            models: "test"
-            samplerate: "8000"
-          - arch: "armv7"
-            system: "buster"
-            models: "test"
-            samplerate: "16000"
-          - arch: "armv7"
-            system: "buster"
-            models: "prod"
-            samplerate: "8000"
-          - arch: "armv7"
-            system: "buster"
-            models: "prod"
-            samplerate: "16000"
-          - arch: "armv7"
-            system: "bullseye"
-            models: "test"
-            samplerate: "8000"
-          - arch: "armv7"
-            system: "bullseye"
-            models: "test"
-            samplerate: "16000"
-          - arch: "armv7"
-            system: "bullseye"
-            models: "prod"
-            samplerate: "8000"
-          - arch: "armv7"
-            system: "bullseye"
-            models: "prod"
-            samplerate: "16000"
-      fail-fast: false
-    env:
-      CI_TMP_DIR: ${{ github.workspace }}/tmp
-      DEBIAN_FRONTEND: "noninteractive"
-      STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-${{ matrix.system }}
-    steps:
-      - name: "Install QEMU"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - uses: actions/download-artifact@v4
-        with:
-          name: "chroot-${{ matrix.arch }}-${{ matrix.system }}"
-          path: ${{ env.CI_TMP_DIR }}/
-      - run: |
-          mkdir ${{ env.SYSTEM_RASPBIAN }}/
-          sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
-          rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: "native_client.tflite.linux.${{ matrix.arch }}.tar.xz"
-          path: ${{ env.CI_TMP_DIR }}/
-      - run: |
-          cd ${{ env.CI_TMP_DIR }}/
-          mkdir ds && cd ds && tar xf ../native_client.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: "test-model.tflite-${{ matrix.samplerate }}.zip"
-          path: ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - run: |
-          ls -hal ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - name: "Check tests"
-        run: |
-          file ${{ env.SYSTEM_RASPBIAN }}/${{ env.CI_TMP_DIR }}/ds/*
-      - uses: ./.github/actions/chroot-bind-mount
-        with:
-          mounts: "/dev"
-      - uses: ./.github/actions/run-tests
-        with:
-          runtime: "cpp"
-          chroot: "sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ${{ github.workspace }}"
-          samplerate: ${{ matrix.samplerate }}
-          model-kind: ${{ matrix.models }}
-  test-py-LinuxArm:
-    name: "LinArm*|Test Python bindings"
-    runs-on: ubuntu-22.04
-    needs: [ build-python-LinuxArmv7, train-test-model-Linux, build-test-chroot ]
-    if: ${{ github.event_name == 'pull_request' }}
-    strategy:
-      matrix:
-        include:
-          - arch: armv7
-            system: "buster"
-            python-version: "3.7"
-            models: "test"
-            samplerate: "8000"
-          - arch: armv7
-            system: "buster"
-            python-version: "3.7"
-            models: test
-            samplerate: "16000"
-          - arch: armv7
-            system: "buster"
-            python-version: "3.7"
-            models: "prod"
-            samplerate: "8000"
-          - arch: armv7
-            system: "buster"
-            python-version: "3.7"
-            models: "prod"
-            samplerate: "16000"
-          - arch: armv7
-            system: "bullseye"
-            python-version: "3.9"
-            models: "test"
-            samplerate: "8000"
-          - arch: armv7
-            system: "bullseye"
-            python-version: "3.9"
-            models: "test"
-            samplerate: "16000"
-          - arch: armv7
-            system: "bullseye"
-            python-version: "3.9"
-            models: "prod"
-            samplerate: "8000"
-          - arch: armv7
-            system: "bullseye"
-            python-version: "3.9"
-            models: "prod"
-            samplerate: "16000"
-      fail-fast: false
-    env:
-      CI_TMP_DIR: ${{ github.workspace }}/tmp
-      DEBIAN_FRONTEND: "noninteractive"
-      STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-${{ matrix.system }}
-      PIP_EXTRA_INDEX_URL: "https://www.piwheels.org/simple https://lissyx.github.io/deepspeech-python-wheels/"
-    steps:
-      - name: "Install QEMU"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - uses: actions/download-artifact@v4
-        with:
-          name: "chroot-${{ matrix.arch }}-${{ matrix.system }}"
-          path: ${{ env.CI_TMP_DIR }}/
-      - run: |
-          mkdir ${{ env.SYSTEM_RASPBIAN }}/
-          sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
-          rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - uses: actions/download-artifact@v4
-        with:
-          name: "stt-tflite-${{ matrix.python-version }}-${{ matrix.arch }}.whl"
-          path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v4
-        with:
-          name: "test-model.tflite-${{ matrix.samplerate }}.zip"
-          path: ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - run: |
-          ls -hal ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - uses: ./.github/actions/chroot-bind-mount
-        with:
-          mounts: "/dev"
-      - run: |
-          ls -hal ${{ env.CI_TMP_DIR }}/
-          ls -hal ${{ github.workspace }}/
-          ls -hal ${{ env.SYSTEM_RASPBIAN }}/${{ github.workspace }}/
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ pip3 install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
-      - uses: ./.github/actions/run-tests
-        with:
-          runtime: "python"
-          chroot: "sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ${{ github.workspace }}"
-          samplerate: ${{ matrix.samplerate }}
-          model-kind: ${{ matrix.models }}
-  test-nodejs-LinuxArm:
-    name: "LinArm*|Test NodeJS bindings"
-    runs-on: ubuntu-22.04
-    needs: [ build-nodejs-LinuxArmv7, train-test-model-Linux, build-test-chroot ]
-    if: ${{ github.event_name == 'pull_request' }}
-    strategy:
-      matrix:
-        arch: ["armv7"]
-        # https://nodejs.org/en/about/releases/
-        nodejs-version: [12, 14, 16, 17]
-        models: ["test"]
-        samplerate: ["16000"]
-      fail-fast: false
-    env:
-      CI_TMP_DIR: ${{ github.workspace }}/tmp
-      DEBIAN_FRONTEND: "noninteractive"
-      STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-buster
-    steps:
-      - name: "Install QEMU"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends qemu-user-static
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - uses: actions/download-artifact@v4
-        with:
-          name: "chroot-${{ matrix.arch }}-buster"
-          path: ${{ env.CI_TMP_DIR }}/
-      - run: |
-          mkdir ${{ env.SYSTEM_RASPBIAN }}/
-          sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
-          rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - name: "Install NodeJS"
-        uses: ./.github/actions/node-install
-        with:
-          node: ${{ matrix.nodejs-version }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: "stt_intermediate-tflite-${{ matrix.arch }}.tgz"
-          path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v4
-        with:
-          name: "test-model.tflite-${{ matrix.samplerate }}.zip"
-          path: ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - run: |
-          ls -hal ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - uses: ./.github/actions/chroot-bind-mount
-        with:
-          mounts: "/dev"
-      - name: Install STT package
-        run: |
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ npm install --prefix ${{ github.workspace }}/ --verbose ${{ env.CI_TMP_DIR }}/stt*.tgz
-      - uses: ./.github/actions/run-tests
-        with:
-          runtime: "node"
-          chroot: "sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ${{ github.workspace }}"
-          samplerate: ${{ matrix.samplerate }}
-          model-kind: ${{ matrix.models }}
-  test-electronjs-LinuxArm:
-    name: "LinArm*|Test ElectronJS bindings"
-    runs-on: ubuntu-22.04
-    needs: [ build-nodejs-LinuxArmv7, train-test-model-Linux, build-test-chroot ]
-    # Disable this task because it seems qemu does not work super-well with ElectronJS
-    if: ${{ github.event_name == 'disabled' }}
-    strategy:
-      matrix:
-        arch: ["armv7"]
-        electronjs-version: [12.0.0, 13.0.0, 14.0.0, 15.0.0, 16.0.0]
-        models: ["test"]
-        samplerate: ["16000"]
-      fail-fast: false
-    env:
-      CI_TMP_DIR: ${{ github.workspace }}/tmp
-      DEBIAN_FRONTEND: "noninteractive"
-      STT_TEST_MODEL: ${{ github.workspace }}/tmp/output_graph.tflite
-      SYSTEM_RASPBIAN: ${{ github.workspace }}/chroot-${{ matrix.arch }}-buster
-      DISPLAY: ":99.0"
-    steps:
-      - name: "Install QEMU"
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends qemu-user-static xvfb xauth
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-      - uses: actions/download-artifact@v4
-        with:
-          name: "chroot-${{ matrix.arch }}-buster"
-          path: ${{ env.CI_TMP_DIR }}/
-      - run: |
-          mkdir ${{ env.SYSTEM_RASPBIAN }}/
-          sudo tar -xf ${{ env.CI_TMP_DIR }}/chroot.tar.xz -C ${{ env.SYSTEM_RASPBIAN }}/
-          rm ${{ env.CI_TMP_DIR }}/chroot.tar.xz
-      - name: "Install NodeJS"
-        uses: ./.github/actions/node-install
-        with:
-          node: 12
-      - uses: actions/download-artifact@v4
-        with:
-          name: "stt_intermediate-tflite-${{ matrix.arch }}.tgz"
-          path: ${{ env.CI_TMP_DIR }}/
-      - uses: actions/download-artifact@v4
-        with:
-          name: "test-model.tflite-${{ matrix.samplerate }}.zip"
-          path: ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - run: |
-          ls -hal ${{ env.CI_TMP_DIR }}/
-        if: matrix.models == 'test'
-      - uses: ./.github/actions/chroot-bind-mount
-        with:
-          mounts: "/dev /proc /sys /run"
-      - name: Install STT package
-        run: |
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ npm install --prefix ${{ github.workspace }}/ ${{ env.CI_TMP_DIR }}/stt*.tgz
-      - run: |
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ npm install --prefix ${{ github.workspace }}/ electron@${{ matrix.electronjs-version }}
-      - name: "Fake X display"
-        run: |
-          sudo Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          xvfb_process=$!
-          echo $xvfb_process > ${{ env.CI_TMP_DIR }}/xvfb.pid
-          cat ${{ env.CI_TMP_DIR }}/xvfb.pid
-      - name: "Debug missing libs"
-        run: |
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ls -hal ${{ github.workspace }}/node_modules/electron/dist/electron
-          sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ldd ${{ github.workspace }}/node_modules/electron/dist/electron
-      - uses: ./.github/actions/run-tests
-        with:
-          runtime: "electronjs"
-          chroot: "sudo --preserve-env chroot --userspec=runner:docker ${{ env.SYSTEM_RASPBIAN }}/ ${{ github.workspace }}"
-          samplerate: ${{ matrix.samplerate }}
-          model-kind: ${{ matrix.models }}
-        timeout-minutes: 5
-      - name: "Kill X"
-        run: |
-          cat ${{ env.CI_TMP_DIR }}/xvfb.pid
-          sudo kill -9 $(cat ${{ env.CI_TMP_DIR }}/xvfb.pid)
-  # Android jobs
-  build-lib-AndroidArmv7:
-    name: "AndroidArmv7|Build libstt+client"
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-armv7
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-armv7-build.sh
-      - run: ./ci_scripts/android-package.sh armeabi-v7a
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "native_client.tflite.android.armv7.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-lib-AndroidArm64:
-    name: "AndroidArm64|Build libstt+client"
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-arm64
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-arm64-build.sh
-      - run: ./ci_scripts/android-package.sh arm64-v8a
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "native_client.tflite.android.arm64.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-lib-Androidx86_64:
-    name: "Androidx86_64|Build libstt+client"
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: 'recursive'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.7"
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "8"
-      - run: ./ci_scripts/tf-setup.sh --android-arm64
-      - run: ./ci_scripts/tf-configure.sh --android
-      - run: ./ci_scripts/android-x86_64-build.sh
-      - run: ./ci_scripts/android-package.sh x86_64
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "native_client.tflite.android.x86_64.tar.xz"
-          path: ${{ github.workspace }}/artifacts/native_client.tar.xz
-  build-android-apk-aar:
-    name: "Android|Build AAR+APK"
-    runs-on: ubuntu-22.04
-    needs: [build-lib-AndroidArmv7, build-lib-AndroidArm64, build-lib-Androidx86_64]
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v4
-        with:
-          name: native_client.tflite.android.armv7.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/armeabi-v7a
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/armeabi-v7a/
-          rm -f *
-      - uses: actions/download-artifact@v4
-        with:
-          name: native_client.tflite.android.arm64.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/arm64-v8a
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/arm64-v8a/
-          rm -f *
-      - uses: actions/download-artifact@v4
-        with:
-          name: native_client.tflite.android.x86_64.tar.xz
-          path: /tmp/nc
-      - run: |
-          mkdir -p native_client/java/libstt/libs/x86_64
-          cd /tmp/nc
-          tar xvf native_client.tar.xz
-          mv libstt.so libkenlm.so ${CI_TASK_DIR}/native_client/java/libstt/libs/x86_64/
-          rm -f *
-      - uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "11"
-          cache: "gradle"
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
-      - name: Install Android NDK r19c
-        uses: nttld/setup-ndk@v1
-        id: setup-ndk
-        with:
-          ndk-version: r19c
-          add-to-path: false
-      # This particular version of CMake confuses Gradle by not being semver.
-      # We're fine with 3.22.1 which is also installed. Keep an eye on the
-      # virtual environments though:
-      # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-13-Readme.md#android
-      - name: Remove CMake 3.18.1-g262b901
-        run: |
-          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall 'cmake;3.18.1'
-      - run: |
-          make GRADLE="./gradlew " -C native_client/java
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - run: |
-          make GRADLE="./gradlew " -C native_client/java maven-bundle
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "app.apk"
-          path: ${{ github.workspace }}/native_client/java/app/build/outputs/apk/release/app*.apk
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "libstt.aar"
-          path: ${{ github.workspace }}/native_client/java/libstt/build/outputs/aar/libstt*.aar
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "libstt.maven.zip"
-          path: ${{ github.workspace }}/native_client/java/libstt/build/libstt-*.maven.zip
-  publish-android-aar:
-    name: "Android|Publish AAR"
-    runs-on: ubuntu-22.04
-    needs: [create-release, build-android-apk-aar]
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/download-artifact@v4
-        with:
-          name: "libstt.aar"
-          path: ${{ github.workspace }}/
-      - run: ls -lh
-      - uses: ./.github/actions/upload-release-asset
-        with:
-          name: '' # use filename
-          path: "*.aar"
-          release-tag: ${{ needs.create-release.outputs.release-tag }}

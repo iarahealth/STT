@@ -5,7 +5,7 @@ set -xe
 macos_target_arch=$1
 DISABLE_AVX=$2
 SYSTEM_TARGET=host
-if [ "$(uname)-$(uname -m)" = "Darwin-x86_64" -a "${macos_target_arch}" = "arm64" ]; then
+if [ "${macos_target_arch}" = "arm64" ]; then
   SYSTEM_TARGET="darwin-arm64"
 fi
 

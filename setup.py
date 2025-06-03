@@ -16,7 +16,7 @@ def main():
         "attrdict",
         "bs4",
         "coqpit",
-        "numpy",
+        "numpy<1.19.0",
         "optuna",
         "numba <= 0.53.1",
         "opuslib == 2.0.0",
@@ -69,7 +69,7 @@ def main():
         ],
         package_dir={"": "training"},
         packages=find_packages(where="training"),
-        python_requires=">=3.7, <3.9",
+        python_requires=">=3.7, <3.10",
         install_requires=install_requires,
         include_package_data=True,
         extras_require={
