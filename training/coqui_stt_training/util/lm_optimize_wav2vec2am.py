@@ -8,15 +8,15 @@ from dataclasses import dataclass, field
 
 import optuna
 from clearml import Task
-from coqui_stt_ctcdecoder import Scorer
-from coqui_stt_training.util.config import (
+from iara_stt_ctcdecoder import Scorer
+from iara_stt_training.util.config import (
     BaseSttConfig,
     Config,
     initialize_globals_from_instance,
     log_error,
 )
-from coqui_stt_training.util.evaluate_tools import wer_cer_batch
-from coqui_stt_training.evaluate_wav2vec2am import (
+from iara_stt_training.util.evaluate_tools import wer_cer_batch
+from iara_stt_training.evaluate_wav2vec2am import (
     compute_emissions,
     evaluate_from_emissions,
 )

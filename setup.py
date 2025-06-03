@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 
 def main():
-    version_file = Path(__file__).parent / "training" / "coqui_stt_training" / "VERSION"
+    version_file = Path(__file__).parent / "training" / "iara_stt_training" / "VERSION"
     with open(str(version_file)) as fin:
         version = fin.read().strip()
 
@@ -36,7 +36,7 @@ def main():
         "clearml",
     ]
 
-    decoder_pypi_dep = ["coqui_stt_ctcdecoder == {}".format(version)]
+    decoder_pypi_dep = ["iara_stt_ctcdecoder == {}".format(version)]
 
     tensorflow_pypi_dep = ["tensorflow == 1.15.4"]
 
@@ -51,7 +51,7 @@ def main():
         install_requires = install_requires + tensorflow_pypi_dep
 
     setup(
-        name="coqui_stt_training",
+        name="iara_stt_training",
         version=version,
         description="Training code for Coqui STT",
         url="https://github.com/coqui-ai/STT",

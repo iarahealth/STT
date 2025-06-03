@@ -2,10 +2,10 @@
 Usage:
  From within the training/ directory, call this script as a module:
 
-       $ python3 -m coqui_stt_training.util.check_characters "INFILE"
- e.g.  $ python3 -m coqui_stt_training.util.check_characters -csv /home/data/french.csv
- e.g.  $ python3 -m coqui_stt_training.util.check_characters -csv ../train.csv,../test.csv
- e.g.  $ python3 -m coqui_stt_training.util.check_characters -alpha -csv ../train.csv
+       $ python3 -m iara_stt_training.util.check_characters "INFILE"
+ e.g.  $ python3 -m iara_stt_training.util.check_characters -csv /home/data/french.csv
+ e.g.  $ python3 -m iara_stt_training.util.check_characters -csv ../train.csv,../test.csv
+ e.g.  $ python3 -m iara_stt_training.util.check_characters -alpha -csv ../train.csv
 
 Point this script to your transcripts, and it returns
 to the terminal the unique set of characters in those

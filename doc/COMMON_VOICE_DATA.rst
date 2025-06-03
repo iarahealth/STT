@@ -38,7 +38,7 @@ For example, if you download, extracted, and imported the French language data f
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.train \
+   $ python -m iara_stt_training.train \
          --train_files fr/clips/train.csv \
          --dev_files fr/clips/dev.csv \
          --test_files fr/clips/test.csv

@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from .io import open_remote
 from .sample_collections import samples_from_sources
-from coqui_stt_ctcdecoder import Alphabet
+from iara_stt_ctcdecoder import Alphabet
 
 
 def create_alphabet_from_sources(sources: [str]) -> ([str], Alphabet):

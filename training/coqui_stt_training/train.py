@@ -19,7 +19,7 @@ import numpy as np
 import progressbar
 import tensorflow.compat.v1 as tfv1
 import tensorflow as tf
-from coqui_stt_ctcdecoder import Scorer
+from iara_stt_ctcdecoder import Scorer
 
 tfv1.logging.set_verbosity(
     {
@@ -257,8 +257,8 @@ def early_training_checks():
             "unexpected behavior of testing on the base checkpoint rather than the "
             "trained one. You should train and evaluate in two separate commands, "
             "specifying the correct --load_checkpoint_dir in both cases.\nFor training, "
-            "use: python -m coqui_stt_training.train\n"
-            "For evaluation, use python -m coqui_stt_training.evaluate"
+            "use: python -m iara_stt_training.train\n"
+            "For evaluation, use python -m iara_stt_training.evaluate"
         )
         Config.test_files = []
 
@@ -691,10 +691,10 @@ def main():
             f"{prefix} Using the training module as a generic driver for all training "
             "related functionality is deprecated and will be removed soon. Use "
             "the specific modules: \n"
-            "    python -m coqui_stt_training.train\n"
-            "    python -m coqui_stt_training.evaluate\n"
-            "    python -m coqui_stt_training.export\n"
-            "    python -m coqui_stt_training.training_graph_inference"
+            "    python -m iara_stt_training.train\n"
+            "    python -m iara_stt_training.evaluate\n"
+            "    python -m iara_stt_training.export\n"
+            "    python -m iara_stt_training.training_graph_inference"
         )
 
     if Config.train_files:
@@ -705,7 +705,7 @@ def main():
     if Config.test_files:
         log_warn(
             deprecated_msg(
-                "Specifying --test_files when calling train module. Use python -m coqui_stt_training.evaluate"
+                "Specifying --test_files when calling train module. Use python -m iara_stt_training.evaluate"
             )
         )
         evaluate.test()
@@ -713,7 +713,7 @@ def main():
     if Config.export_dir:
         log_warn(
             deprecated_msg(
-                "Specifying --export_dir when calling train module. Use python -m coqui_stt_training.export"
+                "Specifying --export_dir when calling train module. Use python -m iara_stt_training.export"
             )
         )
         export.export()
@@ -721,7 +721,7 @@ def main():
     if Config.one_shot_infer:
         log_warn(
             deprecated_msg(
-                "Specifying --one_shot_infer when calling train module. Use python -m coqui_stt_training.training_graph_inference"
+                "Specifying --one_shot_infer when calling train module. Use python -m iara_stt_training.training_graph_inference"
             )
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)

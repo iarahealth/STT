@@ -2,7 +2,7 @@
 """
 This script takes your personal audio downloaded from Common Voice
 (i.e. "a personal data takeout") and will format the data
-and transcripts to be in a state usable by coqui_stt_training.train
+and transcripts to be in a state usable by iara_stt_training.train
 You can download your recordings from Common Voice from your user profile.
 Use "python3 import_cv_personal.py -h" for help
 """
@@ -14,8 +14,8 @@ from multiprocessing import Pool
 
 import zipfile
 import sox
-from coqui_stt_ctcdecoder import Alphabet
-from coqui_stt_training.util.importers import (
+from iara_stt_ctcdecoder import Alphabet
+from iara_stt_training.util.importers import (
     get_counter,
     get_imported_samples,
     get_importers_parser,

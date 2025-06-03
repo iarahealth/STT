@@ -4,7 +4,7 @@ import functools
 from pathlib import Path
 
 import pandas
-from coqui_stt_training.util.helpers import secs_to_hours
+from iara_stt_training.util.helpers import secs_to_hours
 
 
 def read_csvs(csv_files):

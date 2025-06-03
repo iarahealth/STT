@@ -8,24 +8,24 @@ from pathlib import Path
 from typing import List, Optional
 
 import progressbar
-from coqui_stt_training.util.audio import (
+from iara_stt_training.util.audio import (
     AUDIO_TYPE_OPUS,
     AUDIO_TYPE_PCM,
     AUDIO_TYPE_WAV,
     change_audio_types,
 )
-from coqui_stt_training.util.augmentations import (
+from iara_stt_training.util.augmentations import (
     SampleAugmentation,
     apply_sample_augmentations,
     parse_augmentations,
 )
-from coqui_stt_training.util.config import (
+from iara_stt_training.util.config import (
     BaseSttConfig,
     Config,
     initialize_globals_from_instance,
 )
-from coqui_stt_training.util.downloader import SIMPLE_BAR
-from coqui_stt_training.util.sample_collections import (
+from iara_stt_training.util.downloader import SIMPLE_BAR
+from iara_stt_training.util.sample_collections import (
     CSVWriter,
     DirectSDBWriter,
     TarWriter,

@@ -20,7 +20,7 @@ For example, if you want to fine tune existing checkpoints to your own data in `
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.train \
+   $ python -m iara_stt_training.train \
          --checkpoint_dir path/to/checkpoint/folder \
          --train_files my-train.csv \
          --dev_files my-dev.csv \
@@ -39,7 +39,7 @@ You need to specify the location of the pre-trained model with ``--load_checkpoi
 
 .. code-block:: bash
 
-       python -m coqui_stt_training.train \
+       python -m iara_stt_training.train \
            --drop_source_layers 1 \
            --alphabet_config_path my-alphabet.txt \
            --save_checkpoint_dir path/to/output-checkpoint/folder \

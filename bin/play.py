@@ -10,23 +10,23 @@ import sys
 from dataclasses import dataclass, field
 from typing import List
 
-from coqui_stt_training.util.audio import (
+from iara_stt_training.util.audio import (
     AUDIO_TYPE_PCM,
     AUDIO_TYPE_WAV,
     get_loadable_audio_type_from_extension,
     Sample,
 )
-from coqui_stt_training.util.augmentations import (
+from iara_stt_training.util.augmentations import (
     SampleAugmentation,
     apply_sample_augmentations,
     parse_augmentations,
 )
-from coqui_stt_training.util.config import (
+from iara_stt_training.util.config import (
     BaseSttConfig,
     Config,
     initialize_globals_from_instance,
 )
-from coqui_stt_training.util.sample_collections import (
+from iara_stt_training.util.sample_collections import (
     LabeledSample,
     samples_from_source,
 )

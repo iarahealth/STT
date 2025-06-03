@@ -5,17 +5,17 @@
 ## Contents
 
 - [The alphabet.txt file](#the-alphabettxt-file)
-  * [Contents](#contents)
-  * [What is alphabet.txt ?](#what-is-alphabettxt--)
-  * [How does the Glue work?](#how-does-the-glue-work-)
-    + [How to diagnose mis-matched alphabets?](#how-to-diagnose-mis-matched-alphabets-)
-  * [Common alphabet.txt related errors](#common-alphabettxt-related-errors)
+  - [Contents](#contents)
+  - [What is alphabet.txt ?](#what-is-alphabettxt--)
+  - [How does the Glue work?](#how-does-the-glue-work-)
+    - [How to diagnose mis-matched alphabets?](#how-to-diagnose-mis-matched-alphabets-)
+  - [Common alphabet.txt related errors](#common-alphabettxt-related-errors)
 
-This tiny text file is easy to overlook, but it is very important. The *exact same* alphabet must be used to train the both acoustic model and the language model. This alphabet.txt is the glue that holds the language model and the acoustic model together.
+This tiny text file is easy to overlook, but it is very important. The _exact same_ alphabet must be used to train the both acoustic model and the language model. This alphabet.txt is the glue that holds the language model and the acoustic model together.
 
 ## What is alphabet.txt ?
 
-Let's take a look at the English [alphabet.txt](https://github.com/coqui-ai/STT/blob/master/data/alphabet.txt) which was used to train the release 🐸STT models. If you were to ask a native English speaker to write down the alphabet, this `alphabet.txt` isn't what they would write. *The `alphabet.txt` file contains all characters used in a language which are necessary for writing*. Looking at the English alphabet file, the first character is the space `" "`. We need spaces to separate words when writing. Following the space, we find all the familiar letters of the alphabet which children learn in school. Finally, we find the apostrophe "'". The apostrophe is needed for writing contractions, which are very common in English. The apostrophe can distinguish words like "we're" and "were", which have different prounuciations. Not all languages need spaces, and not all languages need apostrophes. Creating the alphabet for a new language takes some research. Two people creating the same alphabet file may disagree, and no one is objectively right. The best alphabet will depend on the target application and the available training data. You may notice that the `alphabet.txt` file released with 🐸STT for English does not contain any characters with accents, even though they do occur sometimes in English. The off-the-shelf 🐸STT model cannot produce words like "naïvely" or "résumé", and this was a design decision. We could make an alphabet that contains every possible character for every possible loan-word into English, but then we would need training data for all those new characters.
+Let's take a look at the English [alphabet.txt](https://github.com/coqui-ai/STT/blob/master/data/alphabet.txt) which was used to train the release 🐸STT models. If you were to ask a native English speaker to write down the alphabet, this `alphabet.txt` isn't what they would write. _The `alphabet.txt` file contains all characters used in a language which are necessary for writing_. Looking at the English alphabet file, the first character is the space `" "`. We need spaces to separate words when writing. Following the space, we find all the familiar letters of the alphabet which children learn in school. Finally, we find the apostrophe "'". The apostrophe is needed for writing contractions, which are very common in English. The apostrophe can distinguish words like "we're" and "were", which have different prounuciations. Not all languages need spaces, and not all languages need apostrophes. Creating the alphabet for a new language takes some research. Two people creating the same alphabet file may disagree, and no one is objectively right. The best alphabet will depend on the target application and the available training data. You may notice that the `alphabet.txt` file released with 🐸STT for English does not contain any characters with accents, even though they do occur sometimes in English. The off-the-shelf 🐸STT model cannot produce words like "naïvely" or "résumé", and this was a design decision. We could make an alphabet that contains every possible character for every possible loan-word into English, but then we would need training data for all those new characters.
 
 ## How does the Glue work?
 
@@ -32,7 +32,7 @@ If you think you used different alphabets to create a [language model and an aco
 One of the most common errors occurs when there is a character in the corpus that is not in the `alphabet.txt` file. You need to include the missing character in the `alphabet.txt` file.
 
 ```
-File "/STT/training/coqui_stt_training/util/text.py", line 18, in text_to_char_array
+File "/STT/training/iara_stt_training/util/text.py", line 18, in text_to_char_array
   .format(transcript, context, list(ch for ch in transcript if not alphabet.CanEncodeSingle(ch))))
 ValueError: Alphabet cannot encode transcript "panggil ambulan！" while processing sample "persistent-data/cv-corpus-6.1-2020-12-11/id/clips/common_voice_id_19338419.wav", check that your alphabet contains all characters in the training corpus. Missing characters are: ['！'].
 ```

@@ -13,9 +13,9 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 
 import progressbar
-from coqui_stt_ctcdecoder import Alphabet
-from coqui_stt_training.util.downloader import SIMPLE_BAR, maybe_download
-from coqui_stt_training.util.importers import validate_label_eng as validate_label
+from iara_stt_ctcdecoder import Alphabet
+from iara_stt_training.util.downloader import SIMPLE_BAR, maybe_download
+from iara_stt_training.util.importers import validate_label_eng as validate_label
 
 TUDA_VERSION = "v2"
 TUDA_PACKAGE = "german-speechdata-package-{}".format(TUDA_VERSION)

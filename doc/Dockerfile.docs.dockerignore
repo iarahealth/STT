@@ -3,8 +3,8 @@
 
 # Add files needed for doc build
 !VERSION
-!training/coqui_stt_training/VERSION
-!training/coqui_stt_training/util/flags.py
+!training/iara_stt_training/VERSION
+!training/iara_stt_training/util/flags.py
 !images
 !doc
 !native_client

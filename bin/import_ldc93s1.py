@@ -3,7 +3,7 @@ import os
 import sys
 
 import pandas
-from coqui_stt_training.util.downloader import maybe_download
+from iara_stt_training.util.downloader import maybe_download
 
 
 def _download_and_preprocess_data(data_dir):

@@ -11,9 +11,9 @@ from multiprocessing import Pool
 
 import progressbar
 import sox
-from coqui_stt_ctcdecoder import Alphabet
-from coqui_stt_training.util.downloader import SIMPLE_BAR, maybe_download
-from coqui_stt_training.util.importers import (
+from iara_stt_ctcdecoder import Alphabet
+from iara_stt_training.util.downloader import SIMPLE_BAR, maybe_download
+from iara_stt_training.util.importers import (
     get_counter,
     get_imported_samples,
     get_importers_parser,

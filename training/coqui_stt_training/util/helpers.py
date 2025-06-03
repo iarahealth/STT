@@ -51,12 +51,12 @@ def check_ctcdecoder_version():
 
     try:
         # pylint: disable=import-outside-toplevel
-        from coqui_stt_ctcdecoder import __version__ as decoder_version
+        from iara_stt_ctcdecoder import __version__ as decoder_version
     except ImportError as e:
         if e.msg.find("__version__") > 0:
             print(
                 "Coqui STT version ({ds_version}) requires CTC decoder to expose __version__. "
-                "Please upgrade the coqui_stt_ctcdecoder package to version {ds_version}".format(
+                "Please upgrade the iara_stt_ctcdecoder package to version {ds_version}".format(
                     ds_version=ds_version_s
                 )
             )

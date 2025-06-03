@@ -65,8 +65,8 @@ WORKDIR /code
 
 COPY native_client /code/native_client
 COPY .git /code/.git
-COPY training/coqui_stt_training/VERSION /code/training/coqui_stt_training/VERSION
-COPY training/coqui_stt_training/GRAPH_VERSION /code/training/coqui_stt_training/GRAPH_VERSION
+COPY training/iara_stt_training/VERSION /code/training/iara_stt_training/VERSION
+COPY training/iara_stt_training/GRAPH_VERSION /code/training/iara_stt_training/GRAPH_VERSION
 
 # Build CTC decoder first, to avoid clashes on incompatible versions upgrades
 RUN cd native_client/ctcdecode && make NUM_PROCESSES=$(nproc) bindings
@@ -89,7 +89,7 @@ RUN LATEST_STABLE_RELEASE=$(curl "https://api.github.com/repos/coqui-ai/STT/rele
 # and we don't want to break that
 RUN DS_NODECODER=y DS_NOTENSORFLOW=y pip install --upgrade -e .
 
-# Install coqui_stt_training (inside tf-venv) for exporting models using tflite
+# Install iara_stt_training (inside tf-venv) for exporting models using tflite
 RUN /tflite-venv/bin/pip install -e .
 
 # Copy rest of the code and test training

@@ -114,12 +114,12 @@ This script will train a model on a single audio file. If the script exits succe
 Training on your own Data
 -------------------------
 
-Whether you used our Dockerfile template or you set up your own environment, the central STT training module is ``python -m coqui_stt_training.train``. For a list of command line options, use the ``--help`` flag:
+Whether you used our Dockerfile template or you set up your own environment, the central STT training module is ``python -m iara_stt_training.train``. For a list of command line options, use the ``--help`` flag:
 
 .. code-block:: bash
 
    $ cd STT
-   $ python -m coqui_stt_training.train --help
+   $ python -m iara_stt_training.train --help
 
 Training Data
 ^^^^^^^^^^^^^
@@ -149,7 +149,7 @@ Alternatively, if you don't have pre-defined splits for training, validation and
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.train --auto_input_dataset samples.csv
+   $ python -m iara_stt_training.train --auto_input_dataset samples.csv
 
 Start Training
 ^^^^^^^^^^^^^^
@@ -159,7 +159,7 @@ After you've successfully installed STT and have access to data, you can start a
 .. code-block:: bash
 
    $ cd STT
-   $ python -m coqui_stt_training.train --train_files train.csv --dev_files dev.csv --test_files test.csv
+   $ python -m iara_stt_training.train --train_files train.csv --dev_files dev.csv --test_files test.csv
 
 Next Steps
 ----------

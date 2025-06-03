@@ -11,7 +11,7 @@ The training package contains options for performing inference directly from a c
 
    $ python -m pip install webrtcvad
 
-Note that if your goal is to evaluate a trained model and obtain accuracy metrics, you should use the evaluation module: ``python -m coqui_stt_training.evaluate``, which calculates character and word error rates, from a properly formatted CSV file (specified with the ``--test_files`` flag. See the :ref:`training docs <intro-training-docs>` for more information).
+Note that if your goal is to evaluate a trained model and obtain accuracy metrics, you should use the evaluation module: ``python -m iara_stt_training.evaluate``, which calculates character and word error rates, from a properly formatted CSV file (specified with the ``--test_files`` flag. See the :ref:`training docs <intro-training-docs>` for more information).
 
 Single file (aka one-shot) inference
 ------------------------------------
@@ -20,7 +20,7 @@ This is the simplest way to perform inference from a checkpoint. It takes a sing
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.training_graph_inference --checkpoint_dir coqui-stt-1.0.0-checkpoint --scorer_path huge-vocabulary.scorer --n_hidden 2048 --one_shot_infer audio/2830-3980-0043.wav
+   $ python -m iara_stt_training.training_graph_inference --checkpoint_dir coqui-stt-1.0.0-checkpoint --scorer_path huge-vocabulary.scorer --n_hidden 2048 --one_shot_infer audio/2830-3980-0043.wav
    I --alphabet_config_path not specified, but found an alphabet file alongside specified checkpoint (coqui-stt-1.0.0-checkpoint/alphabet.txt). Will use this alphabet file for this run.
    I Loading best validating checkpoint from coqui-stt-1.0.0-checkpoint/best_dev-3663881
    I Loading variable from checkpoint: cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/bias
@@ -47,17 +47,17 @@ There are two main usage modes: transcribing a single file, or scanning a direct
 Transcribing a single file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For a single audio file, you can specify it directly in the ``--src`` flag of the ``python -m coqui_stt_training.transcribe`` script:
+For a single audio file, you can specify it directly in the ``--src`` flag of the ``python -m iara_stt_training.transcribe`` script:
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.transcribe --checkpoint_dir coqui-stt-1.0.0-checkpoint --n_hidden 2048 --scorer_path huge-vocabulary.scorer --vad_aggressiveness 0 --src audio/2830-3980-0043.wav
+   $ python -m iara_stt_training.transcribe --checkpoint_dir coqui-stt-1.0.0-checkpoint --n_hidden 2048 --scorer_path huge-vocabulary.scorer --vad_aggressiveness 0 --src audio/2830-3980-0043.wav
    [1]: "audio/2830-3980-0043.wav" -> "audio/2830-3980-0043.tlog"
    Transcribing files: 100%|███████████████████████████████████| 1/1 [00:05<00:00,  5.40s/it]
    $ cat audio/2830-3980-0043.tlog
    [{"start": 150, "end": 1950, "transcript": "experience proves this"}]
 
-Note the use of the ``--vad_aggressiveness`` flag above to control the behavior of the VAD process used to find silent sections of the audio file for splitting into chunks. You can run ``python -m coqui_stt_training.transcribe --help`` to see the full listing of options, the last ones are specific to the transcribe module.
+Note the use of the ``--vad_aggressiveness`` flag above to control the behavior of the VAD process used to find silent sections of the audio file for splitting into chunks. You can run ``python -m iara_stt_training.transcribe --help`` to see the full listing of options, the last ones are specific to the transcribe module.
 
 By default the transcription results are put in a ``.tlog`` file next to the audio file that was transcribed, but you can specify a different location with the ``--dst path/to/some/file.tlog`` flag. This only works when trancribing a single file.
 
@@ -70,7 +70,7 @@ Multiple processes will be used to distribute the transcription work among avail
 
 .. code-block:: bash
 
-   $ python -m coqui_stt_training.transcribe --checkpoint_dir coqui-stt-1.0.0-checkpoint --n_hidden 2048 --scorer_path huge-vocabulary.scorer --vad_aggressiveness 0 --src audio/ --recursive true
+   $ python -m iara_stt_training.transcribe --checkpoint_dir coqui-stt-1.0.0-checkpoint --n_hidden 2048 --scorer_path huge-vocabulary.scorer --vad_aggressiveness 0 --src audio/ --recursive true
    Transcribing all files in --src directory audio
    Transcribing files:   0%|                                           | 0/3 [00:00<?, ?it/s]
    [3]: "audio/8455-210777-0068.wav" -> "audio/8455-210777-0068.tlog"

@@ -15,27 +15,29 @@ using namespace std;
 
 namespace po = boost::program_options;
 
-int
-create_package(absl::optional<string> checkpoint_path,
-               string lm_path,
-               string vocab_path,
-               string package_path,
-               absl::optional<bool> force_bytes_output_mode,
-               float default_alpha,
-               float default_beta)
+int create_package(absl::optional<string> checkpoint_path,
+                   string lm_path,
+                   string vocab_path,
+                   string package_path,
+                   absl::optional<bool> force_bytes_output_mode,
+                   float default_alpha,
+                   float default_beta)
 {
     // Read vocabulary
     unordered_set<string> words;
     bool vocab_looks_char_based = true;
     ifstream fin(vocab_path);
-    if (!fin) {
+    if (!fin)
+    {
         cerr << "Invalid vocabulary file " << vocab_path << "\n";
         return 1;
     }
     string word;
-    while (fin >> word) {
+    while (fin >> word)
+    {
         words.insert(word);
-        if (get_utf8_str_len(word) > 1) {
+        if (get_utf8_str_len(word) > 1)
+        {
             vocab_looks_char_based = false;
         }
     }
@@ -43,18 +45,20 @@ create_package(absl::optional<string> checkpoint_path,
          << (vocab_looks_char_based ? "Looks" : "Doesn't look")
          << " like a character based (Bytes Are All You Need) model.\n";
 
-    if (!force_bytes_output_mode.has_value()) {
+    if (!force_bytes_output_mode.has_value())
+    {
         force_bytes_output_mode = vocab_looks_char_based;
         cerr << "--force_bytes_output_mode was not specified, using value "
              << "infered from vocabulary contents: "
              << (vocab_looks_char_based ? "true" : "false") << "\n";
     }
 
-    if (!force_bytes_output_mode.value() && !checkpoint_path.has_value()) {
+    if (!force_bytes_output_mode.value() && !checkpoint_path.has_value())
+    {
         cerr << "No --checkpoint path specified, not using bytes output mode, can't continue."
              << "\nCheckpoint path must contain an alphabet."
-             << "\nStart by creating an alphabet for your models using coqui_stt_training.util.check_characters if needed.\n"
-             << "\n    python -m coqui_stt_training.util.check_characters \\"
+             << "\nStart by creating an alphabet for your models using iara_stt_training.util.check_characters if needed.\n"
+             << "\n    python -m iara_stt_training.util.check_characters \\"
              << "\n				--csv-files ... \\"
              << "\n				--alphabet-format | grep -v '^#' | sort -n > models/alphabet.txt\n"
              << "\nThis will create an alphabet models/alphabet.txt.\n"
@@ -66,12 +70,16 @@ create_package(absl::optional<string> checkpoint_path,
     }
 
     Scorer scorer;
-    if (force_bytes_output_mode.value()) {
+    if (force_bytes_output_mode.value())
+    {
         scorer.set_alphabet(UTF8Alphabet());
-    } else {
+    }
+    else
+    {
         std::string alphabet_path = checkpoint_path.value() + "/alphabet.txt";
         Alphabet alphabet;
-        if (alphabet.init(alphabet_path.c_str()) != 0) {
+        if (alphabet.init(alphabet_path.c_str()) != 0)
+        {
             cerr << "Alphabet initialization failed (missing file?) - loading from path: " << alphabet_path << "\n";
             return 1;
         }
@@ -80,7 +88,8 @@ create_package(absl::optional<string> checkpoint_path,
     scorer.set_utf8_mode(force_bytes_output_mode.value());
     scorer.reset_params(default_alpha, default_beta);
     int err = scorer.load_lm_filepath(lm_path);
-    if (err != STT_ERR_SCORER_NO_TRIE) {
+    if (err != STT_ERR_SCORER_NO_TRIE)
+    {
         cerr << "Error loading language model file: "
              << (err == STT_ERR_SCORER_UNREADABLE ? "Can't open binary LM file." : STT_ErrorCodeToErrorMessage(err))
              << "\n";
@@ -96,7 +105,8 @@ create_package(absl::optional<string> checkpoint_path,
     }
 
     // Save dictionary to package file, appending instead of overwriting
-    if (!scorer.save_dictionary(package_path, true)) {
+    if (!scorer.save_dictionary(package_path, true))
+    {
         cerr << "Error when saving package in " << package_path << ".\n";
         return 1;
     }
@@ -105,46 +115,39 @@ create_package(absl::optional<string> checkpoint_path,
     return 0;
 }
 
-int
-main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     po::options_description desc("Options");
-    desc.add_options()
-        ("help", "show help message")
-        ("checkpoint", po::value<string>(), "Path to a checkpoint directory "
-            "corresponding to the model this scorer will be used with. The "
-            "alphabet will be loaded from an alphabet.txt file in the "
-            "checkpoint directory. Words with characters not in the alphabet "
-            "will not be included in the vocabulary. Optional if using bytes "
-            "output mode.")
-        ("lm", po::value<string>(), "Path of KenLM binary LM file. Must be "
-            "built without including the vocabulary (use the -v flag). See "
-            "generate_lm.py for how to create a binary LM.")
-        ("vocab", po::value<string>(), "Path of vocabulary file. Must contain "
-            "words separated by whitespace.")
-        ("package", po::value<string>(), "Path to save scorer package.")
-        ("default_alpha", po::value<float>(), "Default value of alpha "
-            "hyperparameter (float).")
-        ("default_beta", po::value<float>(), "Default value of beta "
-            "hyperparameter (float).")
-        ("force_bytes_output_mode", po::value<bool>(), "Boolean flag, force "
-            "set or unset bytes output mode in the scorer package. If not set, "
-            "infers from the vocabulary. See <https://stt.readthedocs.io/en/latest/Decoder.html#bytes-output-mode> "
-            "for further explanation.")
-    ;
+    desc.add_options()("help", "show help message")("checkpoint", po::value<string>(), "Path to a checkpoint directory "
+                                                                                       "corresponding to the model this scorer will be used with. The "
+                                                                                       "alphabet will be loaded from an alphabet.txt file in the "
+                                                                                       "checkpoint directory. Words with characters not in the alphabet "
+                                                                                       "will not be included in the vocabulary. Optional if using bytes "
+                                                                                       "output mode.")("lm", po::value<string>(), "Path of KenLM binary LM file. Must be "
+                                                                                                                                  "built without including the vocabulary (use the -v flag). See "
+                                                                                                                                  "generate_lm.py for how to create a binary LM.")("vocab", po::value<string>(), "Path of vocabulary file. Must contain "
+                                                                                                                                                                                                                 "words separated by whitespace.")("package", po::value<string>(), "Path to save scorer package.")("default_alpha", po::value<float>(), "Default value of alpha "
+                                                                                                                                                                                                                                                                                                                                                        "hyperparameter (float).")("default_beta", po::value<float>(), "Default value of beta "
+                                                                                                                                                                                                                                                                                                                                                                                                                       "hyperparameter (float).")("force_bytes_output_mode", po::value<bool>(), "Boolean flag, force "
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "set or unset bytes output mode in the scorer package. If not set, "
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "infers from the vocabulary. See <https://stt.readthedocs.io/en/latest/Decoder.html#bytes-output-mode> "
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "for further explanation.");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
 
-    if (vm.count("help")) {
+    if (vm.count("help"))
+    {
         cout << desc << "\n";
         return 1;
     }
 
     // Check required flags.
-    for (const string& flag : {"lm", "vocab", "package", "default_alpha", "default_beta"}) {
-        if (!vm.count(flag)) {
+    for (const string &flag : {"lm", "vocab", "package", "default_alpha", "default_beta"})
+    {
+        if (!vm.count(flag))
+        {
             cerr << "--" << flag << " is a required flag. Pass --help for help.\n";
             return 1;
         }
@@ -152,13 +155,15 @@ main(int argc, char** argv)
 
     // Parse optional --force_bytes_output_mode
     absl::optional<bool> force_bytes_output_mode = absl::nullopt;
-    if (vm.count("force_bytes_output_mode")) {
+    if (vm.count("force_bytes_output_mode"))
+    {
         force_bytes_output_mode = vm["force_bytes_output_mode"].as<bool>();
     }
 
     // Parse optional --checkpoint
     absl::optional<string> checkpoint = absl::nullopt;
-    if (vm.count("checkpoint")) {
+    if (vm.count("checkpoint"))
+    {
         checkpoint = vm["checkpoint"].as<string>();
     }
 

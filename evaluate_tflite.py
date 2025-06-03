@@ -5,10 +5,10 @@ if __name__ == "__main__":
 
     print(
         "Using the top level evaluate_tflite.py script is deprecated and will be removed "
-        "in a future release. Instead use: python -m coqui_stt_training.evaluate_export"
+        "in a future release. Instead use: python -m iara_stt_training.evaluate_export"
     )
     try:
-        from coqui_stt_training import evaluate_export as stt_evaluate_export
+        from iara_stt_training import evaluate_export as stt_evaluate_export
     except ImportError:
         print("Training package is not installed. See training documentation.")
         raise

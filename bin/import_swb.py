@@ -16,7 +16,7 @@ import librosa
 import pandas
 import requests
 import soundfile  # <= Has an external dependency on libsndfile
-from coqui_stt_training.util.importers import validate_label_eng as validate_label
+from iara_stt_training.util.importers import validate_label_eng as validate_label
 
 # ARCHIVE_NAME refers to ISIP alignments from 01/29/03
 ARCHIVE_NAME = "switchboard_word_alignments.tar.gz"

@@ -3,7 +3,7 @@ NODE_ABI_TARGET    ?=
 NODE_BUILD_VERBOSE ?= --verbose
 NPM_TOOL           ?= npm
 PROJECT_NAME       ?= stt
-PROJECT_VERSION    ?= $(shell cat ../../training/coqui_stt_training/VERSION | tr -d '\n')
+PROJECT_VERSION    ?= $(shell cat ../../training/iara_stt_training/VERSION | tr -d '\n')
 NPM_ROOT           ?= $(shell npm root)
 
 NODE_PRE_GYP_ABI_CROSSWALK_FILE ?= $(NPM_ROOT)/../abi_crosswalk_priv.json

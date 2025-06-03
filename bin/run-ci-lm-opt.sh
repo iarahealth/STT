@@ -22,7 +22,7 @@ checkpoint_dir="${HOME}/.local/share/stt/ldc93s1"
 # and when trying to run on multiple devices (like GPUs), this will break
 export CUDA_VISIBLE_DEVICES=0
 
-python -m coqui_stt_training.util.lm_optimize \
+python -m iara_stt_training.util.lm_optimize \
         --scorer_path $scorer_filepath \
         --checkpoint_dir "$checkpoint_dir" \
         --test_files $test_filepath \

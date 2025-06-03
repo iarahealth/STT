@@ -11,14 +11,14 @@ from functools import partial
 from multiprocessing import JoinableQueue, Manager, Process, cpu_count
 
 import numpy as np
-from coqui_stt_training.util.evaluate_tools import calculate_and_print_report
-from coqui_stt_training.util.audio import read_ogg_opus
+from iara_stt_training.util.evaluate_tools import calculate_and_print_report
+from iara_stt_training.util.audio import read_ogg_opus
 from six.moves import range, zip
 
 r"""
 This module requires the inference package to be installed:
     - pip install stt
-Then run using `python -m coqui_stt_training.evaluate_export` with a TFLite model and a CSV test file, and optionally a scorer.
+Then run using `python -m iara_stt_training.evaluate_export` with a TFLite model and a CSV test file, and optionally a scorer.
 """
 
 
