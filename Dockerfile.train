@@ -50,7 +50,8 @@ RUN add-apt-repository ppa:deadsnakes/ppa -y
 
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
     python3.7 \
-    python3.7-venv
+    python3.7-venv \
+    python3.7-dev
 
 RUN python3 -m venv --system-site-packages /venv
 ENV VIRTUAL_ENV=/venv
@@ -92,6 +93,7 @@ RUN LATEST_STABLE_RELEASE=$(curl "https://api.github.com/repos/iarahealth/STT/re
 RUN DS_NODECODER=y DS_NOTENSORFLOW=y pip install --upgrade -e .
 
 # Install iara_stt_training (inside tf-venv) for exporting models using tflite
+RUN /tflite-venv/bin/pip install --upgrade pip wheel setuptools packaging
 RUN /tflite-venv/bin/pip install -e .
 
 # Copy rest of the code and test training
