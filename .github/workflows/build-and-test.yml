@@ -2143,6 +2143,8 @@ jobs:
           cd "/c/Program Files/Microsoft Visual Studio/2022/Enterprise/VC"
           ls -hal
           mv vcpkg ..
+          mv bin ..
+          ls -hal
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
