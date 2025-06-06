@@ -511,7 +511,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "libstt.tflite.wasm.es6.tgz"
-          path: ${{ github.workspace }}/native_client/wasm/stt-wasm-*.tgz
+          path: ${{ github.workspace }}/native_client/wasm/iarahealth-stt-wasm-*.tgz
   test-wasm:
     name: "Wasm|Test libstt"
     runs-on: ubuntu-22.04
