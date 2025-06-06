@@ -20,7 +20,7 @@ env:
   SYSTEM_VERSION_COMPAT: 0
 
   # Windows specific
-  CI_MSYS_VERSION: MSYS_NT-10.0-17763
+  CI_MSYS_VERSION: MSYS_NT-10.0-20348
 defaults:
   run:
     shell: bash
@@ -2056,7 +2056,7 @@ jobs:
   build-ctc-decoder-windows:
     name: "Win|Build CTC decoder Python package"
     needs: [swig_Windows_crosscompiled]
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2106,7 +2106,7 @@ jobs:
           make -C native_client/ctcdecode clean-keep-third-party
   build-lib-Windows:
     name: "Win|Build libstt+client"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2138,6 +2138,13 @@ jobs:
         run: |
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
+      - name: Workaround bazel bug where VC 2022 is not found
+        run: |
+          cd "/c/Program Files/Microsoft Visual Studio/2022/Enterprise/VC"
+          ls -hal
+          mv vcpkg ..
+          mv bin ..
+          ls -hal
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
@@ -2151,7 +2158,7 @@ jobs:
           path: ${{ github.workspace }}/artifacts/libstt.zip
   build-python-Windows:
     name: "Win|Build Python bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2210,7 +2217,7 @@ jobs:
           path: ${{ github.workspace }}/native_client/python/dist/*.whl
   build-nodejs-Windows:
     name: "Win|Build NodeJS/ElectronJS"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2275,7 +2282,7 @@ jobs:
           path: ${{ github.workspace }}/native_client/javascript/iarahealth-stt-*.tgz
   test-cpp-Windows:
     name: "Win|Test C++ binary"
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       matrix:
         avx: ["true", "false"]
@@ -2324,7 +2331,7 @@ jobs:
           model-kind: ""
   test-py-Windows:
     name: "Win|Test Python bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2377,7 +2384,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-nodejs-Windows:
     name: "Win|Test NodeJS bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2440,7 +2447,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-electronjs-Windows:
     name: "Win|Test ElectronJS bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2773,7 +2780,7 @@ jobs:
         timeout-minutes: 5
   test-nodejs_all-Windows:
     name: "Win|Test MultiArchPlatform NodeJS bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
@@ -2836,7 +2843,7 @@ jobs:
           model-kind: ${{ matrix.models }}
   test-electronjs_all-Windows:
     name: "Win|Test MultiArchPlatform ElectronJS bindings"
-    runs-on: windows-2019
+    runs-on: windows-2022
     defaults:
       run:
         shell: msys2 {0}
