@@ -1156,9 +1156,6 @@ jobs:
           name: stt-tflite-3.10.1-macOS.whl
       - uses: actions/download-artifact@v4
         with:
-          name: stt-tflite-3.6.8-Windows.whl
-      - uses: actions/download-artifact@v4
-        with:
           name: stt-tflite-3.7.9-Windows.whl
       - uses: actions/download-artifact@v4
         with:
@@ -1448,7 +1445,7 @@ jobs:
             npm publish --access=public --verbose $pkg --tag ${{ steps.compute-npm-tag.outputs.npm-tag }}
           done
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
