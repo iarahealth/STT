@@ -13,11 +13,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
-from coqui_stt_ctcdecoder import (
-    flashlight_beam_search_decoder,
-    Scorer,
-    FlashlightDecoderState,
-)
+from iara_stt_ctcdecoder import ctc_beam_search_decoder, Scorer
 from .deepspeech_model import (
     create_inference_graph,
     create_overlapping_windows,
@@ -31,11 +27,8 @@ from .util.feeding import audiofile_to_features
 def do_single_file_inference(input_file_path):
     reset_default_graph()
 
-    with open(Config.vocab_file) as fin:
-        vocab = [w.encode("utf-8") for w in [l.strip() for l in fin]]
-
     with tfv1.Session(config=Config.session_config) as session:
-        inputs, outputs, layers = create_inference_graph(batch_size=1, n_steps=-1)
+        inputs, outputs, _ = create_inference_graph(batch_size=1, n_steps=-1)
 
         # Restore variables from training checkpoint
         load_graph_for_evaluation(session)
@@ -52,7 +45,7 @@ def do_single_file_inference(input_file_path):
         features = create_overlapping_windows(features).eval(session=session)
         features_len = features_len.eval(session=session)
 
-        probs = layers["raw_logits"].eval(
+        probs = outputs["outputs"].eval(
             feed_dict={
                 inputs["input"]: features,
                 inputs["input_lengths"]: features_len,
@@ -70,18 +63,16 @@ def do_single_file_inference(input_file_path):
             )
         else:
             scorer = None
-        decoded = flashlight_beam_search_decoder(
+        decoded = ctc_beam_search_decoder(
             probs,
             Config.alphabet,
-            beam_size=Config.export_beam_width,
-            decoder_type=FlashlightDecoderState.LexiconBased,
-            token_type=FlashlightDecoderState.Aggregate,
-            lm_tokens=vocab,
+            Config.beam_width,
             scorer=scorer,
+            cutoff_prob=Config.cutoff_prob,
             cutoff_top_n=Config.cutoff_top_n,
         )
-        # Print highest probability result
-        print(" ".join(d.decode("utf-8") for d in decoded[0].words))
+        # Print highest probability transcript
+        print(decoded[0].transcript)
 
 
 def main():

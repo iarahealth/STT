@@ -1,5 +1,5 @@
 {
-    "name" : "$(PROJECT_NAME)",
+    "name" : "@iarahealth/$(PROJECT_NAME)",
     "version" : "$(PROJECT_VERSION)",
     "description" : "A library for doing speech recognition using a Coqui STT model",
     "main" : "./index.js",
@@ -9,7 +9,7 @@
     },
     "author" : "Coqui GmbH",
     "license": "MPL-2.0",
-    "homepage": "https://github.com/coqui-ai/STT",
+    "homepage": "https://github.com/iarahealth/STT",
     "files": [
        "README.md",
        "client.js",
@@ -18,11 +18,11 @@
        "lib/*"
     ],
     "bugs": {
-       "url": "https://github.com/coqui-ai/STT/issues"
+       "url": "https://github.com/iarahealth/STT/issues"
     },
     "repository"   :  {
        "type" : "git",
-       "url"  : "git://github.com/coqui-ai/STT.git"
+       "url"  : "git://github.com/iarahealth/STT.git"
     },
     "binary": {
         "module_name" : "stt",

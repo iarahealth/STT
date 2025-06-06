@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from coqui_stt_training.util.helpers import (
+from iara_stt_training.util.helpers import (
     ValueRange,
     get_value_range,
     pick_value_from_range,

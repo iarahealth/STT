@@ -5,25 +5,25 @@
 ## Contents
 
 - [Training a Coqui STT model](#training-a-coqui-stt-model)
-  * [Contents](#contents)
-  * [Making training files available to the Docker container](#making-training-files-available-to-the-docker-container)
-  * [Running training](#running-training)
-    + [Specifying checkpoint directories so that you can restart training from a checkpoint](#specifying-checkpoint-directories-so-that-you-can-restart-training-from-a-checkpoint)
+  - [Contents](#contents)
+  - [Making training files available to the Docker container](#making-training-files-available-to-the-docker-container)
+  - [Running training](#running-training)
+    - [Specifying checkpoint directories so that you can restart training from a checkpoint](#specifying-checkpoint-directories-so-that-you-can-restart-training-from-a-checkpoint)
       - [Advanced checkpoint configuration](#advanced-checkpoint-configuration)
-        * [How checkpoints are stored](#how-checkpoints-are-stored)
-        * [Managing disk space and checkpoints](#managing-disk-space-and-checkpoints)
-        * [Different checkpoints for loading and saving](#different-checkpoints-for-loading-and-saving)
-    + [Specifying the directory that the trained model should be exported to](#specifying-the-directory-that-the-trained-model-should-be-exported-to)
-  * [Other useful parameters that can be passed to `train.py`](#other-useful-parameters-that-can-be-passed-to--trainpy-)
-    + [`n_hidden` parameter](#-n-hidden--parameter)
-    + [Reduce learning rate on plateau (RLROP)](#reduce-learning-rate-on-plateau--rlrop-)
-    + [Early stopping](#early-stopping)
-    + [Dropout rate](#dropout-rate)
-  * [Steps and epochs](#steps-and-epochs)
-  * [Advanced training options](#advanced-training-options)
-  * [Monitoring GPU use with `nvtop`](#monitoring-gpu-use-with--nvtop-)
-  * [Possible errors](#possible-errors)
-    + [`Failed to get convolution algorithm. This is probably because cuDNN failed to initialize, so try looking to see if a warning log message was printed above.` error when training](#-failed-to-get-convolution-algorithm-this-is-probably-because-cudnn-failed-to-initialize--so-try-looking-to-see-if-a-warning-log-message-was-printed-above--error-when-training)
+        - [How checkpoints are stored](#how-checkpoints-are-stored)
+        - [Managing disk space and checkpoints](#managing-disk-space-and-checkpoints)
+        - [Different checkpoints for loading and saving](#different-checkpoints-for-loading-and-saving)
+    - [Specifying the directory that the trained model should be exported to](#specifying-the-directory-that-the-trained-model-should-be-exported-to)
+  - [Other useful parameters that can be passed to `train.py`](#other-useful-parameters-that-can-be-passed-to--trainpy-)
+    - [`n_hidden` parameter](#-n-hidden--parameter)
+    - [Reduce learning rate on plateau (RLROP)](#reduce-learning-rate-on-plateau--rlrop-)
+    - [Early stopping](#early-stopping)
+    - [Dropout rate](#dropout-rate)
+  - [Steps and epochs](#steps-and-epochs)
+  - [Advanced training options](#advanced-training-options)
+  - [Monitoring GPU use with `nvtop`](#monitoring-gpu-use-with--nvtop-)
+  - [Possible errors](#possible-errors)
+    - [`Failed to get convolution algorithm. This is probably because cuDNN failed to initialize, so try looking to see if a warning log message was printed above.` error when training](#-failed-to-get-convolution-algorithm-this-is-probably-because-cudnn-failed-to-initialize--so-try-looking-to-see-if-a-warning-log-message-was-printed-above--error-when-training)
 
 ## Making training files available to the Docker container
 
@@ -112,9 +112,9 @@ total 1053716
 
 _Checkpoints_ can consume a lot of disk space, so you may wish to configure how often a _checkpoint_ is written to disk, and how many _checkpoints_ are stored.
 
-* `--checkpoint_secs` specifies the time interval for storing a _checkpoint_. The default is `600`, or every five minutes. You may wish to increase this if you have limited disk space.
+- `--checkpoint_secs` specifies the time interval for storing a _checkpoint_. The default is `600`, or every five minutes. You may wish to increase this if you have limited disk space.
 
-* `--max_to_keep` specifies how many _checkpoints_ to keep. The default is `5`. You may wish to decrease this if you have limited disk space.
+- `--max_to_keep` specifies how many _checkpoints_ to keep. The default is `5`. You may wish to decrease this if you have limited disk space.
 
 In this example we will store a _checkpoint_ every 15 minutes, and keep only 3 _checkpoints_.
 
@@ -134,9 +134,9 @@ python3 train.py \
 
 In some cases, you may wish to _load_ _checkpoints_ from one location, but _save_ _checkpoints_ to another location - for example if you are doing fine tuning or transfer learning.
 
-* `--load_checkpoint_dir` specifies the directory to load _checkpoints_ from.
+- `--load_checkpoint_dir` specifies the directory to load _checkpoints_ from.
 
-* `--save_checkpoint_dir` specifies the directory to save _checkpoints_ to.
+- `--save_checkpoint_dir` specifies the directory to save _checkpoints_ to.
 
 In this example we will store a _checkpoint_ every 15 minutes, and keep only 3 _checkpoints_.
 
@@ -198,15 +198,15 @@ python3 train.py \
 
 In neural networks, the _learning rate_ is the rate at which the neural network makes adjustments to the predictions it generates. The accuracy of predictions is measured using the _loss_. The lower the _loss_, the lower the difference between the neural network's predictions, and actual known values. If training is effective, _loss_ will reduce over time. A neural network that has a _loss_ of `0` has perfect prediction.
 
- If the _learning rate_ is too low, predictions will take a long time to align with actual targets. If the learning rate is too high, predictions will overshoot actual targets. The _learning rate_ has to aim for a balance between _exploration and exploitation_.
+If the _learning rate_ is too low, predictions will take a long time to align with actual targets. If the learning rate is too high, predictions will overshoot actual targets. The _learning rate_ has to aim for a balance between _exploration and exploitation_.
 
 If loss is not reducing over time, then the training is said to have _plateaued_ - that is, the adjustments to the predictions are not reducing _loss_. By adjusting the _learning rate_, and other parameters, we may escape the _plateau_ and continue to decrease _loss_.
 
-* The `--reduce_lr_on_plateau` parameter instructs `train.py` to automatically reduce the _learning rate_ if a _plateau_ is detected. By default, this is `false`.
+- The `--reduce_lr_on_plateau` parameter instructs `train.py` to automatically reduce the _learning rate_ if a _plateau_ is detected. By default, this is `false`.
 
-* The `--plateau_epochs` parameter specifies the number of epochs of training during which there is no reduction in loss that should be considered a _plateau_. The default value is `10`.
+- The `--plateau_epochs` parameter specifies the number of epochs of training during which there is no reduction in loss that should be considered a _plateau_. The default value is `10`.
 
-* The `--plateau_reduction` parameter specifies a multiplicative factor that is applied to the current learning rate if a _plateau_ is detected. This number **must** be less than `1`, otherwise it will _increase_ the learning rate. The default value is `0.1`.
+- The `--plateau_reduction` parameter specifies a multiplicative factor that is applied to the current learning rate if a _plateau_ is detected. This number **must** be less than `1`, otherwise it will _increase_ the learning rate. The default value is `0.1`.
 
 An example of training with these parameters would be:
 
@@ -227,11 +227,11 @@ python3 train.py \
 
 If training is not resulting in a reduction of _loss_ over time, you can pass parameters to `train.py` that will stop training. This is called _early stopping_ and is useful if you are using cloud compute resources, or shared resources, and can't monitor the training continuously.
 
-* The `--early_stop` parameter enables early stopping. It is set to `false` by default.
+- The `--early_stop` parameter enables early stopping. It is set to `false` by default.
 
-* The `--es_epochs` parameter takes an integer of the number of epochs with no improvement after which training will be stopped. It is set to `25` by default, for example if this parameter is omitted, but `--early_stop` is set to `true`.
+- The `--es_epochs` parameter takes an integer of the number of epochs with no improvement after which training will be stopped. It is set to `25` by default, for example if this parameter is omitted, but `--early_stop` is set to `true`.
 
-* The `--es_min_delta` parameter is the minimum change in _loss_ per epoch that qualifies as an improvement. By default it is set to `0.05`.
+- The `--es_min_delta` parameter is the minimum change in _loss_ per epoch that qualifies as an improvement. By default it is set to `0.05`.
 
 An example of training with these parameters would be:
 
@@ -257,9 +257,9 @@ In machine learning, one of the risks during training is that of [_overfitting_]
 
 _Dropout_ is a technical approach to reduce _overfitting_. In _dropout_, nodes are randomly removed from the neural network created during training. This simulates the effect of more diverse data, and is a computationally cheap way of reducing _overfitting_, and improving the _generalizability_ of the model.
 
-_Dropout_ can be set for any layer of a neural network. The parameter that has the most effect for 🐸STT training is `--dropout_rate`, which controls  the feedforward layers of the neural network. To see the full set of _dropout parameters_, consult the 🐸STT documentation.
+_Dropout_ can be set for any layer of a neural network. The parameter that has the most effect for 🐸STT training is `--dropout_rate`, which controls the feedforward layers of the neural network. To see the full set of _dropout parameters_, consult the 🐸STT documentation.
 
-* The `-dropout_rate` parameter specifies how many nodes should be dropped from the neural network during training. The default value is `0.05`. However, if you are training on less than thousands of hours of voice data, you will find a value of `0.3` to `0.4` works better to prevent overfitting.
+- The `-dropout_rate` parameter specifies how many nodes should be dropped from the neural network during training. The default value is `0.05`. However, if you are training on less than thousands of hours of voice data, you will find a value of `0.3` to `0.4` works better to prevent overfitting.
 
 An example of training with this parameter would be:
 
@@ -295,9 +295,9 @@ To find out how many _steps_ to expect in each _epoch_, you can count the number
 
 In this case there would be `2131` _steps_ per _epoch_.
 
-* `--epochs` specifies how many _epochs_ to train. It has a default of `75`, which would be appropriate for training tens to hundreds of hours of audio. If you have thousands of hours of audio, you may wish to increase the number of _epochs_ to around 150-300.
+- `--epochs` specifies how many _epochs_ to train. It has a default of `75`, which would be appropriate for training tens to hundreds of hours of audio. If you have thousands of hours of audio, you may wish to increase the number of _epochs_ to around 150-300.
 
-* `--train_batch_size`, `--dev_batch_size`, `--test_batch_size` all specify the _batch size_ per _step_. These all have a default value of `1`. Increasing the _batch size_ increases the amount of memory required to process the _step_; you need to be aware of this before increasing the _batch size_.
+- `--train_batch_size`, `--dev_batch_size`, `--test_batch_size` all specify the _batch size_ per _step_. These all have a default value of `1`. Increasing the _batch size_ increases the amount of memory required to process the _step_; you need to be aware of this before increasing the _batch size_.
 
 ## Advanced training options
 
@@ -343,12 +343,12 @@ To work around this error, you will need to set the `TF_FORCE_GPU_ALLOW_GROWTH` 
 
 This is done in the file
 
-`STT/training/coqui_stt_training/util/config.py`
+`STT/training/iara_stt_training/util/config.py`
 
 and you should edit it as below:
 
 ```
-root@687a2e3516d7:/STT/training/coqui_stt_training/util# nano config.py
+root@687a2e3516d7:/STT/training/iara_stt_training/util# nano config.py
 
 ...
 

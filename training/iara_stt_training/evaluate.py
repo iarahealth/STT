@@ -8,11 +8,7 @@ from multiprocessing import cpu_count
 
 import progressbar
 import tensorflow.compat.v1 as tfv1
-from coqui_stt_ctcdecoder import (
-    Scorer,
-    flashlight_beam_search_decoder_batch,
-    FlashlightDecoderState,
-)
+from iara_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf
@@ -99,9 +95,6 @@ def evaluate(test_csvs, create_model):
     except NotImplementedError:
         num_processes = 1
 
-    with open(Config.vocab_file) as fin:
-        vocab = [l.strip().encode("utf-8") for l in fin]
-
     with tfv1.Session(config=Config.session_config) as session:
         load_graph_for_evaluation(session)
 
@@ -137,19 +130,17 @@ def evaluate(test_csvs, create_model):
                 except tf.errors.OutOfRangeError:
                     break
 
-                decoded = flashlight_beam_search_decoder_batch(
+                decoded = ctc_beam_search_decoder_batch(
                     batch_logits,
                     batch_lengths,
                     Config.alphabet,
-                    beam_size=Config.export_beam_width,
-                    decoder_type=FlashlightDecoderState.DecoderType.LexiconBased,
-                    token_type=FlashlightDecoderState.TokenType.Aggregate,
-                    lm_tokens=vocab,
+                    Config.export_beam_width,
                     num_processes=num_processes,
                     scorer=scorer,
+                    cutoff_prob=Config.cutoff_prob,
                     cutoff_top_n=Config.cutoff_top_n,
                 )
-                predictions.extend(" ".join(d[0].words) for d in decoded)
+                predictions.extend(d[0].transcript for d in decoded)
                 ground_truths.extend(
                     sparse_tensor_value_to_texts(batch_transcripts, Config.alphabet)
                 )

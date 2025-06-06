@@ -18,18 +18,18 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = DESIRED_LOG_LEVEL
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
-from coqui_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
-from coqui_stt_training.train import create_model
-from coqui_stt_training.util.audio import AudioFile
-from coqui_stt_training.util.checkpoints import load_graph_for_evaluation
-from coqui_stt_training.util.config import (
+from iara_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
+from iara_stt_training.train import create_model
+from iara_stt_training.util.audio import AudioFile
+from iara_stt_training.util.checkpoints import load_graph_for_evaluation
+from iara_stt_training.util.config import (
     BaseSttConfig,
     Config,
     initialize_globals_from_instance,
 )
-from coqui_stt_training.util.feeding import split_audio_file
-from coqui_stt_training.util.helpers import check_ctcdecoder_version
-from coqui_stt_training.util.multiprocessing import PoolBase
+from iara_stt_training.util.feeding import split_audio_file
+from iara_stt_training.util.helpers import check_ctcdecoder_version
+from iara_stt_training.util.multiprocessing import PoolBase
 from tqdm import tqdm
 
 

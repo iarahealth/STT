@@ -9,7 +9,7 @@ Mixed precision training makes use of both ``FP32`` and ``FP16`` precisions wher
 
 .. code-block:: bash
 
-    $ python -m coqui_stt_training.train \
+    $ python -m iara_stt_training.train \
         --train_files train.csv \
         --dev_files dev.csv \
         --test_files test.csv \

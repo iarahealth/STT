@@ -14,6 +14,6 @@ You can export STT model checkpoints for deployment by using the export script a
 
 .. code-block:: bash
 
-   $ python3 -m coqui_stt_training.export \
+   $ python3 -m iara_stt_training.export \
          --checkpoint_dir path/to/existing/model/checkpoints \
          --export_dir where/to/export/model

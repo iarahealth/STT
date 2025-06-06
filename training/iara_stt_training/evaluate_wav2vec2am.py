@@ -15,9 +15,9 @@ import numpy as np
 import onnxruntime
 import soundfile as sf
 from clearml import Task
-from coqui_stt_training.util.evaluate_tools import calculate_and_print_report
-from coqui_stt_training.util.multiprocessing import PoolBase
-from coqui_stt_ctcdecoder import (
+from iara_stt_training.util.evaluate_tools import calculate_and_print_report
+from iara_stt_training.util.multiprocessing import PoolBase
+from iara_stt_ctcdecoder import (
     Alphabet,
     Scorer,
     ctc_beam_search_decoder_for_wav2vec2am,

@@ -7,7 +7,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from clearml import Task
-from coqui_stt_training.util.evaluate_tools import calculate_and_print_report
+from iara_stt_training.util.evaluate_tools import calculate_and_print_report
 
 
 def evaluate_from_csv(
