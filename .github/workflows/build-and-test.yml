@@ -610,7 +610,7 @@ jobs:
         if: matrix.models == 'test'
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          pip3 install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
+          pip3 install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/iara_stt*.whl
       - uses: ./.github/actions/run-tests
         with:
           runtime: "python"
@@ -649,7 +649,7 @@ jobs:
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
       - run: |
-          python -m pip install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
+          python -m pip install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/iara_stt*.whl
       - run: |
           python -m pip install iara_stt_ctcdecoder-*.whl
       - run: |
@@ -1919,7 +1919,7 @@ jobs:
         if: matrix.models == 'test'
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          pip3 install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
+          pip3 install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/iara_stt*.whl
       - uses: ./.github/actions/run-tests
         with:
           runtime: "python"
@@ -2373,7 +2373,7 @@ jobs:
         if: matrix.models == 'test'
       - run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          python -m pip install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/stt*.whl
+          python -m pip install --only-binary :all: --upgrade ${{ env.CI_TMP_DIR }}/iara_stt*.whl
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "python"
