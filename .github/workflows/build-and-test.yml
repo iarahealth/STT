@@ -2138,6 +2138,11 @@ jobs:
         run: |
           rm -f /c/msys64/mingw64/clang-cl*
           rm -rf "/c/Program Files/LLVM"
+      - name: Workaround bazel bug where VC 2022 is not found
+        run: |
+          ls -aR
+          cd /c/Program Files/Microsoft Visual Studio/2022/Enterprise/VC
+          mv vcpkg ..
       - run: ./ci_scripts/tf-setup.sh
       - run: ./ci_scripts/host-build.sh "" ${{ matrix.avx }}
       - run: ./ci_scripts/package.sh
