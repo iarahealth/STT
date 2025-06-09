@@ -1,5 +1,5 @@
 NPM_TOOL           	    ?= npm
-TEST_PROJECT_NAME       ?= stt-wasm
+TEST_PROJECT_NAME       ?= iarahealth-stt-wasm
 TEST_PROJECT_VERSION    ?= $(shell cat ../../../training/iara_stt_training/VERSION | tr -d '\n')
 
 clean:

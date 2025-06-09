@@ -37,7 +37,7 @@ runs:
     - run: |
         set -xe
 
-        PROJECT_NAME="stt"
+        PROJECT_NAME="iara_stt"
 
         OS=$(uname)
         if [ "${OS}" = "Linux" -a "${{ inputs.target }}" != "host" ]; then
