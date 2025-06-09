@@ -1444,7 +1444,7 @@ jobs:
             npm publish --access=public --verbose $pkg --tag ${{ steps.compute-npm-tag.outputs.npm-tag }}
           done
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
       - name: Upload artifacts to GitHub release
         uses: ./.github/actions/upload-release-asset
         with:
