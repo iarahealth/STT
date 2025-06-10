@@ -1,4 +1,4 @@
-import STT from "@iarahealth/stt-wasm";
+import STT from "@iarastt/stt-wasm";
 
 describe("STT WASM", () => {
   it("Checks stt-wasm was imported", () => {
@@ -11,7 +11,7 @@ describe("STT WASM", () => {
         if (filename == "stt_wasm.worker.js") {
           return `${__dirname}/mock.worker.js`;
         }
-        return `${__dirname}/node_modules/@iarahealth/stt-wasm/dist/${filename}`;
+        return `${__dirname}/node_modules/@iarastt/stt-wasm/dist/${filename}`;
       },
     });
     expect(ready).toBeTrue();

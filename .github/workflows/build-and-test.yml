@@ -471,7 +471,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt_intermediate-tflite-Linux.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/iarahealth-stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/iarastt-stt-*.tgz
   build-wasm:
     name: "Wasm|Build libstt"
     runs-on: ubuntu-22.04
@@ -511,7 +511,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "libstt.tflite.wasm.es6.tgz"
-          path: ${{ github.workspace }}/native_client/wasm/iarahealth-stt-wasm-*.tgz
+          path: ${{ github.workspace }}/native_client/wasm/iarastt-stt-wasm-*.tgz
   test-wasm:
     name: "Wasm|Test libstt"
     runs-on: ubuntu-22.04
@@ -700,9 +700,9 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
-          ls -hal node_modules/@iarahealth/stt* node_modules/.bin/
+          ls -hal node_modules/@iarastt/stt* node_modules/.bin/
       - uses: ./.github/actions/run-tests
         with:
           runtime: "node"
@@ -751,11 +751,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -1441,7 +1441,7 @@ jobs:
           name: libstt.tflite.wasm.es6.tgz
           path: ${{ github.workspace }}/
       - run: |
-          for pkg in ${{ github.workspace }}/iarahealth-stt-*.tgz; do
+          for pkg in ${{ github.workspace }}/iarastt-stt-*.tgz; do
             npm publish --access=public --verbose $pkg --tag ${{ steps.compute-npm-tag.outputs.npm-tag }}
           done
         env:
@@ -1835,7 +1835,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt_intermediate-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/iarahealth-stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/iarastt-stt-*.tgz
   test-cpp-macOS:
     name: "Mac|Test C++ binary"
     runs-on: ${{ matrix.os }}
@@ -1985,9 +1985,9 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
-          ls -hal node_modules/@iarahealth/stt* node_modules/.bin/
+          ls -hal node_modules/@iarastt/stt* node_modules/.bin/
       - uses: ./.github/actions/run-tests
         with:
           runtime: "node"
@@ -2038,11 +2038,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2276,7 +2276,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "STT_intermediate-tflite-Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/iarahealth-stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/iarastt-stt-*.tgz
   test-cpp-Windows:
     name: "Win|Test C++ binary"
     runs-on: windows-2022
@@ -2436,7 +2436,7 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "node"
@@ -2497,11 +2497,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarahealth/cpu-features
+          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"
@@ -2548,7 +2548,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "stt-tflite.tgz"
-          path: ${{ github.workspace }}/native_client/javascript/iarahealth-stt-*.tgz
+          path: ${{ github.workspace }}/native_client/javascript/iarastt-stt-*.tgz
   test-nodejs_all-Linux:
     name: "Lin|Test MultiArchPlatform NodeJS bindings"
     runs-on: ubuntu-22.04
@@ -2593,9 +2593,9 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
-          ls -hal node_modules/@iarahealth/stt* node_modules/.bin/
+          ls -hal node_modules/@iarastt/stt* node_modules/.bin/
       - uses: ./.github/actions/run-tests
         with:
           runtime: "node"
@@ -2644,11 +2644,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2706,9 +2706,9 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
-          ls -hal node_modules/@iarahealth/stt* node_modules/.bin/
+          ls -hal node_modules/@iarastt/stt* node_modules/.bin/
       - uses: ./.github/actions/run-tests
         with:
           runtime: "node"
@@ -2764,11 +2764,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarahealth/cpu-features
+          ./node_modules/.bin/electron-rebuild -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/run-tests
         with:
           runtime: "electronjs"
@@ -2832,7 +2832,7 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "node"
@@ -2894,11 +2894,11 @@ jobs:
       - name: Install STT package
         run: |
           ls -hal ${{ env.CI_TMP_DIR }}/
-          npm install --verbose ${{ env.CI_TMP_DIR }}/iarahealth-stt*.tgz
+          npm install --verbose ${{ env.CI_TMP_DIR }}/iarastt-stt*.tgz
       - run: |
           npm install electron@${{ matrix.electronjs-version }}
           npm install electron-rebuild
-          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarahealth/cpu-features
+          .\\node_modules\\.bin\\electron-rebuild.cmd -m ./node_modules/@iarastt/cpu-features
       - uses: ./.github/actions/win-run-tests
         with:
           runtime: "electronjs"

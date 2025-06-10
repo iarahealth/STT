@@ -191,7 +191,7 @@ A pre-built ES6 libstt WebAssembly package can be downloaded using `npm`:
 
 .. code-block:: bash
 
-   npm install @iarahealth/stt-wasm
+   npm install @iarastt/stt-wasm
 
 The ES6 package can be used in projects using bundlers.
 

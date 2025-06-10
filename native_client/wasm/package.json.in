@@ -1,5 +1,5 @@
 {
-  "name" : "@iarahealth/$(PROJECT_NAME)",
+  "name" : "@iarastt/$(PROJECT_NAME)",
   "version" : "$(PROJECT_VERSION)",
   "description": "A Webassembly build for doing speech recognition using a Coqui STT model",
   "main": "./dist/stt_wasm.js",
