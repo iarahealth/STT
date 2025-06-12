@@ -2547,12 +2547,20 @@ jobs:
         with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
           path: /tmp/nodewrapper-Linux_amd64/
-      - name: Extract noavx nodewrapper archives and add noavx suffix to bindings
+      - name: Extract noavx nodewrapper archives
         run: |
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_x64.noavx/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Windows_amd64.noavx/wrapper.tar.gz
-          find -type f -name "*stt.node" -exec rename -- 's/stt.node/stt.noavx.node/' {} +
           ls -hal ${{ github.workspace }}/native_client/javascript/
+      - run: find -type f -name "*stt.node"
+      - run: |
+          cd ${{ github.workspace }}/native_client/javascript
+          find -type f -name "*stt.node"
+      - name: Add noavx suffix to bindings
+        run: |
+          cd ${{ github.workspace }}/native_client/javascript
+          find -type f -name "*stt.node" -exec rename -- 's/stt.node/stt.noavx.node/' {} +
+          ls -hal .
       - name: Extract nodewrapper archives
         run: |
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_arm64/wrapper.tar.gz
