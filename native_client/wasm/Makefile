@@ -3,7 +3,7 @@ PROJECT_NAME       ?= stt-wasm
 PROJECT_VERSION    ?= $(shell cat ../../training/iara_stt_training/VERSION | tr -d '\n')
 
 clean:
-	rm -rf ./iarahealth-stt-wasm-*.tgz package.json
+	rm -rf ./iarastt-stt-wasm-*.tgz package.json
 	rm -rf dist
 
 package.json: package.json.in
