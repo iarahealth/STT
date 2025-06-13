@@ -31,13 +31,13 @@
                             "VCCLCompilerTool": {"AdditionalOptions": ["/std:c++17"]}
                         },
                         "libraries": [
-                            "../../../tensorflow/bazel-bin/native_client/libstt.so.if.lib",
+                            "../../../tensorflow/bazel-bin/native_client/$(LIBSTT_NAME).so.if.lib",
                             "../../../tensorflow/bazel-bin/native_client/libkenlm.so.if.lib",
                         ],
                     },
                     {
                         "libraries": [
-                            "../../../tensorflow/bazel-bin/native_client/libstt.so",
+                            "../../../tensorflow/bazel-bin/native_client/$(LIBSTT_NAME).so",
                             "../../../tensorflow/bazel-bin/native_client/libkenlm.so",
                         ],
                     },

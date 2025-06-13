@@ -5,6 +5,7 @@ NPM_TOOL           ?= npm
 PROJECT_NAME       ?= stt
 PROJECT_VERSION    ?= $(shell cat ../../training/iara_stt_training/VERSION | tr -d '\n')
 NPM_ROOT           ?= $(shell npm root)
+LIBSTT_NAME     ?= libstt
 
 NODE_PRE_GYP_ABI_CROSSWALK_FILE ?= $(NPM_ROOT)/../abi_crosswalk_priv.json
 
@@ -50,7 +51,7 @@ configure: stt_wrap.cxx package.json npm-dev
 	PATH="$(NODE_MODULES_BIN):${PATH}" $(NODE_BUILD_TOOL) configure $(NODE_BUILD_VERBOSE)
 
 build: configure stt_wrap.cxx
-	PATH="$(NODE_MODULES_BIN):${PATH}" NODE_PRE_GYP_ABI_CROSSWALK=$(NODE_PRE_GYP_ABI_CROSSWALK_FILE) AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(RPATH_NODEJS) $(LDFLAGS)" LIBS="$(LIBS)" $(NODE_BUILD_TOOL) $(NODE_PLATFORM_TARGET) $(NODE_RUNTIME) $(NODE_ABI_TARGET) $(NODE_DEVDIR) $(NODE_DIST_URL) --no-color rebuild $(NODE_BUILD_VERBOSE)
+	LIBSTT_NAME=$(LIBSTT_NAME) PATH="$(NODE_MODULES_BIN):${PATH}" NODE_PRE_GYP_ABI_CROSSWALK=$(NODE_PRE_GYP_ABI_CROSSWALK_FILE) AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" LDFLAGS="$(RPATH_NODEJS) $(LDFLAGS)" LIBS="$(LIBS)" $(NODE_BUILD_TOOL) $(NODE_PLATFORM_TARGET) $(NODE_RUNTIME) $(NODE_ABI_TARGET) $(NODE_DEVDIR) $(NODE_DIST_URL) --no-color rebuild $(NODE_BUILD_VERBOSE)
 
 copy-deps: build
 	$(call copy_missing_libs,lib/binding/*/*/*/stt.node,lib/binding/*/*/)

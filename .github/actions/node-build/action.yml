@@ -27,6 +27,10 @@ inputs:
     description: "RASPBIAN value"
     required: false
     default: ""
+  avx:
+    description: "AVX value"
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -50,6 +54,7 @@ runs:
               RASPBIAN=${{ inputs.chroot }} \
               NODE_ABI_TARGET=--target=${node} \
               NODE_DEVDIR=--devdir=headers/nodejs \
+              LIBSTT_NAME=${{ inputs.avx == 'false' && 'libstt.noavx' || 'libstt' }} \
             clean node-wrapper
         done;
       shell: bash
@@ -65,6 +70,7 @@ runs:
               NODE_DIST_URL=--disturl=https://electronjs.org/headers \
               NODE_RUNTIME=--runtime=electron \
               NODE_DEVDIR=--devdir=headers/electronjs \
+              LIBSTT_NAME=${{ inputs.avx == 'false' && 'libstt.noavx' || 'libstt' }} \
             clean node-wrapper
         done;
       shell: bash

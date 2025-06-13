@@ -32,7 +32,7 @@
         "host"        : "https://host.invalid"
     },
     "dependencies"  : {
-      "@iarastt/cpu-features": "^0.0.13-alpha.1",
+      "@iarastt/cpu-features": "^0.0.14-rc2",
       "node-pre-gyp": "0.15.x",
       "argparse": "1.0.x",
       "sox-stream": "2.0.x",

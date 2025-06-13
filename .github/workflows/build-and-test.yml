@@ -1801,6 +1801,11 @@ jobs:
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
+      - name: Add suffix to noavx libstt.so
+        if: matrix.avx == 'false'
+        run: |
+          cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
+          mv libstt.so libstt.noavx.so
       - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.${{ matrix.arch }}"
@@ -1828,6 +1833,7 @@ jobs:
         with:
           nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
+          avx: ${{ matrix.avx }}
       - uses: actions/upload-artifact@v4
         with:
           name: "nodewrapper-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
@@ -2237,11 +2243,20 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.Windows.noavx.tar.xz"
+          path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
+      - name: Add suffix to noavx libstt.so
+        run: |
+          cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
+          mv libstt.so libstt.noavx.so
+      - uses: actions/download-artifact@v4
+        with:
+          name: "native_client.tflite.Windows.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
           "C:/Program Files/7-Zip/7z.exe" x native_client.tar.xz -so | "C:/Program Files/7-Zip/7z.exe" x -aoa -si -snld -ttar -o`pwd`
+          ls -hal .
       - uses: actions/download-artifact@v4
         with:
           name: "swig_Windows_crosscompiled"
@@ -2269,6 +2284,7 @@ jobs:
         with:
           nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
+          avx: ${{ matrix.avx }}
       - uses: actions/upload-artifact@v4
         with:
           name: "nodewrapper-tflite-Windows_amd64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
