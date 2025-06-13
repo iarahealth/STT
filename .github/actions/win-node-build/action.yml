@@ -54,7 +54,7 @@ runs:
               RASPBIAN=${{ inputs.chroot }} \
               NODE_ABI_TARGET=--target=${node} \
               NODE_DEVDIR=--devdir=headers/nodejs \
-              NOAVX_PREFIX=${{ inputs.avx == 'false' && 'noavx/' || '' }} \
+              NOAVX_PREFIX=${{ inputs.avx == 'false' && 'noavx\/' || '' }} \
             clean node-wrapper
         done;
       shell: msys2 {0}
@@ -70,7 +70,7 @@ runs:
               NODE_DIST_URL=--disturl=https://electronjs.org/headers \
               NODE_RUNTIME=--runtime=electron \
               NODE_DEVDIR=--devdir=headers/electronjs \
-              NOAVX_PREFIX=${{ inputs.avx == 'false' && 'noavx/' || '' }} \
+              NOAVX_PREFIX=${{ inputs.avx == 'false' && 'noavx\/' || '' }} \
             clean node-wrapper
         done;
       shell: msys2 {0}
