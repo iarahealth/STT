@@ -26,13 +26,13 @@
     },
     "binary": {
         "module_name" : "stt",
-        "module_path" : "./lib/binding/v{version}/{platform}-{arch}/{node_abi}/",
+        "module_path" : "./lib/binding/v{version}/{platform}-{arch}/$(NOAVX_PREFIX){node_abi}/",
         "remote_path" : "./v{version}/{configuration}/",
         "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
         "host"        : "https://host.invalid"
     },
     "dependencies"  : {
-      "@iarastt/cpu-features": "^0.0.13-alpha.1",
+      "@iarastt/cpu-features": "^0.0.14-rc2",
       "node-pre-gyp": "0.15.x",
       "argparse": "1.0.x",
       "sox-stream": "2.0.x",

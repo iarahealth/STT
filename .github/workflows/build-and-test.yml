@@ -1801,6 +1801,12 @@ jobs:
       - run: |
           cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
           tar xf native_client.tar.xz
+      - name: Move binaries to noavx directory
+        if: matrix.avx == 'false'
+        run: |
+          cd ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
+          mkdir -p noavx
+          mv *.so noavx/
       - uses: actions/download-artifact@v4
         with:
           name: "swig_macOS.${{ matrix.arch }}"
@@ -1828,6 +1834,7 @@ jobs:
         with:
           nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
+          avx: ${{ matrix.avx }}
       - uses: actions/upload-artifact@v4
         with:
           name: "nodewrapper-tflite-macOS_${{ matrix.arch }}${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
@@ -2237,11 +2244,22 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v4
         with:
-          name: "native_client.tflite.Windows${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.xz"
+          name: "native_client.tflite.Windows.noavx.tar.xz"
+          path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
+      - uses: actions/download-artifact@v4
+        with:
+          name: "native_client.tflite.Windows.tar.xz"
           path: ${{ github.workspace }}/tensorflow/bazel-bin/native_client/
       - run: |
           cd tensorflow/bazel-bin/native_client/
           "C:/Program Files/7-Zip/7z.exe" x native_client.tar.xz -so | "C:/Program Files/7-Zip/7z.exe" x -aoa -si -snld -ttar -o`pwd`
+          ls -hal .
+      - name: Move binaries to noavx directory
+        if: matrix.avx == 'false'
+        run: |
+          cd tensorflow/bazel-bin/native_client/
+          mkdir -p noavx
+          mv *.so noavx/
       - uses: actions/download-artifact@v4
         with:
           name: "swig_Windows_crosscompiled"
@@ -2269,6 +2287,7 @@ jobs:
         with:
           nodejs_versions: "16.0.0 17.0.1 18.0.0"
           electronjs_versions: "12.0.0 13.0.0 14.0.0 15.0.0 16.0.0 21.0.0"
+          avx: ${{ matrix.avx }}
       - uses: actions/upload-artifact@v4
         with:
           name: "nodewrapper-tflite-Windows_amd64${{ matrix.avx == 'false' && '.noavx' || '' }}.tar.gz"
@@ -2518,6 +2537,8 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
+          sudo apt-get install -y --no-install-recommends rename
+      - run: |
           mkdir -p /tmp/nodewrapper-tflite-macOS_x64/
           mkdir -p /tmp/nodewrapper-tflite-macOS_arm64/
           mkdir -p /tmp/nodewrapper-tflite-Windows_amd64/
@@ -2525,6 +2546,10 @@ jobs:
         with:
           name: "nodewrapper-tflite-macOS_x64.tar.gz"
           path: /tmp/nodewrapper-macOS_x64/
+      - uses: actions/download-artifact@v4
+        with:
+          name: "nodewrapper-tflite-macOS_x64.noavx.tar.gz"
+          path: /tmp/nodewrapper-macOS_x64.noavx/
       - uses: actions/download-artifact@v4
         with:
           name: "nodewrapper-tflite-macOS_arm64.tar.gz"
@@ -2535,14 +2560,33 @@ jobs:
           path: /tmp/nodewrapper-Windows_amd64/
       - uses: actions/download-artifact@v4
         with:
+          name: "nodewrapper-tflite-Windows_amd64.noavx.tar.gz"
+          path: /tmp/nodewrapper-Windows_amd64.noavx/
+      - uses: actions/download-artifact@v4
+        with:
           name: "nodewrapper-tflite-Linux_amd64.tar.gz"
           path: /tmp/nodewrapper-Linux_amd64/
+      - name: Extract noavx nodewrapper archives
+        run: |
+          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_x64.noavx/wrapper.tar.gz
+          tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Windows_amd64.noavx/wrapper.tar.gz
+          ls -hal ${{ github.workspace }}/native_client/javascript/
+      - run: find -type f -name "*stt.node"
+      - run: |
+          cd ${{ github.workspace }}/native_client/javascript
+          find -type f -name "*stt.node"
+      - name: Add noavx suffix to bindings
+        run: |
+          cd ${{ github.workspace }}/native_client/javascript
+          find -type f -name "*stt.node" -exec rename -- 's/stt.node/stt.noavx.node/' {} +
+          ls -hal .
       - name: Extract nodewrapper archives
         run: |
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_arm64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-macOS_x64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Windows_amd64/wrapper.tar.gz
           tar -C ${{ github.workspace }}/native_client/javascript -xzvf /tmp/nodewrapper-Linux_amd64/wrapper.tar.gz
+          ls -hal ${{ github.workspace }}/native_client/javascript/
       - run: |
           make -C native_client/javascript clean npm-pack PROJECT_NAME=stt
       - uses: actions/upload-artifact@v4
