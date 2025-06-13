@@ -26,7 +26,7 @@
     },
     "binary": {
         "module_name" : "stt",
-        "module_path" : "./lib/binding/v{version}/{platform}-{arch}/{node_abi}/",
+        "module_path" : "./lib/binding/v{version}/{platform}-{arch}/$(NOAVX_PREFIX){node_abi}/",
         "remote_path" : "./v{version}/{configuration}/",
         "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
         "host"        : "https://host.invalid"

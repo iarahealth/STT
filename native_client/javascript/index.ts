@@ -11,8 +11,11 @@ let binding_path = binary.find(
 const features = getCpuInfo();
 if (features.arch === "x86") {
   const flags = (features as X86CpuFeatures).flags;
-  if (!flags.avx)
-    binding_path = binding_path.replace("stt.node", "stt.noavx.node");
+  if (!flags.avx) {
+    binding_path = binding_path
+      .replace("darwin-x64/stt.node", "darwin-x64/noavx/stt.node")
+      .replace("win32-x64/stt.node", "win32-x64/noavx/stt.node");
+  }
 }
 
 // On Windows, we can't rely on RPATH being set to $ORIGIN/../ or on
