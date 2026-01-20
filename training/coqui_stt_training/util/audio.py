@@ -749,7 +749,7 @@ def read_ogg_vorbis_duration(ogg_file):
     pcm_length_samples = pyogg.vorbis.ov_pcm_total(
         ctypes.byref(vf), 0  # to extract the length of the first logical bitstream
     )
-
+    pyogg.vorbis.ov_clear(ctypes.byref(vf))
     return get_pcm_duration(pcm_length_samples, audio_format)
 
 
@@ -831,6 +831,7 @@ def read_ogg_vorbis_format(ogg_file):
     channel_count = info.contents.channels
     sample_rate = info.contents.rate
     sample_width = 2  # always 16-bit
+    pyogg.vorbis.ov_clear(ctypes.byref(vf))
     return AudioFormat(sample_rate, channel_count, sample_width)
 
 

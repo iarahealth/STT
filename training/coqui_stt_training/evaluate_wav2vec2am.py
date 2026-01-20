@@ -194,7 +194,7 @@ def evaluate_from_emissions(
             losses.append(0.0)
 
     # Print test summary
-    samples = calculate_and_print_report(
+    samples, _, _ = calculate_and_print_report(
         wav_filenames, ground_truths, predictions, losses, csv_file
     )
 

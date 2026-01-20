@@ -1,7 +1,7 @@
 # Please refer to the USING documentation, "Dockerfile for building from source"
 
 # Need devel version cause we need /usr/include/cudnn.h
-FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+FROM nvcr.io/nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
 # >> START Install base software
 

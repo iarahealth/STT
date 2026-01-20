@@ -164,7 +164,7 @@ def evaluate(test_csvs, create_model):
             bar.finish()
 
             # Print test summary
-            test_samples = calculate_and_print_report(
+            test_samples, _, _ = calculate_and_print_report(
                 wav_filenames,
                 ground_truths,
                 predictions,
