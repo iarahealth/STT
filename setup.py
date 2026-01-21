@@ -35,6 +35,7 @@ def main():
         "miniaudio",
         "clearml",
         "neptune",
+        "mlflow",
     ]
 
     decoder_pypi_dep = ["coqui_stt_ctcdecoder == {}".format(version)]
