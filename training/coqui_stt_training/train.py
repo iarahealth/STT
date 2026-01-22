@@ -18,8 +18,9 @@ from pathlib import Path
 import numpy as np
 import progressbar
 import tensorflow.compat.v1 as tfv1
-import tensorflow as tf
 from coqui_stt_ctcdecoder import Scorer
+
+import tensorflow as tf
 
 tfv1.logging.set_verbosity(
     {
@@ -31,14 +32,12 @@ tfv1.logging.set_verbosity(
 )
 
 
-from . import evaluate
-from . import export
-from . import training_graph_inference
+from . import evaluate, export, training_graph_inference
 from .deepspeech_model import (
     create_model,
-    rnn_impl_lstmblockfusedcell,
-    rnn_impl_cudnn_rnn,
     reset_default_graph,
+    rnn_impl_cudnn_rnn,
+    rnn_impl_lstmblockfusedcell,
 )
 from .util.augmentations import NormalizeSampleRate
 from .util.checkpoints import (
@@ -59,8 +58,7 @@ from .util.config import (
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
 from .util.io import remove_remote
-from .util.neptune_config import neptune_client
-
+from .util.mlflow_config import mlflow_client
 
 # Accuracy and Loss
 # =================
@@ -269,7 +267,11 @@ def create_training_datasets(
     epoch_ph: tf.Tensor = None,
     reverse: bool = False,
     limit: int = 0,
-) -> (tf.data.Dataset, [tf.data.Dataset], [tf.data.Dataset],):
+) -> (
+    tf.data.Dataset,
+    [tf.data.Dataset],
+    [tf.data.Dataset],
+):
     """Creates training datasets from input flags.
 
     Returns a single training dataset and two lists of datasets for validation
@@ -583,7 +585,7 @@ def train_impl(
                 # Training
                 log_progress("Training epoch %d..." % epoch)
                 train_loss, _ = run_set("train", epoch, train_init_op)
-                neptune_client.log_metric("train/train_loss", train_loss)
+                mlflow_client.log_metric("train/train_loss", train_loss, step=epoch)
                 log_progress(
                     "Finished training epoch %d - loss: %f" % (epoch, train_loss)
                 )
@@ -607,7 +609,7 @@ def train_impl(
                         )
 
                     dev_loss = dev_loss / total_steps
-                    neptune_client.log_metric("train/dev_loss", dev_loss)
+                    mlflow_client.log_metric("train/dev_loss", dev_loss, step=epoch)
                     dev_losses.append(dev_loss)
 
                     # Count epochs without an improvement for early stopping and reduction of learning rate on a plateau
@@ -693,7 +695,7 @@ def train_impl(
 
         optim_time = datetime.utcnow() - train_start_time
         log_info("FINISHED optimization in {}".format(optim_time))
-        neptune_client.log_score("train/training_time", optim_time.total_seconds())
+        mlflow_client.log_score("train/training_time", optim_time.total_seconds())
 
     log_debug("Session closed.")
 
@@ -712,14 +714,18 @@ def main():
             "    python -m coqui_stt_training.training_graph_inference"
         )
 
-    neptune_client.start_run(
-        Config.neptune_project,
-        Config.neptune_api_token,
-        Config.neptune_run_id,
+    mlflow_client.start_run(
+        Config.mlflow_tracking_uri,
+        Config.mlflow_experiment_name,
+        Config.mlflow_run_id,
         "train",
     )
-    neptune_client.log_score("parameters/beam_width", Config.beam_width)
-    neptune_client.log_score("parameters/random_seed", Config.random_seed)
+    mlflow_client.log_param("beam_width", Config.beam_width)
+    mlflow_client.log_param("random_seed", Config.random_seed)
+    mlflow_client.log_param("epochs", Config.epochs)
+    mlflow_client.log_param("learning_rate", Config.learning_rate)
+    mlflow_client.log_param("dropout_rate", Config.dropout_rate)
+    mlflow_client.log_param("train_batch_size", Config.train_batch_size)
 
     if Config.train_files:
         train()
@@ -750,7 +756,7 @@ def main():
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)
 
-    neptune_client.stop_run()
+    mlflow_client.stop_run()
 
 
 if __name__ == "__main__":

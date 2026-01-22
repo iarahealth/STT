@@ -6,13 +6,13 @@ import json
 import sys
 from multiprocessing import cpu_count
 
+import numpy as np
 import progressbar
 import tensorflow.compat.v1 as tfv1
 from coqui_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf
-import numpy as np
 
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
@@ -27,7 +27,7 @@ from .util.config import (
 from .util.evaluate_tools import calculate_and_print_report, save_samples_json
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
-from .util.neptune_config import neptune_client
+from .util.mlflow_config import mlflow_client
 
 
 def sparse_tensor_value_to_texts(value, alphabet):
@@ -173,18 +173,21 @@ def evaluate(test_csvs, create_model):
             print("Testing model on {}".format(csv))
             samples.extend(run_test(init_op, dataset=csv))
 
-        if neptune_client.enabled:
+        if mlflow_client.enabled:
             samples_wer = []
             samples_cer = []
-            for sample in samples:
+            samples_loss = []
+            for idx, sample in enumerate(samples):
                 samples_wer.append(sample.wer)
                 samples_cer.append(sample.cer)
-                neptune_client.log_metric("test/test_wer", sample.wer)
-                neptune_client.log_metric("test/test_cer", sample.cer)
-                neptune_client.log_metric("test/test_loss", sample.loss)
+                samples_loss.append(sample.loss)
+                mlflow_client.log_metric("test/test_wer", sample.wer, step=idx)
+                mlflow_client.log_metric("test/test_cer", sample.cer, step=idx)
+                mlflow_client.log_metric("test/test_loss", sample.loss, step=idx)
 
-            neptune_client.log_score("test/test_mean_wer", np.mean(samples_wer))
-            neptune_client.log_score("test/test_mean_cer", np.mean(samples_cer))
+            mlflow_client.log_score("test/test_mean_wer", np.mean(samples_wer))
+            mlflow_client.log_score("test/test_mean_cer", np.mean(samples_cer))
+            mlflow_client.log_score("test/test_mean_loss", np.mean(samples_loss))
 
         return samples
 
@@ -201,11 +204,14 @@ def main():
     initialize_globals_from_cli()
     check_ctcdecoder_version()
 
-    neptune_client.start_run(
-        Config.neptune_project, Config.neptune_api_token, Config.neptune_run_id, "test"
+    mlflow_client.start_run(
+        Config.mlflow_tracking_uri,
+        Config.mlflow_experiment_name,
+        Config.mlflow_run_id,
+        "test",
     )
-    neptune_client.log_score("parameters/beam_width", Config.beam_width)
-    neptune_client.log_score("parameters/random_seed", Config.random_seed)
+    mlflow_client.log_param("beam_width", Config.beam_width)
+    mlflow_client.log_param("random_seed", Config.random_seed)
 
     if not Config.test_files:
         raise RuntimeError(
@@ -214,7 +220,7 @@ def main():
         )
 
     test()
-    neptune_client.stop_run()
+    mlflow_client.stop_run()
 
 
 if __name__ == "__main__":
