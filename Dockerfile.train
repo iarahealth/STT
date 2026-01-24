@@ -7,10 +7,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        build-essential cmake libboost-system-dev \
-        libboost-thread-dev libboost-program-options-dev \
-        libboost-test-dev libeigen3-dev zlib1g-dev \
-        libbz2-dev liblzma-dev && \
+    build-essential cmake libboost-system-dev \
+    libboost-thread-dev libboost-program-options-dev \
+    libboost-test-dev libeigen3-dev zlib1g-dev \
+    libbz2-dev liblzma-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Build KenLM to generate new scorers
@@ -22,40 +22,55 @@ RUN cd /code/kenlm && \
     cmake .. && \
     make -j $(nproc) || \
     ( \
-        echo "ERROR: Failed to build KenLM." \
-        echo "ERROR: Make sure you update the kenlm submodule on host before building this Dockerfile." \
-        echo "ERROR: $ cd STT; git submodule update --init kenlm" \
-        exit 1 \
+    echo "ERROR: Failed to build KenLM." \
+    echo "ERROR: Make sure you update the kenlm submodule on host before building this Dockerfile." \
+    echo "ERROR: $ cd STT; git submodule update --init kenlm" \
+    exit 1 \
     )
 
 FROM nvcr.io/nvidia/tensorflow:22.02-tf1-py3
-
 ENV DEBIAN_FRONTEND=noninteractive
-ENV CONDA_DIR=/opt/conda
-ENV PATH=$CONDA_DIR/bin:$PATH
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    libopus0 \
+    libvorbisfile3 \
+    libopusfile0 \
+    libsndfile1 \
+    sox \
+    libsox-fmt-mp3 \
+    python3-venv \
+    software-properties-common && \
+    rm -rf /var/lib/apt/lists/*
+
+# Build Python 3.7 from source for TFLite export (no longer available in deadsnakes PPA)
+# Note: Skipping --enable-optimizations for faster build (~2-3min vs ~15min)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+    build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev \
+    libssl-dev libreadline-dev libffi-dev libsqlite3-dev libbz2-dev && \
+    cd /tmp && \
+    wget https://www.python.org/ftp/python/3.7.17/Python-3.7.17.tgz && \
+    tar -xzf Python-3.7.17.tgz && \
+    cd Python-3.7.17 && \
+    ./configure --with-ensurepip=install && \
+    make -j $(nproc) && \
+    make altinstall && \
+    cd / && rm -rf /tmp/Python-3.7.17* && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install miniconda
-RUN curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-py37_4.12.0-Linux-x86_64.sh -o miniconda.sh && \
-    bash miniconda.sh -b -p $CONDA_DIR && \
-    rm miniconda.sh
+RUN python3 -m venv --system-site-packages /venv
+ENV VIRTUAL_ENV=/venv
 
-# Create python 3.7 env
-RUN conda create -y -n py37 python=3.7 && \
-    conda clean -afy
+# Venv for upstream tensorflow with tflite api
+RUN python3.7 -m venv /tflite-venv
 
-# Use it
-ENV PATH=$CONDA_DIR/envs/py37/bin:$PATH
-
-# Install TensorFlow 1.15.4 in the conda environment
-RUN pip install tensorflow-gpu==1.15.4
+ENV PATH="$VIRTUAL_ENV/bin:/tflite-venv/bin:$PATH"
 
 # Make sure pip and its dependencies are up-to-date
-RUN pip install --upgrade pip wheel setuptools
+# Pin setuptools<69 to avoid canonicalize_version() breaking changes
+RUN pip install --upgrade pip wheel "setuptools<69"
 
 WORKDIR /code
 
@@ -86,8 +101,7 @@ RUN LATEST_STABLE_RELEASE=$(curl "https://api.github.com/repos/coqui-ai/STT/rele
 RUN DS_NODECODER=y DS_NOTENSORFLOW=y pip install --upgrade -e .
 
 # Install coqui_stt_training (inside tf-venv) for exporting models using tflite
-# RUN /tflite-venv/bin/pip install -e .
-# RUN pip install -e .
+RUN /tflite-venv/bin/pip install -e .
 
 # Copy rest of the code and test training
 COPY . /code
