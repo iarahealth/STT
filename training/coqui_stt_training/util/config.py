@@ -440,24 +440,26 @@ class BaseSttConfig(Coqpit):
     )
 
     # Global Constants
-    neptune_run_id: str = field(
+    # MLflow Configuration
+    mlflow_tracking_uri: str = field(
         default="",
         metadata=dict(
-            help="run ID to be used for ML logging - defaults to empty (no logging)"
+            help="MLflow tracking server URI (e.g., 'http://localhost:5000' or file path) - defaults to empty (no logging)"
         ),
     )
-    neptune_api_token: str = field(
+    mlflow_experiment_name: str = field(
         default="",
         metadata=dict(
-            help="run api token to be used for ML logging - defaults to empty (no logging)"
+            help="MLflow experiment name to be used for ML logging - defaults to empty (no logging)"
         ),
     )
-    neptune_project: str = field(
+    mlflow_run_id: str = field(
         default="",
         metadata=dict(
-            help="run api project name to be used for ML logging - defaults to empty (no logging)"
+            help="MLflow run ID to resume existing run - defaults to empty (new run)"
         ),
     )
+
     epochs: int = field(
         default=75,
         metadata=dict(

@@ -28,13 +28,13 @@ def main():
         "requests",
         "semver",
         "six",
-        "sox",
+        "sox==1.4.1",  # 1.5.0 has broken setup.py that imports package during metadata parsing
         "soundfile",
         "tqdm",
         "webdataset==0.1.103",
         "miniaudio",
         "clearml",
-        "neptune",
+        "mlflow",
     ]
 
     decoder_pypi_dep = ["coqui_stt_ctcdecoder == {}".format(version)]
