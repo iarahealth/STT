@@ -34,7 +34,7 @@ def main():
         "webdataset==0.1.103",
         "miniaudio",
         "clearml",
-        "mlflow==1.30.1",
+        "mlflow",
     ]
 
     decoder_pypi_dep = ["coqui_stt_ctcdecoder == {}".format(version)]
