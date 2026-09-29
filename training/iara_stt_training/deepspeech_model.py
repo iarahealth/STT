@@ -13,6 +13,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 tfv1.logging.set_verbosity(
     {
         "0": tfv1.logging.DEBUG,
@@ -81,7 +85,7 @@ def dense(name, x, units, dropout_rate=None, relu=True, layer_norm=False):
 
     if layer_norm:
         with tfv1.variable_scope(name):
-            output = tf.contrib.layers.layer_norm(output)
+            output = _layer_norm(output)
 
     if dropout_rate is not None:
         output = tf.nn.dropout(output, rate=dropout_rate)
@@ -89,53 +93,94 @@ def dense(name, x, units, dropout_rate=None, relu=True, layer_norm=False):
     return output
 
 
-def rnn_impl_lstmblockfusedcell(x, seq_length, previous_state, reuse):
-    with tfv1.variable_scope("cudnn_lstm/rnn/multi_rnn_cell/cell_0"):
-        fw_cell = tf.contrib.rnn.LSTMBlockFusedCell(
-            Config.n_cell_dim,
-            forget_bias=0,
-            reuse=reuse,
-            name="cudnn_compatible_lstm_cell",
-        )
-
-        output, output_state = fw_cell(
-            inputs=x,
-            dtype=tf.float32,
-            sequence_length=seq_length,
-            initial_state=previous_state,
-        )
-
-    return output, output_state
+def _layer_norm(x, epsilon=1e-12):
+    """Match tf.contrib.layers.layer_norm on the last axis."""
+    params_shape = [x.shape[-1]]
+    mean, variance = tf.nn.moments(x, axes=[-1], keepdims=True)
+    beta = tfv1.get_variable(
+        "LayerNorm/beta", params_shape, initializer=tfv1.zeros_initializer()
+    )
+    gamma = tfv1.get_variable(
+        "LayerNorm/gamma", params_shape, initializer=tfv1.ones_initializer()
+    )
+    return tf.nn.batch_normalization(x, mean, variance, beta, gamma, epsilon)
 
 
-def rnn_impl_cudnn_rnn(x, seq_length, previous_state, _):
-    assert (
-        previous_state is None
-    )  # 'Passing previous state not supported with CuDNN backend'
-
-    # Hack: CudnnLSTM works similarly to Keras layers in that when you instantiate
-    # the object it creates the variables, and then you just call it several times
-    # to enable variable re-use. Because all of our code is structure in an old
-    # school TensorFlow structure where you can just call tf.get_variable again with
-    # reuse=True to reuse variables, we can't easily make use of the object oriented
-    # way CudnnLSTM is implemented, so we save a singleton instance in the function,
-    # emulating a static function variable.
-    if not rnn_impl_cudnn_rnn.cell:
-        # Forward direction cell:
-        fw_cell = tf.contrib.cudnn_rnn.CudnnLSTM(
-            num_layers=1,
-            num_units=Config.n_cell_dim,
-            input_mode="linear_input",
-            direction="unidirectional",
-            dtype=tf.float32,
-        )
-        rnn_impl_cudnn_rnn.cell = fw_cell
-
-    output, output_state = rnn_impl_cudnn_rnn.cell(
-        inputs=x, sequence_lengths=seq_length
+def _block_lstm_fused(inputs, sequence_length, initial_state):
+    """Fused LSTM matching tf.contrib.rnn.LSTMBlockFusedCell(forget_bias=0)."""
+    num_units = Config.n_cell_dim
+    dtype = tf.float32
+    input_size = inputs.shape[-1]
+    input_size = int(input_size) if input_size is not None else Config.n_hidden_3
+    kernel = tfv1.get_variable("kernel", [input_size + num_units, num_units * 4])
+    bias = tfv1.get_variable(
+        "bias", [num_units * 4], initializer=tfv1.zeros_initializer()
     )
 
+    batch_size = tf.shape(inputs)[1]
+    time_len = tf.shape(inputs)[0]
+
+    if initial_state is None:
+        zeros = tf.zeros([batch_size, num_units], dtype=dtype)
+        initial_cell_state, initial_output = zeros, zeros
+    else:
+        initial_cell_state, initial_output = initial_state
+
+    peephole_zeros = tf.zeros([num_units], dtype=dtype)
+    if sequence_length is None:
+        max_seq_len = tf.cast(time_len, tf.int64)
+    else:
+        max_seq_len = tf.cast(tf.reduce_max(sequence_length), tf.int64)
+
+    _, cs, _, _, _, _, h = tf.raw_ops.BlockLSTM(
+        seq_len_max=max_seq_len,
+        x=inputs,
+        cs_prev=initial_cell_state,
+        h_prev=initial_output,
+        w=kernel,
+        wci=peephole_zeros,
+        wcf=peephole_zeros,
+        wco=peephole_zeros,
+        b=bias,
+        forget_bias=0.0,
+        cell_clip=-1.0,
+        use_peephole=False,
+    )
+
+    if sequence_length is not None:
+        mask = tf.transpose(
+            tf.sequence_mask(sequence_length, time_len, dtype=dtype), [1, 0]
+        )
+        mask = tf.tile(tf.expand_dims(mask, -1), [1, 1, num_units])
+        h = h * mask
+        mod_cell_states = tf.concat(
+            [tf.expand_dims(initial_cell_state, 0), cs], 0
+        )
+        mod_outputs = tf.concat([tf.expand_dims(initial_output, 0), h], 0)
+        gather_idx = tf.stack([sequence_length, tf.range(batch_size)], axis=1)
+        final_cell_state = tf.gather_nd(mod_cell_states, gather_idx)
+        final_output = tf.gather_nd(mod_outputs, gather_idx)
+    else:
+        final_cell_state = cs[-1]
+        final_output = h[-1]
+
+    return h, tfv1.nn.rnn_cell.LSTMStateTuple(final_cell_state, final_output)
+
+
+def rnn_impl_lstmblockfusedcell(x, seq_length, previous_state, reuse):
+    with tfv1.variable_scope("cudnn_lstm/rnn/multi_rnn_cell/cell_0"):
+        with tfv1.variable_scope("cudnn_compatible_lstm_cell", reuse=reuse):
+            output, output_state = _block_lstm_fused(
+                x, seq_length, previous_state
+            )
+
     return output, output_state
+
+
+def rnn_impl_cudnn_rnn(x, seq_length, previous_state, reuse):
+    # tf.contrib.cudnn_rnn.CudnnLSTM was removed. The fused BlockLSTM op still
+    # runs on GPU and writes the same checkpoint names the export graph loads.
+    return rnn_impl_lstmblockfusedcell(x, seq_length, previous_state, reuse)
 
 
 rnn_impl_cudnn_rnn.cell = None
@@ -321,7 +366,7 @@ def create_inference_graph(batch_size=1, n_steps=16, tflite=False):
             tf.float32, [batch_size, Config.n_cell_dim], name="previous_state_h"
         )
 
-        previous_state = tf.nn.rnn_cell.LSTMStateTuple(
+        previous_state = tfv1.nn.rnn_cell.LSTMStateTuple(
             previous_state_c, previous_state_h
         )
 

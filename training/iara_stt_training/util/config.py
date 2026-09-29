@@ -8,15 +8,17 @@ from pathlib import Path
 from typing import List
 
 import progressbar
-from attrdict import AttrDict
 from coqpit import MISSING, Coqpit, check_argument
 from iara_stt_ctcdecoder import Alphabet, UTF8Alphabet
 
+from . import pycompat  # noqa: F401
+from attrdict import AttrDict
 from .augmentations import NormalizeSampleRate, parse_augmentations
 from .auto_input import create_alphabet_from_sources, create_datasets_from_auto_input
 from .gpu import get_available_gpus
 from .helpers import parse_file_size
 from .io import is_remote_path, open_remote, path_exists_remote
+from .tfv1_runtime import enable_tf1_runtime
 
 
 class _ConfigSingleton:
@@ -39,6 +41,8 @@ Config = _ConfigSingleton()  # pylint: disable=invalid-name
 class BaseSttConfig(Coqpit):
     def __post_init__(self):
         import tensorflow.compat.v1 as tfv1
+
+        enable_tf1_runtime()
 
         # Augmentations
         self.augmentations = parse_augmentations(self.augment)
@@ -327,6 +331,14 @@ class BaseSttConfig(Coqpit):
         if self.one_shot_infer and not path_exists_remote(self.one_shot_infer):
             raise RuntimeError(
                 "Path specified in --one_shot_infer is not a valid file."
+            )
+
+        if self.train_cudnn:
+            print(
+                "WARNING: --train_cudnn now uses the fused BlockLSTM GPU kernel. "
+                "tf.contrib.cudnn_rnn.CudnnLSTM is gone in TensorFlow 2. Checkpoints "
+                "keep the same variable names as the default (non-CuDNN) trainer.",
+                file=sys.stderr,
             )
 
         if self.train_cudnn and self.load_cudnn:

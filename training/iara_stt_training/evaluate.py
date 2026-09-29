@@ -13,6 +13,10 @@ from six.moves import zip
 
 import tensorflow as tf
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
 from .util.checkpoints import load_graph_for_evaluation

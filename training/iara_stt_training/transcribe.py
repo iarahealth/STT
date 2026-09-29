@@ -18,6 +18,10 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = DESIRED_LOG_LEVEL
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 from iara_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from iara_stt_training.train import create_model
 from iara_stt_training.util.audio import AudioFile
@@ -57,8 +61,8 @@ class TranscriptionPool(PoolBase):
             self.create_graph()
 
     def create_graph(self):
-        self.batch_x_ph = tf.placeholder(tf.float32, [None, None, Config.n_input])
-        self.batch_x_len_ph = tf.placeholder(tf.int32)
+        self.batch_x_ph = tfv1.placeholder(tf.float32, [None, None, Config.n_input])
+        self.batch_x_len_ph = tfv1.placeholder(tf.int32)
 
         no_dropout = [None] * 6
         logits, _ = create_model(

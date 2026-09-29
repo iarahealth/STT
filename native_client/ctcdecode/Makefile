@@ -43,18 +43,17 @@ workspace_status.cc:
 		../gen_workspace_status.sh > $@
 
 # Enforce PATH here because swig calls from build_ext looses track of some
-# variables over several runs
+# variables over several runs.
+# Do not call `python setup.py`: current setuptools raises
+# MinimalDistribution.set_defaults on that path. `pip wheel` uses the
+# setuptools build backend instead.
 bindings: clean-keep-third-party workspace_status.cc $(DS_SWIG_DEP)
-	python -m pip install --quiet $(PYTHON_PACKAGES) wheel setuptools
-	DISTUTILS_USE_SDK=1 PATH=$(DS_SWIG_BIN_PATH):$(TOOLCHAIN_DIR):$$PATH SWIG_LIB="$(SWIG_LIB)" AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS)" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) python ./setup.py build_ext --num_processes $(NUM_PROCESSES) $(SETUP_FLAGS)
-	find temp_build -type f -name "*.o" -delete
-	DISTUTILS_USE_SDK=1 AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS)" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) python ./setup.py bdist_wheel $(SETUP_FLAGS)
+	python -m pip install --quiet $(PYTHON_PACKAGES) wheel 'setuptools==69.5.1'
+	DISTUTILS_USE_SDK=1 PATH=$(DS_SWIG_BIN_PATH):$(TOOLCHAIN_DIR):$$PATH SWIG_LIB="$(SWIG_LIB)" AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS)" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) NUM_PROCESSES=$(NUM_PROCESSES) python -m pip wheel --no-build-isolation --no-deps -w dist .
 	rm -rf temp_build
 
 bindings-debug: clean-keep-third-party workspace_status.cc $(DS_SWIG_DEP)
-	python -m pip install --quiet $(PYTHON_PACKAGES) wheel setuptools
-	DISTUTILS_USE_SDK=1 PATH=$(DS_SWIG_BIN_PATH):$(TOOLCHAIN_DIR):$$PATH SWIG_LIB="$(SWIG_LIB)" AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -DDEBUG" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) python ./setup.py build_ext --debug --num_processes $(NUM_PROCESSES) $(SETUP_FLAGS)
+	python -m pip install --quiet $(PYTHON_PACKAGES) wheel 'setuptools==69.5.1'
+	DISTUTILS_USE_SDK=1 PATH=$(DS_SWIG_BIN_PATH):$(TOOLCHAIN_DIR):$$PATH SWIG_LIB="$(SWIG_LIB)" AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -DDEBUG" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) NUM_PROCESSES=$(NUM_PROCESSES) python -m pip wheel --no-build-isolation --no-deps -w dist .
 	$(GENERATE_DEBUG_SYMS)
-	find temp_build -type f -name "*.o" -delete
-	DISTUTILS_USE_SDK=1 AS=$(AS) CC=$(CC) CXX=$(CXX) LD=$(LD) LIBEXE=$(LIBEXE) CFLAGS="$(CFLAGS) $(CXXFLAGS) $(EXTRA_CXXFLAGS) -DDEBUG" LDFLAGS="$(LDFLAGS_NEEDED)" $(PYTHON_PATH) $(NUMPY_INCLUDE) python ./setup.py bdist_wheel $(SETUP_FLAGS)
 	rm -rf temp_build

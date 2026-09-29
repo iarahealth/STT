@@ -570,6 +570,7 @@ class Warp(GraphAugmentation):
 
     def apply(self, tensor, transcript=None, clock=0.0):
         import tensorflow as tf  # pylint: disable=import-outside-toplevel
+        from .dense_image_warp import dense_image_warp
 
         original_shape = tf.shape(tensor)
         size_t, size_f = original_shape[1], original_shape[2]
@@ -598,8 +599,12 @@ class Warp(GraphAugmentation):
             ],
             axis=2,
         )
-        flows = tf.image.resize_bicubic(tf.expand_dims(flows, 0), [size_t, size_f])
-        spectrogram_aug = tf.contrib.image.dense_image_warp(
+        flows = tf.image.resize(
+            tf.expand_dims(flows, 0),
+            [size_t, size_f],
+            method=tf.image.ResizeMethod.BICUBIC,
+        )
+        spectrogram_aug = dense_image_warp(
             tf.expand_dims(tensor, -1), flows
         )
         return tf.reshape(spectrogram_aug, shape=(1, -1, size_f))

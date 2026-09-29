@@ -13,6 +13,10 @@ import numpy as np
 import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 from iara_stt_ctcdecoder import ctc_beam_search_decoder, Scorer
 from .deepspeech_model import (
     create_inference_graph,

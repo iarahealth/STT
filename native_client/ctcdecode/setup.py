@@ -6,10 +6,21 @@ import multiprocessing.pool
 import os
 import platform
 import sys
+
+# Import setuptools before distutils so Python 3.12 uses the setuptools shim.
+import setuptools  # noqa: F401
 from distutils.command.build import build
+from setuptools import Extension, setup
+
+# pip/setuptools exec setup.py as a string (`__file__ == "<string>"`), so
+# local modules are not on sys.path unless we add the decoder directory.
+SETUP_DIR = os.path.dirname(os.path.abspath(__file__))
+if SETUP_DIR in ("", os.curdir) or os.path.basename(SETUP_DIR) == "<string>":
+    SETUP_DIR = os.getcwd()
+if SETUP_DIR not in sys.path:
+    sys.path.insert(0, SETUP_DIR)
 
 from build_archive import *
-from setuptools import Extension, distutils, setup
 
 try:
     import numpy
@@ -28,7 +39,7 @@ numpy_min_ver = os.getenv("NUMPY_DEP_VERSION", "")
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument(
     "--num_processes",
-    default=1,
+    default=int(os.environ.get("NUM_PROCESSES", "1")),
     type=int,
     help="Number of cpu processes to build package. (default: %(default)d)",
 )
@@ -40,7 +51,7 @@ sys.argv = [sys.argv[0]] + unknown_args
 
 
 def read(fname):
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+    return open(os.path.join(SETUP_DIR, fname)).read()
 
 
 def maybe_rebuild(srcs, out_name, build_dir):

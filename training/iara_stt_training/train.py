@@ -21,6 +21,10 @@ import tensorflow.compat.v1 as tfv1
 import tensorflow as tf
 from iara_stt_ctcdecoder import Scorer
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 tfv1.logging.set_verbosity(
     {
         "0": tfv1.logging.DEBUG,
@@ -346,7 +350,7 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
     reset_default_graph()
     tfv1.set_random_seed(Config.random_seed)
 
-    epoch_ph = tf.placeholder(tf.int64, name="epoch_ph")
+    epoch_ph = tfv1.placeholder(tf.int64, name="epoch_ph")
     train_set, dev_sets, metrics_sets = create_training_datasets(
         epoch_ph, reverse=reverse, limit=limit
     )
@@ -390,9 +394,15 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
     # Enable mixed precision training
     if Config.automatic_mixed_precision:
         log_info("Enabling automatic mixed precision training.")
-        optimizer = tfv1.train.experimental.enable_mixed_precision_graph_rewrite(
-            optimizer
-        )
+        try:
+            optimizer = tfv1.train.experimental.enable_mixed_precision_graph_rewrite(
+                optimizer
+            )
+        except AttributeError:
+            log_error(
+                "automatic_mixed_precision is not available in this TensorFlow build."
+            )
+            sys.exit(1)
 
     gradients, loss, non_finite_files = get_tower_results(
         iterator, optimizer, dropout_rates
