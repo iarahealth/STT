@@ -63,6 +63,7 @@ from .util.config import (
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
 from .util.io import remove_remote
+from .util.mlflow_config import mlflow_client
 
 
 # Accuracy and Loss
@@ -582,6 +583,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                 # Training
                 log_progress("Training epoch %d..." % epoch)
                 train_loss, _ = run_set("train", epoch, train_init_op)
+                if write:
+                    mlflow_client.log_metric("train/train_loss", train_loss, step=epoch)
                 log_progress(
                     "Finished training epoch %d - loss: %f" % (epoch, train_loss)
                 )
@@ -605,6 +608,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                         )
 
                     dev_loss = dev_loss / total_steps
+                    if write:
+                        mlflow_client.log_metric("train/dev_loss", dev_loss, step=epoch)
                     dev_losses.append(dev_loss)
 
                     # Count epochs without an improvement for early stopping and reduction of learning rate on a plateau
@@ -687,9 +692,10 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
 
         except KeyboardInterrupt:
             pass
-        log_info(
-            "FINISHED optimization in {}".format(datetime.utcnow() - train_start_time)
-        )
+        optim_time = datetime.utcnow() - train_start_time
+        log_info("FINISHED optimization in {}".format(optim_time))
+        if write:
+            mlflow_client.log_score("train/training_time", optim_time.total_seconds())
     log_debug("Session closed.")
 
 
@@ -706,6 +712,19 @@ def main():
             "    python -m iara_stt_training.export\n"
             "    python -m iara_stt_training.training_graph_inference"
         )
+
+    mlflow_client.start_run(
+        Config.mlflow_tracking_uri,
+        Config.mlflow_experiment_name,
+        Config.mlflow_run_id,
+        "train",
+    )
+    mlflow_client.log_param("beam_width", Config.beam_width)
+    mlflow_client.log_param("random_seed", Config.random_seed)
+    mlflow_client.log_param("epochs", Config.epochs)
+    mlflow_client.log_param("learning_rate", Config.learning_rate)
+    mlflow_client.log_param("dropout_rate", Config.dropout_rate)
+    mlflow_client.log_param("train_batch_size", Config.train_batch_size)
 
     if Config.train_files:
         train()
@@ -735,6 +754,8 @@ def main():
             )
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)
+
+    mlflow_client.stop_run()
 
 
 if __name__ == "__main__":

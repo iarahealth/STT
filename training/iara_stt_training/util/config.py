@@ -451,6 +451,26 @@ class BaseSttConfig(Coqpit):
         ),
     )
 
+    # MLflow Configuration
+    mlflow_tracking_uri: str = field(
+        default="",
+        metadata=dict(
+            help="MLflow tracking server URI (e.g., 'http://localhost:5000'; a local path also requires MLFLOW_ALLOW_FILE_STORE=true) - defaults to empty (no logging)"
+        ),
+    )
+    mlflow_experiment_name: str = field(
+        default="",
+        metadata=dict(
+            help="MLflow experiment name to be used for ML logging - defaults to empty (no logging)"
+        ),
+    )
+    mlflow_run_id: str = field(
+        default="",
+        metadata=dict(
+            help="MLflow run ID to resume existing run - defaults to empty (new run)"
+        ),
+    )
+
     # Global Constants
     epochs: int = field(
         default=75,

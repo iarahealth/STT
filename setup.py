@@ -31,6 +31,9 @@ def main():
         "webdataset==0.1.103",
         "miniaudio",
         "clearml",
+        # Client only: enough for --mlflow_tracking_uri pointing to an HTTP server or a
+        # local file path. Use the full "mlflow" package for sqlite/SQL backends.
+        "mlflow-skinny>=3,<4",
     ]
 
     decoder_pypi_dep = ["iara_stt_ctcdecoder == {}".format(version)]
