@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function
 
-import json
-import sys
 from multiprocessing import cpu_count
 
 import numpy as np
@@ -25,7 +23,6 @@ from .util.config import (
     Config,
     create_progressbar,
     initialize_globals_from_cli,
-    log_error,
     log_progress,
 )
 from .util.evaluate_tools import calculate_and_print_report, save_samples_json
@@ -178,11 +175,6 @@ def evaluate(test_csvs, create_model):
             samples.extend(run_test(init_op, dataset=csv))
 
         if mlflow_client.enabled:
-            for idx, sample in enumerate(samples):
-                mlflow_client.log_metric("test/test_wer", sample.wer, step=idx)
-                mlflow_client.log_metric("test/test_cer", sample.cer, step=idx)
-                mlflow_client.log_metric("test/test_loss", sample.loss, step=idx)
-
             mlflow_client.log_score(
                 "test/test_mean_wer", np.mean([s.wer for s in samples])
             )
