@@ -14,6 +14,10 @@ import tensorflow as tf
 import tensorflow.compat.v1 as tfv1
 import shutil
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 from .deepspeech_model import create_inference_graph, create_model, reset_default_graph
 from .util.checkpoints import load_graph_for_evaluation
 from .util.config import Config, initialize_globals_from_cli, log_error, log_info
@@ -87,7 +91,7 @@ def export():
     ]
     output_names = output_names_tensors + output_names_ops
 
-    with tf.Session() as session:
+    with tfv1.Session() as session:
         # Restore variables from checkpoint
         load_graph_for_evaluation(session)
 
@@ -122,23 +126,21 @@ def export():
                 Config.export_dir, output_filename.replace(".pb", ".tflite")
             )
 
+            output_tensors = [
+                tensor
+                for tensor in outputs.values()
+                if isinstance(tensor, tf.Tensor)
+            ]
             try:
-                converter = tf.lite.TFLiteConverter(
-                    frozen_graph,
-                    input_tensors=inputs.values(),
-                    output_tensors=outputs.values(),
+                converter = tfv1.lite.TFLiteConverter.from_session(
+                    session, list(inputs.values()), output_tensors
                 )
             except AttributeError:
                 log_error(
                     "Couldn't access TFLite API in TensorFlow package. "
-                    "The NVIDIA TF1 docker image removes the TFLite API, so you'll need "
-                    "to use the separate virtual environment to call the export module: \n"
-                    "    /tflite-venv/bin/python -m iara_stt_training.export --checkpoint_dir ... --export_dir ...\n"
-                    "You can also save the checkpoint outside of Docker and then export it using "
-                    "the training package directly: \n"
-                    "    pip install iara_stt_training\n"
-                    "    python -m iara_stt_training.export --checkpoint_dir ... --export_dir ...\n"
-                    "This should work without needing any special CUDA setup, even for CUDA checkpoints."
+                    "Export the checkpoint with a TensorFlow build that includes "
+                    "tf.lite, for example: python -m iara_stt_training.export "
+                    "--checkpoint_dir ... --export_dir ..."
                 )
                 sys.exit(1)
 
@@ -195,21 +197,21 @@ def export_savedmodel():
     reset_default_graph()
 
     with tfv1.Session(config=Config.session_config) as session:
-        input_wavfile_contents = tf.placeholder(
+        input_wavfile_contents = tfv1.placeholder(
             tf.string, [], name="input_wavfile_contents"
         )
         features, features_len = wavfile_bytes_to_features(input_wavfile_contents)
 
-        features_in = tf.placeholder(
+        features_in = tfv1.placeholder(
             tf.float32, [None, None, Config.n_input], name="features_in"
         )
-        feature_lens_in = tf.placeholder(tf.int32, [None], name="feature_lens_in")
+        feature_lens_in = tfv1.placeholder(tf.int32, [None], name="feature_lens_in")
         batch_size = tf.shape(features_in)[0]
 
         previous_state_c = tf.zeros([batch_size, Config.n_cell_dim], tf.float32)
         previous_state_h = tf.zeros([batch_size, Config.n_cell_dim], tf.float32)
 
-        previous_state = tf.nn.rnn_cell.LSTMStateTuple(
+        previous_state = tfv1.nn.rnn_cell.LSTMStateTuple(
             previous_state_c, previous_state_h
         )
 

@@ -2,16 +2,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function
 
-import json
-import sys
 from multiprocessing import cpu_count
 
+import numpy as np
 import progressbar
 import tensorflow.compat.v1 as tfv1
 from iara_stt_ctcdecoder import Scorer, ctc_beam_search_decoder_batch
 from six.moves import zip
 
 import tensorflow as tf
+
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
 
 from .deepspeech_model import create_model, reset_default_graph
 from .util.augmentations import NormalizeSampleRate
@@ -20,12 +23,12 @@ from .util.config import (
     Config,
     create_progressbar,
     initialize_globals_from_cli,
-    log_error,
     log_progress,
 )
 from .util.evaluate_tools import calculate_and_print_report, save_samples_json
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
+from .util.mlflow_config import mlflow_client
 
 
 def sparse_tensor_value_to_texts(value, alphabet):
@@ -170,6 +173,18 @@ def evaluate(test_csvs, create_model):
         for csv, init_op in zip(test_csvs, test_init_ops):
             print("Testing model on {}".format(csv))
             samples.extend(run_test(init_op, dataset=csv))
+
+        if mlflow_client.enabled:
+            mlflow_client.log_score(
+                "test/test_mean_wer", np.mean([s.wer for s in samples])
+            )
+            mlflow_client.log_score(
+                "test/test_mean_cer", np.mean([s.cer for s in samples])
+            )
+            mlflow_client.log_score(
+                "test/test_mean_loss", np.mean([s.loss for s in samples])
+            )
+
         return samples
 
 
@@ -185,6 +200,15 @@ def main():
     initialize_globals_from_cli()
     check_ctcdecoder_version()
 
+    mlflow_client.start_run(
+        Config.mlflow_tracking_uri,
+        Config.mlflow_experiment_name,
+        Config.mlflow_run_id,
+        "test",
+    )
+    mlflow_client.log_param("beam_width", Config.beam_width)
+    mlflow_client.log_param("random_seed", Config.random_seed)
+
     if not Config.test_files:
         raise RuntimeError(
             "You need to specify what files to use for evaluation via "
@@ -192,6 +216,7 @@ def main():
         )
 
     test()
+    mlflow_client.stop_run()
 
 
 if __name__ == "__main__":

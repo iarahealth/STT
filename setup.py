@@ -1,9 +1,6 @@
 import os
-import platform
-import sys
 from pathlib import Path
 
-from pkg_resources import parse_version
 from setuptools import find_packages, setup
 
 
@@ -17,13 +14,12 @@ def main():
         "attrs < 22",
         "bs4",
         "coqpit",
-        "numpy<1.19.0",
+        "numpy>=1.26,<2.0",
         "optuna",
-        "numba <= 0.53.1",
         "opuslib == 2.0.0",
         "pandas",
         "progressbar2",
-        "protobuf <= 3.20.1",
+        "protobuf>=3.20.3,<5",
         "pyogg >= 0.6.14a1",
         "resampy >= 0.4.0",
         "requests",
@@ -35,11 +31,14 @@ def main():
         "webdataset==0.1.103",
         "miniaudio",
         "clearml",
+        # Client only: enough for --mlflow_tracking_uri pointing to an HTTP server or a
+        # local file path. Use the full "mlflow" package for sqlite/SQL backends.
+        "mlflow-skinny>=3,<4",
     ]
 
     decoder_pypi_dep = ["iara_stt_ctcdecoder == {}".format(version)]
 
-    tensorflow_pypi_dep = ["tensorflow == 1.15.4"]
+    tensorflow_pypi_dep = ["tensorflow >= 2.15, < 2.18"]
 
     if os.environ.get("DS_NODECODER", ""):
         install_requires = install_requires_base
@@ -70,7 +69,7 @@ def main():
         ],
         package_dir={"": "training"},
         packages=find_packages(where="training"),
-        python_requires=">=3.7, <3.10",
+        python_requires=">=3.12, <3.13",
         install_requires=install_requires,
         include_package_data=True,
         extras_require={

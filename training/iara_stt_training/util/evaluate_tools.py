@@ -3,17 +3,20 @@
 from __future__ import absolute_import, division, print_function
 
 
-import os
 import json
+import os
 from multiprocessing.dummy import Pool
+from tempfile import gettempdir
 
 import numpy as np
-from attrdict import AttrDict
-
-from .text import levenshtein
-from tempfile import gettempdir
 import tensorflow.compat.v1 as tfv1
 
+from . import pycompat  # noqa: F401
+from attrdict import AttrDict
+from .text import levenshtein
+from .tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
 tfv1.logging.set_verbosity(tfv1.logging.ERROR)
 
 

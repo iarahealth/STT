@@ -21,6 +21,10 @@ import tensorflow.compat.v1 as tfv1
 import tensorflow as tf
 from iara_stt_ctcdecoder import Scorer
 
+from .util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 tfv1.logging.set_verbosity(
     {
         "0": tfv1.logging.DEBUG,
@@ -59,6 +63,7 @@ from .util.config import (
 from .util.feeding import create_dataset
 from .util.helpers import check_ctcdecoder_version
 from .util.io import remove_remote
+from .util.mlflow_config import mlflow_client
 
 
 # Accuracy and Loss
@@ -346,7 +351,7 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
     reset_default_graph()
     tfv1.set_random_seed(Config.random_seed)
 
-    epoch_ph = tf.placeholder(tf.int64, name="epoch_ph")
+    epoch_ph = tfv1.placeholder(tf.int64, name="epoch_ph")
     train_set, dev_sets, metrics_sets = create_training_datasets(
         epoch_ph, reverse=reverse, limit=limit
     )
@@ -390,9 +395,15 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
     # Enable mixed precision training
     if Config.automatic_mixed_precision:
         log_info("Enabling automatic mixed precision training.")
-        optimizer = tfv1.train.experimental.enable_mixed_precision_graph_rewrite(
-            optimizer
-        )
+        try:
+            optimizer = tfv1.train.experimental.enable_mixed_precision_graph_rewrite(
+                optimizer
+            )
+        except AttributeError:
+            log_error(
+                "automatic_mixed_precision is not available in this TensorFlow build."
+            )
+            sys.exit(1)
 
     gradients, loss, non_finite_files = get_tower_results(
         iterator, optimizer, dropout_rates
@@ -572,6 +583,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                 # Training
                 log_progress("Training epoch %d..." % epoch)
                 train_loss, _ = run_set("train", epoch, train_init_op)
+                if write:
+                    mlflow_client.log_metric("train/train_loss", train_loss, step=epoch)
                 log_progress(
                     "Finished training epoch %d - loss: %f" % (epoch, train_loss)
                 )
@@ -595,6 +608,8 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
                         )
 
                     dev_loss = dev_loss / total_steps
+                    if write:
+                        mlflow_client.log_metric("train/dev_loss", dev_loss, step=epoch)
                     dev_losses.append(dev_loss)
 
                     # Count epochs without an improvement for early stopping and reduction of learning rate on a plateau
@@ -677,9 +692,10 @@ def train_impl(epochs=0, reverse=False, limit=0, write=True, silent_load=False):
 
         except KeyboardInterrupt:
             pass
-        log_info(
-            "FINISHED optimization in {}".format(datetime.utcnow() - train_start_time)
-        )
+        optim_time = datetime.utcnow() - train_start_time
+        log_info("FINISHED optimization in {}".format(optim_time))
+        if write:
+            mlflow_client.log_score("train/training_time", optim_time.total_seconds())
     log_debug("Session closed.")
 
 
@@ -696,6 +712,19 @@ def main():
             "    python -m iara_stt_training.export\n"
             "    python -m iara_stt_training.training_graph_inference"
         )
+
+    mlflow_client.start_run(
+        Config.mlflow_tracking_uri,
+        Config.mlflow_experiment_name,
+        Config.mlflow_run_id,
+        "train",
+    )
+    mlflow_client.log_param("beam_width", Config.beam_width)
+    mlflow_client.log_param("random_seed", Config.random_seed)
+    mlflow_client.log_param("epochs", Config.epochs)
+    mlflow_client.log_param("learning_rate", Config.learning_rate)
+    mlflow_client.log_param("dropout_rate", Config.dropout_rate)
+    mlflow_client.log_param("train_batch_size", Config.train_batch_size)
 
     if Config.train_files:
         train()
@@ -725,6 +754,8 @@ def main():
             )
         )
         traning_graph_inference.do_single_file_inference(Config.one_shot_infer)
+
+    mlflow_client.stop_run()
 
 
 if __name__ == "__main__":

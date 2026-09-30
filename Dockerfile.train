@@ -1,8 +1,9 @@
-# This is a Dockerfile useful for training models with Coqui STT.
-# You can train "acoustic models" with audio + Tensorflow, and
-# you can create "scorers" with text + KenLM.
+# Training image for Iara STT on CUDA 12.8 (NVIDIA TensorFlow 25.02).
+# Exports the same TFLite graph the existing inference binaries load.
+# Python 3.12 is the version shipped in this NGC container; TensorFlow has no
+# 3.14 GPU wheel that still produces that graph.
 
-FROM nvcr.io/nvidia/tensorflow:22.02-tf1-py3 AS kenlm-build
+FROM nvcr.io/nvidia/tensorflow:25.02-tf2-py3 AS kenlm-build
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
@@ -13,7 +14,6 @@ RUN apt-get update && \
         libbz2-dev liblzma-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Build KenLM to generate new scorers
 WORKDIR /code
 COPY kenlm /code/kenlm
 RUN cd /code/kenlm && \
@@ -28,13 +28,16 @@ RUN cd /code/kenlm && \
         exit 1 \
     )
 
-FROM nvcr.io/nvidia/tensorflow:22.02-tf1-py3
+FROM nvcr.io/nvidia/tensorflow:25.02-tf2-py3
 ENV DEBIAN_FRONTEND=noninteractive
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
         wget \
+        curl \
         libopus0 \
         libvorbisfile3 \
         libopusfile0 \
@@ -42,27 +45,16 @@ RUN apt-get update && \
         sox \
         libsox-fmt-mp3 \
         python3-venv \
-        software-properties-common && \
+        python3-dev \
+        build-essential \
+        cmake && \
     rm -rf /var/lib/apt/lists/*
-
-# For exporting using TFLite
-RUN add-apt-repository ppa:deadsnakes/ppa -y
-
-RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
-    python3.7 \
-    python3.7-venv \
-    python3.7-dev
 
 RUN python3 -m venv --system-site-packages /venv
 ENV VIRTUAL_ENV=/venv
-
-# Venv for upstream tensorflow with tflite api
-RUN python3.7 -m venv /tflite-venv
-
-ENV PATH="$VIRTUAL_ENV/bin:/tflite-venv/bin:$PATH"
-
-# Make sure pip and its dependencies are up-to-date
-RUN pip install --upgrade pip wheel setuptools packaging
+ENV PATH="/venv/bin:/usr/local/bin:$PATH"
+ENV UV_SYSTEM_PYTHON=0
+ENV UV_LINK_MODE=copy
 
 WORKDIR /code
 
@@ -71,14 +63,17 @@ COPY .git /code/.git
 COPY training/iara_stt_training/VERSION /code/training/iara_stt_training/VERSION
 COPY training/iara_stt_training/GRAPH_VERSION /code/training/iara_stt_training/GRAPH_VERSION
 
-# Build CTC decoder first, to avoid clashes on incompatible versions upgrades
+# Decoder C++ archives still compile; the wheel is built with `pip wheel`
+# because `python setup.py` crashes on current setuptools (MinimalDistribution).
+RUN uv pip install --python /venv/bin/python 'setuptools==69.5.1' wheel numpy
 RUN cd native_client/ctcdecode && make NUM_PROCESSES=$(nproc) bindings
-RUN pip install --upgrade native_client/ctcdecode/dist/*.whl
+RUN uv pip install --python /venv/bin/python native_client/ctcdecode/dist/*.whl
 
 COPY setup.py /code/setup.py
 COPY VERSION /code/VERSION
+COPY pyproject.toml /code/pyproject.toml
+COPY MANIFEST.in /code/MANIFEST.in
 COPY training /code/training
-# Copy files from previous build stages
 RUN mkdir -p /code/kenlm/build/
 COPY --from=kenlm-build /code/kenlm/build/bin /code/kenlm/build/bin
 
@@ -86,16 +81,10 @@ COPY --from=kenlm-build /code/kenlm/build/bin /code/kenlm/build/bin
 RUN LATEST_STABLE_RELEASE=$(curl "https://api.github.com/repos/iarahealth/STT/releases/latest" | python -c 'import sys; import json; print(json.load(sys.stdin)["tag_name"])') \
     bash -c 'curl -L https://github.com/iarahealth/STT/releases/download/${LATEST_STABLE_RELEASE}/native_client.tflite.Linux.tar.xz | tar -xJvf -'
 
-# Install STT
-# No need for the decoder since we did it earlier
-# TensorFlow GPU should already be installed on the base image,
-# and we don't want to break that
-RUN DS_NODECODER=y DS_NOTENSORFLOW=y pip install --upgrade -e .
+# TensorFlow GPU is already in the NGC image; do not replace it from PyPI.
+# --no-build-isolation uses the venv setuptools (uv's isolated env has no pkg_resources).
+RUN DS_NODECODER=y DS_NOTENSORFLOW=y uv pip install --python /venv/bin/python --no-build-isolation --upgrade -e .
+RUN uv pip install --python /venv/bin/python ruff
 
-# Install iara_stt_training (inside tf-venv) for exporting models using tflite
-RUN /tflite-venv/bin/pip install --upgrade pip wheel setuptools packaging
-RUN /tflite-venv/bin/pip install -e .
-
-# Copy rest of the code and test training
 COPY . /code
 RUN ./bin/run-ldc93s1.sh && rm -rf ~/.local/share/stt

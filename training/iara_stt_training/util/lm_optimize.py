@@ -15,6 +15,9 @@ from iara_stt_training.util.config import (
     log_error,
 )
 from iara_stt_training.util.evaluate_tools import wer_cer_batch
+from iara_stt_training.util.tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
 
 
 def character_based():

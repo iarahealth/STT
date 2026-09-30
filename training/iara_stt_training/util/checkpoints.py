@@ -4,6 +4,10 @@ import tensorflow.compat.v1 as tfv1
 
 import tensorflow as tf
 
+from .tfv1_runtime import enable_tf1_runtime
+
+enable_tf1_runtime()
+
 from .config import Config, log_error, log_info, log_warn
 
 
